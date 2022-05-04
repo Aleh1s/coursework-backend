@@ -28,6 +28,7 @@ public class RegistrationServiceAdapterImpl implements RegistrationServiceAdapte
                 passwordEncoder.encode(registrationModel.password()),
                 registrationModel.firstName(),
                 registrationModel.lastName(),
+                registrationModel.dob(),
                 UserRole.USER,
                 UserStatus.ACTIVE,
                 null
@@ -39,6 +40,7 @@ public class RegistrationServiceAdapterImpl implements RegistrationServiceAdapte
         return new DeliveryInfoEntity(
                 null,
                 registrationModel.phoneNumber(),
+                registrationModel.city(),
                 registrationModel.address(),
                 registrationModel.postNumber(),
                 null

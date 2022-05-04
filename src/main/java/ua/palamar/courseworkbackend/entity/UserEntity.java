@@ -5,6 +5,8 @@ import ua.palamar.courseworkbackend.entity.permissions.UserRole;
 import ua.palamar.courseworkbackend.entity.permissions.UserStatus;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.UUID;
 
 import static javax.persistence.CascadeType.ALL;
@@ -33,6 +35,9 @@ public class UserEntity {
     @Column(nullable = false)
     private String lastName;
 
+    @Column(nullable = false)
+    private LocalDate dob;
+
     @Enumerated(STRING)
     @Column(nullable = false)
     private UserRole role;
@@ -49,6 +54,10 @@ public class UserEntity {
         if (id == null) {
             id = UUID.randomUUID().toString();
         }
+    }
+
+    public int getAge() {
+        return Period.between(dob, LocalDate.now()).getYears();
     }
 
     public void addDeliveryInfo(DeliveryInfoEntity deliveryInfo) {
