@@ -7,10 +7,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ua.palamar.courseworkbackend.entity.permissions.UserPermission.*;
+
 public enum UserRole {
 
-    USER(Sets.newHashSet()),
-    ADMIN(Sets.newHashSet());
+    VIEWER(Sets.newHashSet(POST_READ)),
+    USER(Sets.newHashSet(POST_READ, POST_CREATE, POST_DELETE, POST_UPDATE, ORDER_ITEM, ORDER_SERVICE, RENT_HOUSE)),
+    ADMIN(Sets.newHashSet(POST_READ, POST_CREATE, POST_DELETE, POST_UPDATE, ORDER_ITEM, ORDER_SERVICE, RENT_HOUSE));
 
     private final Set<UserPermission> permissions;
 
