@@ -7,6 +7,7 @@ import ua.palamar.courseworkbackend.entity.permissions.UserStatus;
 import javax.persistence.*;
 import java.util.UUID;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 
 @Entity
@@ -40,11 +41,24 @@ public class UserEntity {
     @Column(nullable = false)
     private UserStatus status;
 
+    @OneToOne(mappedBy = "user", cascade = ALL)
+    private DeliveryInfoEntity deliveryInfo;
+
     @PrePersist
     public void setId() {
         if (id == null) {
             id = UUID.randomUUID().toString();
         }
+    }
+
+    public void addDeliveryInfo(DeliveryInfoEntity deliveryInfo) {
+        this.deliveryInfo = deliveryInfo;
+        deliveryInfo.setUser(this);
+    }
+
+    public void removeDeliveryInfo(DeliveryInfoEntity deliveryInfo) {
+        this.deliveryInfo = null;
+        deliveryInfo.setUser(null);
     }
 
 }

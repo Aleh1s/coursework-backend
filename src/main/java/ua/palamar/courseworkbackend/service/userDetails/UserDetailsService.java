@@ -1,4 +1,4 @@
-package ua.palamar.courseworkbackend.service;
+package ua.palamar.courseworkbackend.service.userDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

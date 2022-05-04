@@ -9,10 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.entity.UserEntity;
-import ua.palamar.courseworkbackend.service.UserDetailsService;
+import ua.palamar.courseworkbackend.service.userDetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Time;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 

@@ -4,13 +4,14 @@ import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.entity.UserEntity;
 import ua.palamar.courseworkbackend.repository.UserRepository;
 import ua.palamar.courseworkbackend.service.UserService;
+import ua.palamar.courseworkbackend.service.UserServiceValidator;
 
 @Service
-public class UserSimpleService implements UserService {
+public class SimpleUserService implements UserService, UserServiceValidator {
 
     private final UserRepository userRepository;
 
-    public UserSimpleService(UserRepository userRepository) {
+    public SimpleUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -25,5 +26,15 @@ public class UserSimpleService implements UserService {
                 .orElseThrow(() -> new IllegalStateException(
                         String.format("User with email: %s does not exist", email))
                 );
+    }
+
+    @Override
+    public boolean userWithEmailExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean userWithPhoneNumberExists(String phoneNumber) {
+        return userRepository.existsByDeliveryInfoPhoneNumber(phoneNumber);
     }
 }

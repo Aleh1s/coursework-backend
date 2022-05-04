@@ -1,18 +1,19 @@
-package ua.palamar.courseworkbackend.adapter;
+package ua.palamar.courseworkbackend.adapter.userDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ua.palamar.courseworkbackend.adapter.UserDetailsAdapter;
 import ua.palamar.courseworkbackend.entity.UserDetails;
 import ua.palamar.courseworkbackend.entity.UserEntity;
-import ua.palamar.courseworkbackend.service.user.UserSimpleService;
+import ua.palamar.courseworkbackend.service.user.SimpleUserService;
 
 @Component
 public class UserDetailsAdapterImpl implements UserDetailsAdapter {
 
-    private final UserSimpleService userService;
+    private final SimpleUserService userService;
 
     @Autowired
-    public UserDetailsAdapterImpl(UserSimpleService userService) {
+    public UserDetailsAdapterImpl(SimpleUserService userService) {
         this.userService = userService;
     }
 

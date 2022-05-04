@@ -5,7 +5,6 @@ import ua.palamar.courseworkbackend.entity.UserDetails;
 import ua.palamar.courseworkbackend.entity.UserEntity;
 
 public interface UserDetailsAdapter {
-
     UserDetails getUserDetails(String email);
 
 }
