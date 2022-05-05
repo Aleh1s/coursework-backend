@@ -8,6 +8,7 @@ import ua.palamar.courseworkbackend.adapter.RegistrationServiceAdapter;
 import ua.palamar.courseworkbackend.dto.RegistrationModel;
 import ua.palamar.courseworkbackend.entity.DeliveryInfoEntity;
 import ua.palamar.courseworkbackend.entity.UserEntity;
+import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.DeliveryInfoRepository;
 import ua.palamar.courseworkbackend.repository.UserRepository;
 import ua.palamar.courseworkbackend.service.RegistrationService;
@@ -45,12 +46,12 @@ public class SimpleRegistrationService implements RegistrationService {
     public ResponseEntity<?> register(RegistrationModel registrationModel) {
 
         if (userServiceValidator.userWithEmailExists(registrationModel.email()))
-            throw new IllegalStateException(
+            throw new ApiRequestException(
                     String.format("User with email: %s already exists", registrationModel.email())
             );
 
         if (userServiceValidator.userWithPhoneNumberExists(registrationModel.phoneNumber()))
-            throw new IllegalStateException(
+            throw new ApiRequestException(
                     String.format("User with phone number: %s already exists", registrationModel.phoneNumber())
             );
 
