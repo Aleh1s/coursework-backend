@@ -8,6 +8,7 @@ import ua.palamar.courseworkbackend.service.RegistrationService;
 
 @RestController
 @RequestMapping("/api/v1/registration")
+@CrossOrigin("http://localhost:3000")
 public class RegistrationController {
 
     private final RegistrationService registrationService;

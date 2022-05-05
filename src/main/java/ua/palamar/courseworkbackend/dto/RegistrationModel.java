@@ -12,4 +12,6 @@ public record RegistrationModel(
         String postNumber,
         String phoneNumber,
         LocalDate dob
-) {}
+) {
+
+}
