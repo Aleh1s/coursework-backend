@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.dto.AuthenticationModel;
-import ua.palamar.courseworkbackend.dto.TokensModel;
+import ua.palamar.courseworkbackend.dto.AuthenticationResponseModel;
 import ua.palamar.courseworkbackend.dto.UserModel;
 import ua.palamar.courseworkbackend.entity.UserEntity;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
@@ -40,10 +40,6 @@ public class SimpleAuthenticationService implements AuthenticationService {
         String accessToken = tokenProvider.generateToken(currentUser);
         String refreshToken = tokenProvider.generateRefreshToken(currentUser);
 
-        TokensModel tokensModel = new TokensModel(
-                accessToken,
-                refreshToken
-        );
 
         UserModel userModel = new UserModel(
                 currentUser.getEmail(),
@@ -54,6 +50,10 @@ public class SimpleAuthenticationService implements AuthenticationService {
                 currentUser.getAge()
         );
 
-        return new ResponseEntity<>(new Object[]{tokensModel, userModel}, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(new AuthenticationResponseModel(
+                accessToken,
+                refreshToken,
+                userModel
+        ), HttpStatus.ACCEPTED);
     }
 }

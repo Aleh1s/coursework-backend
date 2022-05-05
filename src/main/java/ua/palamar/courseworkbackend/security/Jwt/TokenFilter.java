@@ -28,7 +28,6 @@ public class TokenFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        if(!request.getServletPath().equals("/token/refresh")) {
             String token = tokenProvider.resolveToken(request);
 
             if (token != null && tokenProvider.validateToken(token)) {
@@ -39,8 +38,6 @@ public class TokenFilter extends OncePerRequestFilter {
                 }
 
             }
-
-        }
 
         filterChain.doFilter(request, response);
     }
