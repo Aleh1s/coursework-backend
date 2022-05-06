@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.palamar.courseworkbackend.dto.AdvertisementModel;
+import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
 import ua.palamar.courseworkbackend.service.GeneralizedAdvertisementService;
 
@@ -31,8 +32,13 @@ public class AdvertisementController {
         return advertisementService.removeAdvertisement(category, id);
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<?> getAllByEmail(@PathVariable String email) {
         return generalizedAdvertisementService.getAllAdvertisementsByEmail(email);
+    }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<?> getAllByCategory(@PathVariable Category category) {
+        return generalizedAdvertisementService.getAllAdvertisementsByCategory(category);
     }
 }

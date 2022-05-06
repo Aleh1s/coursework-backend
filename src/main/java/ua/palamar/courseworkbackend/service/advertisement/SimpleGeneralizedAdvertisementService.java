@@ -5,8 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
+import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.repository.AdvertisementsRepository;
 
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -17,6 +19,11 @@ public class SimpleGeneralizedAdvertisementService implements ua.palamar.coursew
     @Autowired
     public SimpleGeneralizedAdvertisementService(AdvertisementsRepository advertisementsRepository) {
         this.advertisementsRepository = advertisementsRepository;
+    }
+
+    public ResponseEntity<?> getAllAdvertisementsByCategory(Category category) {
+        List<Advertisement> advertisements = advertisementsRepository.findAllByCategory(category);
+        return new ResponseEntity<>(advertisements, HttpStatus.ACCEPTED);
     }
 
     @Override
