@@ -50,7 +50,6 @@ public class AdvertisementAdapterImpl implements AdvertisementAdapter {
                 UNCONFIRMED,
                 LocalDateTime.now(),
                 null,
-                null,
                 creator,
                 null,
                 dimensions

@@ -38,7 +38,6 @@ public class ItemAdvertisementEntity extends Advertisement {
             AdvertisementStatus status,
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
-            LocalDateTime removedAt,
             UserEntity createdBy,
             Set<Order> orders,
             DimensionsEntity dimensions
@@ -51,7 +50,6 @@ public class ItemAdvertisementEntity extends Advertisement {
                 status,
                 createdAt,
                 updatedAt,
-                removedAt,
                 createdBy,
                 orders
         );

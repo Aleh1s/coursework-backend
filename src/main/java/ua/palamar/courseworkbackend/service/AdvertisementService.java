@@ -9,6 +9,6 @@ public interface AdvertisementService {
 
 //    ResponseEntity<?> updateAdvertisement();
 //
-    ResponseEntity<?> removeAdvertisement(String id);
+    ResponseEntity<?> removeAdvertisement(String category,String id);
 
 }

@@ -17,7 +17,6 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
-import static ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus.UNCONFIRMED;
 
 @Entity
 @Getter
@@ -50,9 +49,6 @@ public abstract class Advertisement {
     @Column
     private LocalDateTime updatedAt;
 
-    @Column
-    private LocalDateTime removedAt;
-
     @ManyToOne(
             fetch = LAZY
     )
@@ -77,10 +73,5 @@ public abstract class Advertisement {
     @PreUpdate
     public void setUpdatedAt() {
         updatedAt = LocalDateTime.now();
-    }
-
-    @PreRemove
-    public void setRemovedAt() {
-        removedAt = LocalDateTime.now();
     }
 }
