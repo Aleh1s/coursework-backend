@@ -49,6 +49,7 @@ public abstract class Advertisement {
     @Column
     private LocalDateTime updatedAt;
 
+    @JsonIgnore
     @ManyToOne(
             fetch = LAZY
     )
