@@ -12,6 +12,5 @@ import javax.persistence.Entity;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServicePostEntity extends Post{
-
+public class HousePostEntity extends Post{
 }
