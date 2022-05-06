@@ -9,24 +9,32 @@ import ua.palamar.courseworkbackend.dto.AdvertisementModel;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.ItemAdvertisementRepository;
+import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class SimpleAdvertisementService implements AdvertisementService {
 
     private final AdvertisementCreator advertisementCreator;
     private final ItemAdvertisementRepository itemAdvertisementRepository;
+    private final TokenProvider tokenProvider;
 
     @Autowired
     public SimpleAdvertisementService(AdvertisementCreator advertisementCreator,
-                                      ItemAdvertisementRepository itemAdvertisementRepository) {
+                                      ItemAdvertisementRepository itemAdvertisementRepository,
+                                      TokenProvider tokenProvider) {
         this.advertisementCreator = advertisementCreator;
         this.itemAdvertisementRepository = itemAdvertisementRepository;
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
-    public ResponseEntity<?> saveAdvertisement(AdvertisementModel advertisementModel) {
-        Advertisement advertisement = advertisementCreator.createAdvertisement(advertisementModel);
+    public ResponseEntity<?> saveAdvertisement(AdvertisementModel advertisementModel, HttpServletRequest request) {
+        String token = tokenProvider.resolveToken(request);
+        String email = tokenProvider.getEmailByToken(token);
+        Advertisement advertisement = advertisementCreator.createAdvertisement(advertisementModel, email);
         return new ResponseEntity<>(advertisement, HttpStatus.CREATED);
     }
 

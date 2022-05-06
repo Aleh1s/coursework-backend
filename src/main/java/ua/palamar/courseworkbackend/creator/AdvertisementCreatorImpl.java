@@ -25,13 +25,13 @@ public class AdvertisementCreatorImpl implements AdvertisementCreator {
     }
 
     @Override
-    public Advertisement createAdvertisement(AdvertisementModel advertisementModel) {
+    public Advertisement createAdvertisement(AdvertisementModel advertisementModel, String email) {
         String category = advertisementModel.category();
 
         return switch (category) {
             case "ITEM" -> {
                 ItemAdvertisementEntity advertisement
-                        = advertisementAdapter.getItemAdvertisement(advertisementModel);
+                        = advertisementAdapter.getItemAdvertisement(advertisementModel, email);
                 itemAdvertisementRepository.save(advertisement);
                 yield advertisement;
             }

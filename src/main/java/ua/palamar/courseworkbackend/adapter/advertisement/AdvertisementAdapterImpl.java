@@ -25,8 +25,8 @@ public class AdvertisementAdapterImpl implements AdvertisementAdapter {
     }
 
     @Override
-    public ItemAdvertisementEntity getItemAdvertisement(AdvertisementModel advertisementModel) {
-        UserEntity creator = userService.getUserEntityByEmail(advertisementModel.creatorEmail());
+    public ItemAdvertisementEntity getItemAdvertisement(AdvertisementModel advertisementModel, String email) {
+        UserEntity creator = userService.getUserEntityByEmail(email);
 
         int height = advertisementModel.height()
                 .orElseThrow(() -> new ApiRequestException("Invalid height"));

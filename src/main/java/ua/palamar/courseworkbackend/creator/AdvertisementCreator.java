@@ -5,6 +5,6 @@ import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 
 public interface AdvertisementCreator {
 
-    Advertisement createAdvertisement(AdvertisementModel advertisementModel);
+    Advertisement createAdvertisement(AdvertisementModel advertisementModel, String email);
 
 }

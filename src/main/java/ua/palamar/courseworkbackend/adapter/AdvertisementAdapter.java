@@ -8,7 +8,7 @@ import ua.palamar.courseworkbackend.entity.advertisement.ServiceAdvertisementEnt
 
 public interface AdvertisementAdapter {
 
-    ItemAdvertisementEntity getItemAdvertisement(AdvertisementModel advertisementModel);
+    ItemAdvertisementEntity getItemAdvertisement(AdvertisementModel advertisementModel, String email);
     ServiceAdvertisementEntity getServiceAdvertisement(AdvertisementModel advertisementModel);
     HouseAdvertisementEntity getHouseAdvertisement(AdvertisementModel advertisementModel);
 

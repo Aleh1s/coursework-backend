@@ -1,5 +1,6 @@
 package ua.palamar.courseworkbackend.controller;
 
+import com.sun.net.httpserver.HttpServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,8 @@ import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
 import ua.palamar.courseworkbackend.service.GeneralizedAdvertisementService;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/v1/advertisements")
@@ -25,8 +28,11 @@ public class AdvertisementController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAdvertisement(@RequestBody AdvertisementModel advertisementModel) {
-        return advertisementService.saveAdvertisement(advertisementModel);
+    public ResponseEntity<?> createAdvertisement(
+            @RequestBody AdvertisementModel advertisementModel,
+            HttpServletRequest request
+    ) {
+        return advertisementService.saveAdvertisement(advertisementModel, request);
     }
 
     @DeleteMapping("/{category}/{id}")
@@ -46,9 +52,9 @@ public class AdvertisementController {
 
     @GetMapping("/page/{category}")
     public ResponseEntity<?> getSortedPageByCreatedAtByCategory(
-            @RequestParam Integer limit,
-            @RequestParam Integer page,
-            @RequestParam AdvertisementStatus status,
+            @RequestParam("_limit") Integer limit,
+            @RequestParam("_page") Integer page,
+            @RequestParam("_status") AdvertisementStatus status,
             @PathVariable Category category
     ) {
         return generalizedAdvertisementService.getPageOfSortedAdvertisementsByCategoryAndStatus(category, status, limit, page);
