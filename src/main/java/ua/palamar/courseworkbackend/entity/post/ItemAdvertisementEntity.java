@@ -13,15 +13,15 @@ import javax.persistence.OneToOne;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class HousePostEntity extends Post{
+@NoArgsConstructor
+public class ItemAdvertisementEntity extends Advertisement {
 
     @OneToOne(
             fetch = FetchType.LAZY,
-            optional = false,
+            orphanRemoval = true,
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            optional = false
     )
     private Dimensions dimensions;
 

@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServicePostEntity extends Post{
+public class ServiceAdvertisementEntity extends Advertisement {
+
 
 }
