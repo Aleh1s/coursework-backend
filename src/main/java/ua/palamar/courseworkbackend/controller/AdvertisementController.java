@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.palamar.courseworkbackend.dto.AdvertisementModel;
+import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
 import ua.palamar.courseworkbackend.service.GeneralizedAdvertisementService;
 
 @RestController
 @RequestMapping("/api/v1/advertisements")
+@CrossOrigin("http://localhost:3000")
 public class AdvertisementController {
 
     private final AdvertisementService advertisementService;
@@ -40,5 +42,15 @@ public class AdvertisementController {
     @GetMapping("/category/{category}")
     public ResponseEntity<?> getAllByCategory(@PathVariable Category category) {
         return generalizedAdvertisementService.getAllAdvertisementsByCategory(category);
+    }
+
+    @GetMapping("/page/{category}")
+    public ResponseEntity<?> getSortedPageByCreatedAtByCategory(
+            @RequestParam Integer limit,
+            @RequestParam Integer page,
+            @RequestParam AdvertisementStatus status,
+            @PathVariable Category category
+    ) {
+        return generalizedAdvertisementService.getPageOfSortedAdvertisementsByCategoryAndStatus(category, status, limit, page);
     }
 }
