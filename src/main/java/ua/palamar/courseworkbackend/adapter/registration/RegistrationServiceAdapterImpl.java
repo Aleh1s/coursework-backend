@@ -5,10 +5,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.adapter.RegistrationServiceAdapter;
 import ua.palamar.courseworkbackend.dto.RegistrationModel;
-import ua.palamar.courseworkbackend.entity.DeliveryInfoEntity;
-import ua.palamar.courseworkbackend.entity.UserEntity;
-import ua.palamar.courseworkbackend.entity.permissions.UserRole;
-import ua.palamar.courseworkbackend.entity.permissions.UserStatus;
+import ua.palamar.courseworkbackend.entity.user.DeliveryInfoEntity;
+import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
+import ua.palamar.courseworkbackend.entity.user.permissions.UserStatus;
 
 @Component
 public class RegistrationServiceAdapterImpl implements RegistrationServiceAdapter {

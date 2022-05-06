@@ -1,4 +1,4 @@
-package ua.palamar.courseworkbackend.entity.permissions;
+package ua.palamar.courseworkbackend.entity.user.permissions;
 
 public enum UserPermission {
 

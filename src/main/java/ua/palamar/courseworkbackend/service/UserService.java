@@ -1,6 +1,6 @@
 package ua.palamar.courseworkbackend.service;
 
-import ua.palamar.courseworkbackend.entity.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserEntity;
 
 public interface UserService {
 

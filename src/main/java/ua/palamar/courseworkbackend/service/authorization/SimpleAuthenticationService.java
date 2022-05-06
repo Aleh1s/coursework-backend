@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.dto.AuthenticationModel;
 import ua.palamar.courseworkbackend.dto.AuthenticationResponseModel;
 import ua.palamar.courseworkbackend.dto.UserModel;
-import ua.palamar.courseworkbackend.entity.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
 import ua.palamar.courseworkbackend.service.AuthenticationService;
 import ua.palamar.courseworkbackend.service.UserService;

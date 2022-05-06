@@ -1,8 +1,8 @@
-package ua.palamar.courseworkbackend.entity;
+package ua.palamar.courseworkbackend.entity.user;
 
 import lombok.*;
-import ua.palamar.courseworkbackend.entity.permissions.UserRole;
-import ua.palamar.courseworkbackend.entity.permissions.UserStatus;
+import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
+import ua.palamar.courseworkbackend.entity.user.permissions.UserStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;

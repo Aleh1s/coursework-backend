@@ -1,7 +1,7 @@
 package ua.palamar.courseworkbackend.service.user;
 
 import org.springframework.stereotype.Service;
-import ua.palamar.courseworkbackend.entity.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.repository.UserRepository;
 import ua.palamar.courseworkbackend.service.UserService;
 import ua.palamar.courseworkbackend.service.UserServiceValidator;

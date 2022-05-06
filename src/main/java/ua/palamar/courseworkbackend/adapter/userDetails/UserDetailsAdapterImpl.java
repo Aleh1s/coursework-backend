@@ -3,8 +3,8 @@ package ua.palamar.courseworkbackend.adapter.userDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.adapter.UserDetailsAdapter;
-import ua.palamar.courseworkbackend.entity.UserDetails;
-import ua.palamar.courseworkbackend.entity.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserDetails;
+import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.service.user.SimpleUserService;
 
 @Component

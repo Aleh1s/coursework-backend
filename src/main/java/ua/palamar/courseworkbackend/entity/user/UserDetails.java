@@ -1,13 +1,13 @@
-package ua.palamar.courseworkbackend.entity;
+package ua.palamar.courseworkbackend.entity.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import ua.palamar.courseworkbackend.entity.permissions.UserRole;
-import ua.palamar.courseworkbackend.entity.permissions.UserStatus;
+import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
+import ua.palamar.courseworkbackend.entity.user.permissions.UserStatus;
 
 import java.util.Collection;
 
-import static ua.palamar.courseworkbackend.entity.permissions.UserStatus.*;
+import static ua.palamar.courseworkbackend.entity.user.permissions.UserStatus.*;
 @AllArgsConstructor
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
 

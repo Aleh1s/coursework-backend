@@ -1,4 +1,4 @@
-package ua.palamar.courseworkbackend.entity;
+package ua.palamar.courseworkbackend.entity.user;
 
 import lombok.*;
 
