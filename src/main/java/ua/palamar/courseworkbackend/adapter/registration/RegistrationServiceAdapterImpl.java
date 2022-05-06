@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.adapter.RegistrationServiceAdapter;
 import ua.palamar.courseworkbackend.dto.RegistrationModel;
-import ua.palamar.courseworkbackend.entity.user.DeliveryInfoEntity;
+import ua.palamar.courseworkbackend.entity.user.UserInfo;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserStatus;
@@ -21,30 +21,29 @@ public class RegistrationServiceAdapterImpl implements RegistrationServiceAdapte
     }
 
     @Override
-    public UserEntity getUserEntity(RegistrationModel registrationModel) {
+    public UserEntity getUserEntity(RegistrationModel registrationModel, UserInfo userInfo) {
         return new UserEntity(
                 null,
                 registrationModel.email(),
                 passwordEncoder.encode(registrationModel.password()),
-                registrationModel.firstName(),
-                registrationModel.lastName(),
                 registrationModel.dob(),
                 UserRole.USER,
                 UserStatus.ACTIVE,
-                null,
+                userInfo,
                 null
         );
     }
 
     @Override
-    public DeliveryInfoEntity getDeliveryInfoEntity(RegistrationModel registrationModel) {
-        return new DeliveryInfoEntity(
+    public UserInfo getUserInfo(RegistrationModel registrationModel) {
+        return new UserInfo(
                 null,
+                registrationModel.firstName(),
+                registrationModel.lastName(),
                 registrationModel.phoneNumber(),
                 registrationModel.city(),
                 registrationModel.address(),
-                registrationModel.postNumber(),
-                null
+                registrationModel.postNumber()
         );
     }
 }

@@ -1,12 +1,12 @@
 package ua.palamar.courseworkbackend.adapter;
 
 import ua.palamar.courseworkbackend.dto.RegistrationModel;
-import ua.palamar.courseworkbackend.entity.user.DeliveryInfoEntity;
+import ua.palamar.courseworkbackend.entity.user.UserInfo;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 
 public interface RegistrationServiceAdapter {
 
-    UserEntity getUserEntity(RegistrationModel registrationModel);
+    UserEntity getUserEntity(RegistrationModel registrationModel, UserInfo userInfo);
 
-    DeliveryInfoEntity getDeliveryInfoEntity(RegistrationModel registrationModel);
+    UserInfo getUserInfo(RegistrationModel registrationModel);
 }

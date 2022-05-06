@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.adapter.RegistrationServiceAdapter;
 import ua.palamar.courseworkbackend.dto.RegistrationModel;
-import ua.palamar.courseworkbackend.entity.user.DeliveryInfoEntity;
+import ua.palamar.courseworkbackend.entity.user.UserInfo;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
-import ua.palamar.courseworkbackend.repository.DeliveryInfoRepository;
+import ua.palamar.courseworkbackend.repository.UserInfoRepository;
 import ua.palamar.courseworkbackend.repository.UserRepository;
 import ua.palamar.courseworkbackend.service.RegistrationService;
 import ua.palamar.courseworkbackend.service.UserService;
@@ -24,7 +24,7 @@ public class SimpleRegistrationService implements RegistrationService {
     private final UserServiceValidator userServiceValidator;
     private final RegistrationValidator registrationValidator;
 
-    private final DeliveryInfoRepository deliveryInfoRepository;
+    private final UserInfoRepository userInfoRepository;
     private final RegistrationServiceAdapter registrationServiceAdapter;
 
     @Autowired
@@ -32,13 +32,13 @@ public class SimpleRegistrationService implements RegistrationService {
                                      UserRepository userRepository,
                                      UserServiceValidator userServiceValidator,
                                      RegistrationValidator registrationValidator,
-                                     DeliveryInfoRepository deliveryInfoRepository,
+                                     UserInfoRepository userInfoRepository,
                                      RegistrationServiceAdapter registrationServiceAdapter) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.userServiceValidator = userServiceValidator;
         this.registrationValidator = registrationValidator;
-        this.deliveryInfoRepository = deliveryInfoRepository;
+        this.userInfoRepository = userInfoRepository;
         this.registrationServiceAdapter = registrationServiceAdapter;
     }
 
@@ -79,13 +79,11 @@ public class SimpleRegistrationService implements RegistrationService {
         if (!registrationValidator.isPhoneNumberValid(registrationModel.phoneNumber()))
             throw new IllegalStateException("Invalid phone number");
 
-        UserEntity newUser = registrationServiceAdapter.getUserEntity(registrationModel);
-        DeliveryInfoEntity newDeliveryInfo = registrationServiceAdapter.getDeliveryInfoEntity(registrationModel);
+        UserInfo newUserInfo = registrationServiceAdapter.getUserInfo(registrationModel);
+        UserEntity newUser = registrationServiceAdapter.getUserEntity(registrationModel, newUserInfo);
 
-        newUser.addDeliveryInfo(newDeliveryInfo);
-
+        userInfoRepository.save(newUserInfo);
         userRepository.save(newUser);
-        deliveryInfoRepository.save(newDeliveryInfo);
 
         return new ResponseEntity<>("Successful registration", HttpStatus.CREATED);
     }

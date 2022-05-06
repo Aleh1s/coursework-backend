@@ -43,10 +43,10 @@ public class SimpleAuthenticationService implements AuthenticationService {
 
         UserModel userModel = new UserModel(
                 currentUser.getEmail(),
-                currentUser.getFirstName(),
-                currentUser.getLastName(),
-                currentUser.getDeliveryInfo().getCity(),
-                currentUser.getDeliveryInfo().getPhoneNumber(),
+                currentUser.getUserInfo().getFirstName(),
+                currentUser.getUserInfo().getLastName(),
+                currentUser.getUserInfo().getCity(),
+                currentUser.getUserInfo().getPhoneNumber(),
                 currentUser.getAge()
         );
 

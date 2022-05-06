@@ -14,6 +14,8 @@ import java.util.UUID;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PRIVATE;
 
 @Entity
 @Getter
@@ -33,12 +35,6 @@ public class UserEntity {
     private String password;
 
     @Column(nullable = false)
-    private String firstName;
-
-    @Column(nullable = false)
-    private String lastName;
-
-    @Column(nullable = false)
     private LocalDate dob;
 
     @Enumerated(STRING)
@@ -49,16 +45,22 @@ public class UserEntity {
     @Column(nullable = false)
     private UserStatus status;
 
+    @OneToOne(
+            fetch = LAZY,
+            optional = false,
+            orphanRemoval = true,
+            cascade = ALL
+    )
+    private UserInfo userInfo;
+
+    @Setter(PRIVATE)
     @OneToMany(
-            fetch = FetchType.LAZY,
+            fetch = LAZY,
             orphanRemoval = true,
             cascade = ALL,
             mappedBy = "createdBy"
     )
     private Set<Advertisement> advertisements = new HashSet<>();
-
-    @OneToOne(mappedBy = "user", cascade = ALL)
-    private DeliveryInfoEntity deliveryInfo;
 
     @PrePersist
     public void setId() {
@@ -69,16 +71,6 @@ public class UserEntity {
 
     public int getAge() {
         return Period.between(dob, LocalDate.now()).getYears();
-    }
-
-    public void addDeliveryInfo(DeliveryInfoEntity deliveryInfo) {
-        this.deliveryInfo = deliveryInfo;
-        deliveryInfo.setUser(this);
-    }
-
-    public void removeDeliveryInfo(DeliveryInfoEntity deliveryInfo) {
-        this.deliveryInfo = null;
-        deliveryInfo.setUser(null);
     }
 
 }

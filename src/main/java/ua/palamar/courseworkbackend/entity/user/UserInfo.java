@@ -1,23 +1,31 @@
 package ua.palamar.courseworkbackend.entity.user;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import java.util.UUID;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
-public class DeliveryInfoEntity {
+public class UserInfo {
 
     @Id
     private String id;
+
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
 
     @Column(nullable = false, unique = true)
     private String phoneNumber;
@@ -31,11 +39,8 @@ public class DeliveryInfoEntity {
     @Column(nullable = false)
     private String postNumber;
 
-    @OneToOne(fetch = LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    private UserEntity user;
-
     @PrePersist
-    public void setId() {
+    public void setUp() {
         if (id == null) {
             id = UUID.randomUUID().toString();
         }

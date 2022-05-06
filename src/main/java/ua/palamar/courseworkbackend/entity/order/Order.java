@@ -5,9 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.palamar.courseworkbackend.entity.post.Advertisement;
-import ua.palamar.courseworkbackend.entity.user.DeliveryInfoEntity;
 
 import javax.persistence.*;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
@@ -23,13 +25,20 @@ public abstract class Order {
     private String id;
 
     @Column(nullable = false)
-    private String createdAt;
+    private LocalDateTime createdAt;
 
-    @OneToOne(
+    @ManyToOne(
             fetch = FetchType.LAZY,
-            orphanRemoval = true,
             optional = false
     )
     private Advertisement advertisement;
+
+    @PrePersist
+    public void setUp() {
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
+        createdAt = LocalDateTime.now();
+    }
 
 }
