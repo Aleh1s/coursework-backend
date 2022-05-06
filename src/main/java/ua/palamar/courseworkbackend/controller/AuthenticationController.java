@@ -22,4 +22,9 @@ public class AuthenticationController {
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationModel authenticationModel) {
         return authenticationService.authenticate(authenticationModel);
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestParam String refreshToken) {
+        return authenticationService.refresh(refreshToken);
+    }
 }

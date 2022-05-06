@@ -9,6 +9,7 @@ import ua.palamar.courseworkbackend.dto.AuthenticationModel;
 import ua.palamar.courseworkbackend.dto.AuthenticationResponseModel;
 import ua.palamar.courseworkbackend.dto.UserModel;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
 import ua.palamar.courseworkbackend.service.AuthenticationService;
 import ua.palamar.courseworkbackend.service.UserService;
@@ -55,5 +56,37 @@ public class SimpleAuthenticationService implements AuthenticationService {
                 refreshToken,
                 userModel
         ), HttpStatus.ACCEPTED);
+    }
+
+    @Override
+    public ResponseEntity<?> refresh(String token) {
+        String refreshToken = tokenProvider.resolveToken(token);
+
+        if (refreshToken != null && tokenProvider.validateToken(refreshToken)) {
+            UserEntity currentUser = userService.getUserEntityByEmail(
+                    tokenProvider.getEmailByToken(refreshToken)
+            );
+
+            String newAccessToken = tokenProvider.generateToken(currentUser);
+
+            UserModel userModel = new UserModel(
+                    currentUser.getEmail(),
+                    currentUser.getUserInfo().getFirstName(),
+                    currentUser.getUserInfo().getLastName(),
+                    currentUser.getUserInfo().getCity(),
+                    currentUser.getUserInfo().getPhoneNumber(),
+                    currentUser.getAge()
+            );
+
+            AuthenticationResponseModel authenticationResponseModel = new AuthenticationResponseModel(
+                    newAccessToken,
+                    refreshToken,
+                    userModel
+            );
+
+            return new ResponseEntity<>(authenticationResponseModel, HttpStatus.ACCEPTED);
+        } else {
+            throw new ApiRequestException("Token isn't valid");
+        }
     }
 }

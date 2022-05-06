@@ -2,6 +2,7 @@ package ua.palamar.courseworkbackend.service.user;
 
 import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.UserRepository;
 import ua.palamar.courseworkbackend.service.UserService;
 import ua.palamar.courseworkbackend.service.UserServiceValidator;
@@ -23,7 +24,7 @@ public class SimpleUserService implements UserService, UserServiceValidator {
     @Override
     public UserEntity getUserEntityByEmail(String email) {
         return userRepository.getUserEntityByEmail(email)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new ApiRequestException(
                         String.format("User with email: %s does not exist", email))
                 );
     }

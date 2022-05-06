@@ -72,6 +72,15 @@ public class TokenProvider {
         return null;
     }
 
+    public String resolveToken (String token) {
+
+        if (token != null && token.startsWith("Bearer_")) {
+            return token.substring("Bearer_".length());
+        }
+
+        return null;
+    }
+
     public Authentication authentication (String token) {
         String email = Jwts.parser()
                 .setSigningKey(secretKey)
