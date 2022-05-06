@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ua.palamar.courseworkbackend.dto.AdvertisementPageResponseModel;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
@@ -36,9 +37,14 @@ public class SimpleGeneralizedAdvertisementService implements ua.palamar.coursew
             Integer numberOfPages,
             Integer pageNumber
     ) {
-        Pageable dynamicPage = PageRequest.of(pageNumber, numberOfPages, Sort.by("createdAt"));
+        Pageable dynamicPage = PageRequest.of(pageNumber, numberOfPages, Sort.by("createdAt").descending());
         List<Advertisement> advertisementsPage = advertisementsRepository.findAllByCategoryAndStatus(category, status, dynamicPage);
-        return new ResponseEntity<>(advertisementsPage, HttpStatus.ACCEPTED);
+        Long totalCount = advertisementsRepository.count();
+        AdvertisementPageResponseModel advertisementPageResponseModel = new AdvertisementPageResponseModel(
+                advertisementsPage,
+                totalCount
+        );
+        return new ResponseEntity<>(advertisementPageResponseModel, HttpStatus.ACCEPTED);
     }
 
     @Override
