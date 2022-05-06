@@ -23,6 +23,6 @@ public class ItemAdvertisementEntity extends Advertisement {
             cascade = CascadeType.ALL,
             optional = false
     )
-    private Dimensions dimensions;
+    private DimensionsEntity dimensions;
 
 }

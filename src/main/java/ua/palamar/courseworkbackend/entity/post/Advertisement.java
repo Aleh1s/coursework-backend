@@ -8,15 +8,18 @@ import ua.palamar.courseworkbackend.entity.user.UserEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
+@Entity
 @Getter
 @Setter
-@MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = TABLE_PER_CLASS)
 public abstract class Advertisement {
 
     @Id
@@ -53,6 +56,9 @@ public abstract class Advertisement {
 
     @PrePersist
     public void setCreatedAt() {
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
         createdAt = LocalDateTime.now();
     }
 

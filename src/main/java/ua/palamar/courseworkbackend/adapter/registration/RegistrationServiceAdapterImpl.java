@@ -31,6 +31,7 @@ public class RegistrationServiceAdapterImpl implements RegistrationServiceAdapte
                 registrationModel.dob(),
                 UserRole.USER,
                 UserStatus.ACTIVE,
+                null,
                 null
         );
     }

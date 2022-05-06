@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dimensions {
+public class DimensionsEntity {
 
     @Id
     private String id;

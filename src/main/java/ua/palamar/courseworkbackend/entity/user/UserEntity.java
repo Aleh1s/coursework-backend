@@ -1,12 +1,15 @@
 package ua.palamar.courseworkbackend.entity.user;
 
 import lombok.*;
+import ua.palamar.courseworkbackend.entity.post.Advertisement;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import static javax.persistence.CascadeType.ALL;
@@ -45,6 +48,14 @@ public class UserEntity {
     @Enumerated(STRING)
     @Column(nullable = false)
     private UserStatus status;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
+            cascade = ALL,
+            mappedBy = "createdBy"
+    )
+    private Set<Advertisement> advertisements = new HashSet<>();
 
     @OneToOne(mappedBy = "user", cascade = ALL)
     private DeliveryInfoEntity deliveryInfo;

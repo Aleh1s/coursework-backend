@@ -23,6 +23,6 @@ public class HouseAdvertisementEntity extends Advertisement {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Dimensions dimensions;
+    private DimensionsEntity dimensions;
 
 }
