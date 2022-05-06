@@ -10,10 +10,8 @@ import javax.persistence.Entity;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class ItemPostEntity extends Post{
-
-
-
+@AllArgsConstructor
+public class ServicePostEntity extends Post{
+    
 }
