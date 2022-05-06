@@ -1,4 +1,4 @@
-package ua.palamar.courseworkbackend.entity.post;
+package ua.palamar.courseworkbackend.entity.advertisement;
 
 public enum Category {
 

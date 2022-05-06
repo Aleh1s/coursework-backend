@@ -1,7 +1,8 @@
 package ua.palamar.courseworkbackend.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import ua.palamar.courseworkbackend.entity.post.Advertisement;
+import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserStatus;
 
@@ -45,6 +46,7 @@ public class UserEntity {
     @Column(nullable = false)
     private UserStatus status;
 
+    @JsonIgnore
     @OneToOne(
             fetch = LAZY,
             optional = false,
@@ -53,6 +55,7 @@ public class UserEntity {
     )
     private UserInfo userInfo;
 
+    @JsonIgnore
     @Setter(PRIVATE)
     @OneToMany(
             fetch = LAZY,

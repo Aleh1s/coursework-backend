@@ -1,5 +1,6 @@
-package ua.palamar.courseworkbackend.entity.post;
+package ua.palamar.courseworkbackend.entity.advertisement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
-import static ua.palamar.courseworkbackend.entity.post.AdvertisementStatus.UNCONFIRMED;
+import static ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus.UNCONFIRMED;
 
 @Entity
 @Getter
@@ -29,6 +30,12 @@ public abstract class Advertisement {
     @Id
     private String id;
 
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String description;
+
     @Enumerated(STRING)
     @Column(nullable = false)
     private Category category;
@@ -36,12 +43,6 @@ public abstract class Advertisement {
     @Enumerated(STRING)
     @Column(nullable = false)
     private AdvertisementStatus status;
-
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String description;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -57,6 +58,7 @@ public abstract class Advertisement {
     )
     private UserEntity createdBy;
 
+    @JsonIgnore
     @OneToMany(
             fetch = LAZY,
             orphanRemoval = true,
@@ -66,12 +68,10 @@ public abstract class Advertisement {
     private Set<Order> orders;
 
     @PrePersist
-    public void setCreatedAt() {
+    public void setId() {
         if (id == null) {
             id = UUID.randomUUID().toString();
         }
-        createdAt = LocalDateTime.now();
-        status = UNCONFIRMED;
     }
 
     @PreUpdate

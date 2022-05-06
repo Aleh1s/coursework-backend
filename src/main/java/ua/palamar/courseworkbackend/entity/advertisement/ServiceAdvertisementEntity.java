@@ -1,6 +1,5 @@
-package ua.palamar.courseworkbackend.entity.post;
+package ua.palamar.courseworkbackend.entity.advertisement;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

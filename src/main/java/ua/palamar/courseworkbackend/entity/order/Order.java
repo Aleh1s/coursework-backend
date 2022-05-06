@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.palamar.courseworkbackend.entity.post.Advertisement;
+import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 
 import javax.persistence.*;
 
