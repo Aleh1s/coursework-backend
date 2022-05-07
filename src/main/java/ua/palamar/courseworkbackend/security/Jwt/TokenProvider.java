@@ -42,7 +42,7 @@ public class TokenProvider {
 
     public String generateToken (UserEntity userEntity) {
         Date now = new Date();
-        Date expired = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(15));
+        Date expired = new Date(now.getTime() + TimeUnit.SECONDS.toMillis(15));
 
         return Jwts.builder()
                 .setSubject(userEntity.getEmail())

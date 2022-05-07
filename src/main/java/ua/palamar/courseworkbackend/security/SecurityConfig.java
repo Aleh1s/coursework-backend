@@ -10,6 +10,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ua.palamar.courseworkbackend.entity.user.permissions.UserPermission;
+import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
 import ua.palamar.courseworkbackend.security.Jwt.TokenFilter;
 
 @Configuration
@@ -31,7 +33,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/api/**").permitAll()
+                .antMatchers(
+                        "/api/v1/authentication/**",
+                        "/api/v1/registration/**",
+                        "/api/v1/advertisements/**"
+                ).permitAll()
+                .antMatchers(
+                        "/api/v1/advertisements/page/**"
+                ).hasRole(UserRole.USER.name())
                 .anyRequest()
                 .authenticated().and()
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
