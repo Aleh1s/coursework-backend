@@ -5,14 +5,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.palamar.courseworkbackend.dto.AuthenticationModel;
-import ua.palamar.courseworkbackend.dto.AuthenticationResponseModel;
-import ua.palamar.courseworkbackend.dto.UserModel;
+import ua.palamar.courseworkbackend.adapter.AuthenticationServiceAdapter;
+import ua.palamar.courseworkbackend.dto.request.AuthenticationRequestModel;
+import ua.palamar.courseworkbackend.dto.response.AuthenticationResponseModel;
+import ua.palamar.courseworkbackend.dto.response.UserResponseModel;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
 import ua.palamar.courseworkbackend.service.AuthenticationService;
 import ua.palamar.courseworkbackend.service.UserService;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class SimpleAuthenticationService implements AuthenticationService {
@@ -20,21 +23,24 @@ public class SimpleAuthenticationService implements AuthenticationService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final AuthenticationServiceAdapter authenticationServiceAdapter;
 
     @Autowired
     public SimpleAuthenticationService(UserService userService,
                                        PasswordEncoder passwordEncoder,
-                                       TokenProvider tokenProvider) {
+                                       TokenProvider tokenProvider,
+                                       AuthenticationServiceAdapter authenticationServiceAdapter) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
+        this.authenticationServiceAdapter = authenticationServiceAdapter;
     }
 
     @Override
-    public ResponseEntity<?> authenticate(AuthenticationModel authenticationModel) {
-        UserEntity currentUser = userService.getUserEntityByEmail(authenticationModel.email());
+    public ResponseEntity<?> authenticate(AuthenticationRequestModel authenticationRequestModel) {
+        UserEntity currentUser = userService.getUserEntityByEmail(authenticationRequestModel.email());
 
-        if (!passwordEncoder.matches(authenticationModel.password(), currentUser.getPassword())) {
+        if (!passwordEncoder.matches(authenticationRequestModel.password(), currentUser.getPassword())) {
             throw new IllegalStateException("Wrong password");
         }
 
@@ -42,25 +48,19 @@ public class SimpleAuthenticationService implements AuthenticationService {
         String refreshToken = tokenProvider.generateRefreshToken(currentUser);
 
 
-        UserModel userModel = new UserModel(
-                currentUser.getEmail(),
-                currentUser.getUserInfo().getFirstName(),
-                currentUser.getUserInfo().getLastName(),
-                currentUser.getUserInfo().getCity(),
-                currentUser.getUserInfo().getPhoneNumber(),
-                currentUser.getAge()
-        );
+        UserResponseModel userResponseModel
+                = authenticationServiceAdapter.getUserModel(currentUser);
 
         return new ResponseEntity<>(new AuthenticationResponseModel(
                 accessToken,
                 refreshToken,
-                userModel
+                userResponseModel
         ), HttpStatus.ACCEPTED);
     }
 
     @Override
-    public ResponseEntity<?> refresh(String token) {
-        String refreshToken = tokenProvider.resolveToken(token);
+    public ResponseEntity<?> refresh(HttpServletRequest request) {
+        String refreshToken = tokenProvider.resolveToken(request);
 
         if (refreshToken != null && tokenProvider.validateToken(refreshToken)) {
             UserEntity currentUser = userService.getUserEntityByEmail(
@@ -69,23 +69,18 @@ public class SimpleAuthenticationService implements AuthenticationService {
 
             String newAccessToken = tokenProvider.generateToken(currentUser);
 
-            UserModel userModel = new UserModel(
-                    currentUser.getEmail(),
-                    currentUser.getUserInfo().getFirstName(),
-                    currentUser.getUserInfo().getLastName(),
-                    currentUser.getUserInfo().getCity(),
-                    currentUser.getUserInfo().getPhoneNumber(),
-                    currentUser.getAge()
-            );
+            UserResponseModel userResponseModel
+                    = authenticationServiceAdapter.getUserModel(currentUser);
 
             AuthenticationResponseModel authenticationResponseModel = new AuthenticationResponseModel(
                     newAccessToken,
                     refreshToken,
-                    userModel
+                    userResponseModel
             );
 
             return new ResponseEntity<>(authenticationResponseModel, HttpStatus.ACCEPTED);
         } else {
+
             throw new ApiRequestException("Token isn't valid");
         }
     }

@@ -1,10 +1,9 @@
 package ua.palamar.courseworkbackend.controller;
 
-import com.sun.net.httpserver.HttpServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.palamar.courseworkbackend.dto.AdvertisementModel;
+import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
@@ -29,33 +28,33 @@ public class AdvertisementController {
 
     @PostMapping
     public ResponseEntity<?> createAdvertisement(
-            @RequestBody AdvertisementModel advertisementModel,
+            @RequestBody AdvertisementRequestModel advertisementRequestModel,
             HttpServletRequest request
     ) {
-        return advertisementService.saveAdvertisement(advertisementModel, request);
+        return advertisementService.saveAdvertisement(advertisementRequestModel, request);
     }
 
-    @DeleteMapping("/{category}/{id}")
-    public ResponseEntity<?> removeAdvertisement(@PathVariable String category, @PathVariable String id) {
-        return advertisementService.removeAdvertisement(category, id);
+    @DeleteMapping
+    public ResponseEntity<?> removeAdvertisement(
+            @RequestParam("_id") String id,
+            HttpServletRequest request
+    ) {
+        return advertisementService.removeAdvertisement(id, request);
+    }
+    @GetMapping
+    public ResponseEntity<?> getAdvertisementById(
+            @RequestParam("_category") String category,
+            @RequestParam("_id") String id
+    ) {
+        return generalizedAdvertisementService.getAdvertisementById(category, id);
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<?> getAllByEmail(@PathVariable String email) {
-        return generalizedAdvertisementService.getAllAdvertisementsByEmail(email);
-    }
-
-    @GetMapping("/category/{category}")
-    public ResponseEntity<?> getAllByCategory(@PathVariable Category category) {
-        return generalizedAdvertisementService.getAllAdvertisementsByCategory(category);
-    }
-
-    @GetMapping("/page/{category}")
+    @GetMapping("/page")
     public ResponseEntity<?> getSortedPageByCreatedAtByCategory(
             @RequestParam("_limit") Integer limit,
             @RequestParam("_page") Integer page,
             @RequestParam("_status") AdvertisementStatus status,
-            @PathVariable Category category
+            @RequestParam("_category") Category category
     ) {
         return generalizedAdvertisementService.getPageOfSortedAdvertisementsByCategoryAndStatus(category, status, limit, page);
     }

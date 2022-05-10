@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.adapter.RegistrationServiceAdapter;
-import ua.palamar.courseworkbackend.dto.RegistrationModel;
+import ua.palamar.courseworkbackend.dto.request.RegistrationRequestModel;
 import ua.palamar.courseworkbackend.entity.user.UserInfo;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
@@ -43,44 +43,44 @@ public class SimpleRegistrationService implements RegistrationService {
     }
 
     @Override
-    public ResponseEntity<?> register(RegistrationModel registrationModel) {
+    public ResponseEntity<?> register(RegistrationRequestModel registrationRequestModel) {
 
-        if (userServiceValidator.userWithEmailExists(registrationModel.email()))
+        if (userServiceValidator.userWithEmailExists(registrationRequestModel.email()))
             throw new ApiRequestException(
-                    String.format("User with email: %s already exists", registrationModel.email())
+                    String.format("User with email: %s already exists", registrationRequestModel.email())
             );
 
-        if (userServiceValidator.userWithPhoneNumberExists(registrationModel.phoneNumber()))
+        if (userServiceValidator.userWithPhoneNumberExists(registrationRequestModel.phoneNumber()))
             throw new ApiRequestException(
-                    String.format("User with phone number: %s already exists", registrationModel.phoneNumber())
+                    String.format("User with phone number: %s already exists", registrationRequestModel.phoneNumber())
             );
 
-        if (!registrationValidator.isEmailValid(registrationModel.email()))
+        if (!registrationValidator.isEmailValid(registrationRequestModel.email()))
             throw new IllegalStateException("Invalid email");
 
-        if (!registrationValidator.isPasswordValid(registrationModel.password()))
+        if (!registrationValidator.isPasswordValid(registrationRequestModel.password()))
             throw new IllegalStateException("Invalid password");
 
-        if (!registrationValidator.isFirstNameValid(registrationModel.firstName()))
+        if (!registrationValidator.isFirstNameValid(registrationRequestModel.firstName()))
             throw new IllegalStateException("Invalid first name");
 
-        if (!registrationValidator.isLastNameValid(registrationModel.lastName()))
+        if (!registrationValidator.isLastNameValid(registrationRequestModel.lastName()))
             throw new IllegalStateException("Invalid last name");
 
-        if (!registrationValidator.isCityValid(registrationModel.city()))
+        if (!registrationValidator.isCityValid(registrationRequestModel.city()))
             throw new IllegalStateException("Invalid city");
 
-        if (!registrationValidator.isPostNumberValid(registrationModel.postNumber()))
+        if (!registrationValidator.isPostNumberValid(registrationRequestModel.postNumber()))
             throw new IllegalStateException("Invalid post number");
 
-        if (!registrationValidator.isAddressValid(registrationModel.address()))
+        if (!registrationValidator.isAddressValid(registrationRequestModel.address()))
             throw new IllegalStateException("Invalid address");
 
-        if (!registrationValidator.isPhoneNumberValid(registrationModel.phoneNumber()))
+        if (!registrationValidator.isPhoneNumberValid(registrationRequestModel.phoneNumber()))
             throw new IllegalStateException("Invalid phone number");
 
-        UserInfo newUserInfo = registrationServiceAdapter.getUserInfo(registrationModel);
-        UserEntity newUser = registrationServiceAdapter.getUserEntity(registrationModel, newUserInfo);
+        UserInfo newUserInfo = registrationServiceAdapter.getUserInfo(registrationRequestModel);
+        UserEntity newUser = registrationServiceAdapter.getUserEntity(registrationRequestModel, newUserInfo);
 
         userInfoRepository.save(newUserInfo);
         userRepository.save(newUser);

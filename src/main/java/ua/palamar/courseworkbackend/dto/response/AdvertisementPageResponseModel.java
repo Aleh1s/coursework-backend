@@ -1,4 +1,4 @@
-package ua.palamar.courseworkbackend.dto;
+package ua.palamar.courseworkbackend.dto.response;
 
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 

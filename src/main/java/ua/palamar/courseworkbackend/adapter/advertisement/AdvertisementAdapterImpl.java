@@ -3,7 +3,7 @@ package ua.palamar.courseworkbackend.adapter.advertisement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.adapter.AdvertisementAdapter;
-import ua.palamar.courseworkbackend.dto.AdvertisementModel;
+import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
 import ua.palamar.courseworkbackend.entity.advertisement.*;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
@@ -25,14 +25,14 @@ public class AdvertisementAdapterImpl implements AdvertisementAdapter {
     }
 
     @Override
-    public ItemAdvertisementEntity getItemAdvertisement(AdvertisementModel advertisementModel, String email) {
+    public ItemAdvertisementEntity getItemAdvertisement(AdvertisementRequestModel advertisementRequestModel, String email) {
         UserEntity creator = userService.getUserEntityByEmail(email);
 
-        int height = advertisementModel.height()
+        int height = advertisementRequestModel.height()
                 .orElseThrow(() -> new ApiRequestException("Invalid height"));
-        int width = advertisementModel.width()
+        int width = advertisementRequestModel.width()
                 .orElseThrow(() -> new ApiRequestException("Invalid width"));
-        int length = advertisementModel.length()
+        int length = advertisementRequestModel.length()
                 .orElseThrow(() -> new ApiRequestException("Invalid length"));
 
         DimensionsEntity dimensions = new DimensionsEntity(
@@ -44,8 +44,8 @@ public class AdvertisementAdapterImpl implements AdvertisementAdapter {
 
         return new ItemAdvertisementEntity(
                 null,
-                advertisementModel.title(),
-                advertisementModel.description(),
+                advertisementRequestModel.title(),
+                advertisementRequestModel.description(),
                 ITEM,
                 UNCONFIRMED,
                 LocalDateTime.now(),
@@ -57,12 +57,12 @@ public class AdvertisementAdapterImpl implements AdvertisementAdapter {
     }
 
     @Override
-    public ServiceAdvertisementEntity getServiceAdvertisement(AdvertisementModel advertisementModel) {
+    public ServiceAdvertisementEntity getServiceAdvertisement(AdvertisementRequestModel advertisementRequestModel) {
         return null;
     }
 
     @Override
-    public HouseAdvertisementEntity getHouseAdvertisement(AdvertisementModel advertisementModel) {
+    public HouseAdvertisementEntity getHouseAdvertisement(AdvertisementRequestModel advertisementRequestModel) {
         return null;
     }
 }

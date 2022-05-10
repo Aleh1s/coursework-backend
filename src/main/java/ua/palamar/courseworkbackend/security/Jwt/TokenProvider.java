@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.service.userDetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +43,7 @@ public class TokenProvider {
 
     public String generateToken (UserEntity userEntity) {
         Date now = new Date();
-        Date expired = new Date(now.getTime() + TimeUnit.SECONDS.toMillis(15));
+        Date expired = new Date(now.getTime() + TimeUnit.DAYS.toMillis(15));
 
         return Jwts.builder()
                 .setSubject(userEntity.getEmail())
@@ -72,15 +73,6 @@ public class TokenProvider {
         return null;
     }
 
-    public String resolveToken (String token) {
-
-        if (token != null && token.startsWith("Bearer_")) {
-            return token.substring("Bearer_".length());
-        }
-
-        return null;
-    }
-
     public Authentication authentication (String token) {
         String email = Jwts.parser()
                 .setSigningKey(secretKey)
@@ -92,10 +84,14 @@ public class TokenProvider {
     }
 
     public String getEmailByToken (String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        if (token != null && !token.equals("")) {
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        }
+
+        throw new ApiRequestException("Token can not be empty or null");
     }
 }

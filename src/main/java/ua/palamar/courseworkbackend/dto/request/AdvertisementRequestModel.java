@@ -1,8 +1,8 @@
-package ua.palamar.courseworkbackend.dto;
+package ua.palamar.courseworkbackend.dto.request;
 
 import java.util.Optional;
 
-public record AdvertisementModel(
+public record AdvertisementRequestModel(
         String title,
         String description,
         String category,

@@ -1,9 +1,9 @@
-package ua.palamar.courseworkbackend.creator;
+package ua.palamar.courseworkbackend.factory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.adapter.AdvertisementAdapter;
-import ua.palamar.courseworkbackend.dto.AdvertisementModel;
+import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.advertisement.HouseAdvertisementEntity;
 import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementEntity;
@@ -12,39 +12,39 @@ import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.ItemAdvertisementRepository;
 
 @Component
-public class AdvertisementCreatorImpl implements AdvertisementCreator {
+public class AdvertisementFactoryImpl implements AdvertisementFactory {
 
     private final AdvertisementAdapter advertisementAdapter;
     private final ItemAdvertisementRepository itemAdvertisementRepository;
 
     @Autowired
-    public AdvertisementCreatorImpl(AdvertisementAdapter advertisementAdapter,
+    public AdvertisementFactoryImpl(AdvertisementAdapter advertisementAdapter,
                                     ItemAdvertisementRepository itemAdvertisementRepository) {
         this.advertisementAdapter = advertisementAdapter;
         this.itemAdvertisementRepository = itemAdvertisementRepository;
     }
 
     @Override
-    public Advertisement createAdvertisement(AdvertisementModel advertisementModel, String email) {
-        String category = advertisementModel.category();
+    public Advertisement createAdvertisement(AdvertisementRequestModel advertisementRequestModel, String email) {
+        String category = advertisementRequestModel.category();
 
         return switch (category) {
             case "ITEM" -> {
                 ItemAdvertisementEntity advertisement
-                        = advertisementAdapter.getItemAdvertisement(advertisementModel, email);
+                        = advertisementAdapter.getItemAdvertisement(advertisementRequestModel, email);
                 itemAdvertisementRepository.save(advertisement);
                 yield advertisement;
             }
             case "SERVICE" -> {
                 ServiceAdvertisementEntity advertisement
-                        = advertisementAdapter.getServiceAdvertisement(advertisementModel);
+                        = advertisementAdapter.getServiceAdvertisement(advertisementRequestModel);
                 // todo: save advertisement
                 yield advertisement;
             }
             case "HOUSE" -> {
-                advertisementAdapter.getHouseAdvertisement(advertisementModel);
+                advertisementAdapter.getHouseAdvertisement(advertisementRequestModel);
                 HouseAdvertisementEntity advertisement
-                        = advertisementAdapter.getHouseAdvertisement(advertisementModel);
+                        = advertisementAdapter.getHouseAdvertisement(advertisementRequestModel);
                 // todo: save advertisement
                 yield advertisement;
             }

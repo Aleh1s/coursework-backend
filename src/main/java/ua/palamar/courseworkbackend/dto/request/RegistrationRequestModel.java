@@ -1,8 +1,8 @@
-package ua.palamar.courseworkbackend.dto;
+package ua.palamar.courseworkbackend.dto.request;
 
 import java.time.LocalDate;
 
-public record RegistrationModel(
+public record RegistrationRequestModel(
         String email,
         String password,
         String firstName,

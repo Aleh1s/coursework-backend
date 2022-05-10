@@ -14,4 +14,5 @@ public interface GeneralizedAdvertisementService {
             Integer numberOfPages,
             Integer pageNumber
     );
+    ResponseEntity<?> getAdvertisementById(String category, String id);
 }

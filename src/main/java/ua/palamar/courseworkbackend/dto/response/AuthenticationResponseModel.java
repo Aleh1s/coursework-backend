@@ -1,9 +1,9 @@
-package ua.palamar.courseworkbackend.dto;
+package ua.palamar.courseworkbackend.dto.response;
 
 public record AuthenticationResponseModel(
         String accessToken,
         String refreshToken,
-        UserModel userModel
+        UserResponseModel userResponseModel
 ) {
 
 }
