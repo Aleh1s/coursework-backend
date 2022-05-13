@@ -22,5 +22,7 @@ public interface OrderService {
 
     ResponseEntity<?> getOrdersByAdvertisementId(String id);
 
+    ResponseEntity<?> getOrderDetailsModelById(String id);
+
     ResponseEntity<?> deleteOrder(String id, HttpServletRequest request);
 }

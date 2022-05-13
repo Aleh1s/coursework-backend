@@ -54,6 +54,7 @@ public abstract class Order {
     @Column(nullable = false)
     private OrderStatus orderStatus;
 
+    @JsonIgnore
     @ManyToOne(
             fetch = LAZY,
             optional = false

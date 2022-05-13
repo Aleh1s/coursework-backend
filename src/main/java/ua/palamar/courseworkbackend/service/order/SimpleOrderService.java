@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.palamar.courseworkbackend.dto.request.OrderRequestModel;
+import ua.palamar.courseworkbackend.dto.response.OrderDetailsModelResponse;
+import ua.palamar.courseworkbackend.dto.response.OrderModelResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.advertisement.Category;
-import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementEntity;
 import ua.palamar.courseworkbackend.entity.order.Order;
 import ua.palamar.courseworkbackend.entity.order.OrderStatus;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
@@ -22,8 +22,8 @@ import ua.palamar.courseworkbackend.service.OrderService;
 import ua.palamar.courseworkbackend.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static ua.palamar.courseworkbackend.entity.order.DeliveryStatus.*;
 import static ua.palamar.courseworkbackend.entity.order.OrderStatus.CANCELED;
@@ -38,6 +38,7 @@ public class SimpleOrderService implements OrderService {
     private final UserService userService;
     private final TokenProvider tokenProvider;
     private final ItemAdvertisementRepository itemAdvertisementRepository;
+
     @Autowired
     public SimpleOrderService(OrderFactory orderFactory,
                               AdvertisementService advertisementService,
@@ -92,7 +93,7 @@ public class SimpleOrderService implements OrderService {
             );
         }
 
-        if (order.getOrderStatus().equals(CANCELED)){
+        if (order.getOrderStatus().equals(CANCELED)) {
             throw new ApiRequestException(
                     String.format("Can not decline order with id %s", id)
             );
@@ -182,12 +183,6 @@ public class SimpleOrderService implements OrderService {
             }
             case "DELIVERED" -> {
 
-                if (!email.equals(ownerEmail)) {
-                    throw new ApiRequestException(
-                            String.format("User with email %s can not change delivery status of order with id %s", email, id)
-                    );
-                }
-
                 if (!order.getOrderStatus().equals(CONFIRMED)) {
                     throw new ApiRequestException(
                             String.format("Order is not accepted")
@@ -208,16 +203,53 @@ public class SimpleOrderService implements OrderService {
     public ResponseEntity<?> getOrdersByUserEmail(HttpServletRequest request) {
         String email = tokenProvider.getEmail(request);
         UserEntity user = userService.getUserEntityByEmail(email);
-        Set<Order> orders = user.getUserInfo().getOrders();
-        return new ResponseEntity<>(orders, HttpStatus.ACCEPTED);
+        Set<Order> orders = orderRepository.getOrdersByOrderedBy(user.getUserInfo());
+        Set<OrderModelResponse> modelResponses = orders.stream()
+                .map(order -> new OrderModelResponse(
+                        order.getId(),
+                        order.getAdvertisement().getTitle(),
+                        order.getAdvertisement().getCreatedBy().getEmail(),
+                        order.getAdvertisement().getCategory(),
+                        order.getOrderStatus()))
+                .collect(Collectors.toSet());
+        return new ResponseEntity<>(modelResponses, HttpStatus.ACCEPTED);
     }
 
     @Override
     @Transactional
     public ResponseEntity<?> getOrdersByAdvertisementId(String id) {
-        Set<Order> ordersByAdvertisement_id = orderRepository.getOrdersByAdvertisement_Id(id);
+        Set<Order> ordersByAdvertisement_id = orderRepository.getOrdersByAdvertisementId(id);
         return new ResponseEntity<>(ordersByAdvertisement_id, HttpStatus.ACCEPTED);
     }
+
+    @Override
+    public ResponseEntity<?> getOrderDetailsModelById(String id) {
+        Order order = orderRepository.getOrderById(id)
+                .orElseThrow(() -> new ApiRequestException(
+                        String.format(
+                                "Order with id %s does not exist", id
+                        )
+                ));
+
+        Advertisement advertisement = order.getAdvertisement();
+        OrderDetailsModelResponse orderDetailsModelResponse = new OrderDetailsModelResponse(
+                order.getId(),
+                order.getCity(),
+                order.getAddress(),
+                order.getPostNumber(),
+                order.getCreatedAt(),
+                advertisement.getId(),
+                advertisement.getTitle(),
+                advertisement.getDescription(),
+                advertisement.getCategory(),
+                advertisement.getCreatedBy().getEmail(),
+                order.getDeliveryStatus(),
+                order.getOrderStatus()
+                );
+
+        return new ResponseEntity<>(orderDetailsModelResponse, HttpStatus.ACCEPTED);
+    }
+
 
     @Override
     public ResponseEntity<?> deleteOrder(String id, HttpServletRequest request) {

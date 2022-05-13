@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/v1/orders")
+@CrossOrigin("http://localhost:3000")
 public class OrderController {
 
     private final OrderService orderService;
@@ -72,5 +73,12 @@ public class OrderController {
             @RequestParam("_id") String id
     ) {
         return orderService.getOrdersByAdvertisementId(id);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getOrderDetailsModelById(
+            @RequestParam("_id") String id
+    ) {
+        return orderService.getOrderDetailsModelById(id);
     }
 }
