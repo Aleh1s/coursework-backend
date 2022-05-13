@@ -39,10 +39,6 @@ public abstract class Advertisement {
     @Column(nullable = false)
     private Category category;
 
-    @Enumerated(STRING)
-    @Column(nullable = false)
-    private AdvertisementStatus status;
-
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -54,15 +50,6 @@ public abstract class Advertisement {
             fetch = LAZY
     )
     private UserEntity createdBy;
-
-    @JsonIgnore
-    @OneToMany(
-            fetch = LAZY,
-            orphanRemoval = true,
-            cascade = ALL,
-            mappedBy = "advertisement"
-    )
-    private Set<Order> orders;
 
     @PrePersist
     public void setId() {

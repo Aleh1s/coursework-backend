@@ -1,10 +1,21 @@
 package ua.palamar.courseworkbackend.service.advertisement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ua.palamar.courseworkbackend.adapter.ItemAdvertisementAdapter;
+import ua.palamar.courseworkbackend.dto.response.AdvertisementPageResponseModel;
+import ua.palamar.courseworkbackend.dto.response.ItemAdvertisementResponse;
+import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementStatus;
+import ua.palamar.courseworkbackend.entity.advertisement.Category;
+import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementEntity;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserInfo;
 import ua.palamar.courseworkbackend.factory.AdvertisementFactory;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
@@ -12,31 +23,39 @@ import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.AdvertisementsRepository;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
+import ua.palamar.courseworkbackend.service.ItemAdvertisementService;
 import ua.palamar.courseworkbackend.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 public class SimpleAdvertisementService implements AdvertisementService {
 
     private final AdvertisementFactory advertisementFactory;
+    private final ItemAdvertisementService itemAdvertisementService;
     private final AdvertisementsRepository advertisementsRepository;
     private final TokenProvider tokenProvider;
     private final UserService userService;
+    private final ItemAdvertisementAdapter itemAdvertisementAdapter;
 
     @Autowired
     public SimpleAdvertisementService(AdvertisementFactory advertisementFactory,
+                                      ItemAdvertisementService itemAdvertisementService,
                                       AdvertisementsRepository advertisementsRepository,
                                       TokenProvider tokenProvider,
-                                      UserService userService) {
+                                      UserService userService,
+                                      ItemAdvertisementAdapter itemAdvertisementAdapter) {
         this.advertisementFactory = advertisementFactory;
+        this.itemAdvertisementService = itemAdvertisementService;
         this.advertisementsRepository = advertisementsRepository;
         this.tokenProvider = tokenProvider;
         this.userService = userService;
+        this.itemAdvertisementAdapter = itemAdvertisementAdapter;
     }
 
     @Override
-    public ResponseEntity<?> saveAdvertisement(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request) {
+    public ResponseEntity<?> save(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request) {
         String token = tokenProvider.resolveToken(request);
         String email = tokenProvider.getEmailByToken(token);
         Advertisement advertisement = advertisementFactory.createAdvertisement(advertisementRequestModel, email);
@@ -44,7 +63,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
     }
 
     @Override
-    public ResponseEntity<?> removeAdvertisement(String id, HttpServletRequest request) {
+    public ResponseEntity<?> remove(String id, HttpServletRequest request) {
         String token = tokenProvider.resolveToken(request);
         String email = tokenProvider.getEmailByToken(token);
 
@@ -71,5 +90,46 @@ public class SimpleAdvertisementService implements AdvertisementService {
         }
 
         return new ResponseEntity<>("Post was successfully removed", HttpStatus.ACCEPTED);
+    }
+
+    public ResponseEntity<?> getAllByCategory(Category category) {
+        List<Advertisement> advertisements = advertisementsRepository.findAllByCategory(category);
+        return new ResponseEntity<>(advertisements, HttpStatus.ACCEPTED);
+    }
+
+    public ResponseEntity<?> getSortedPageByCategoryAndStatus(
+            Category category,
+            ItemAdvertisementStatus status,
+            Integer numberOfPages,
+            Integer pageNumber
+    ) {
+        Pageable dynamicPage = PageRequest.of(pageNumber, numberOfPages, Sort.by("createdAt").descending());
+        List<Advertisement> advertisementsPage = advertisementsRepository.findAllByCategoryAndStatus(category, status, dynamicPage);
+        Long totalCount = advertisementsRepository.count();
+        AdvertisementPageResponseModel advertisementPageResponseModel = new AdvertisementPageResponseModel(
+                advertisementsPage,
+                totalCount
+        );
+        return new ResponseEntity<>(advertisementPageResponseModel, HttpStatus.ACCEPTED);
+    }
+
+    @Transactional
+    public ResponseEntity<?> getById(String category, String id) {
+        switch (category) {
+            case "ITEM":
+                ItemAdvertisementEntity advertisement = itemAdvertisementService.getById(id);
+                UserInfo userInfo = advertisement.getCreatedBy().getUserInfo();
+                ItemAdvertisementResponse response =
+                        itemAdvertisementAdapter.getResponse(advertisement, userInfo);
+                return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+
+            default:
+                throw new ApiRequestException("Invalid category");
+        }
+    }
+
+    public ResponseEntity<?> getAllAdvertisementsByEmail(String email) {
+        List<Advertisement> advertisements = advertisementsRepository.findAllByCreatedByEmail(email);
+        return new ResponseEntity<>(advertisements, HttpStatus.ACCEPTED);
     }
 }

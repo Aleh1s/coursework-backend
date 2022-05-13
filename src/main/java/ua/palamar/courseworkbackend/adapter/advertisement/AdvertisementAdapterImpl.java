@@ -11,7 +11,7 @@ import ua.palamar.courseworkbackend.service.UserService;
 
 import java.time.LocalDateTime;
 
-import static ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus.*;
+import static ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementStatus.*;
 import static ua.palamar.courseworkbackend.entity.advertisement.Category.*;
 
 @Component

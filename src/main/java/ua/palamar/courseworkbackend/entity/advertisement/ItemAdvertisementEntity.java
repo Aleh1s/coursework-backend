@@ -1,24 +1,23 @@
 package ua.palamar.courseworkbackend.entity.advertisement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.palamar.courseworkbackend.entity.order.Order;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
+
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Setter
-//@AllArgsConstructor
 @NoArgsConstructor
 public class ItemAdvertisementEntity extends Advertisement {
 
@@ -31,13 +30,25 @@ public class ItemAdvertisementEntity extends Advertisement {
     )
     private DimensionsEntity dimensions;
 
+    @Enumerated(STRING)
+    @Column(nullable = false)
+    private ItemAdvertisementStatus status;
+
+    @JsonIgnore
+    @OneToMany(
+            fetch = LAZY,
+            orphanRemoval = true,
+            cascade = ALL,
+            mappedBy = "advertisement"
+    )
+    private Set<Order> orders;
 
     public ItemAdvertisementEntity(
             String id,
             String title,
             String description,
             Category category,
-            AdvertisementStatus status,
+            ItemAdvertisementStatus status,
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
             UserEntity createdBy,
@@ -49,12 +60,12 @@ public class ItemAdvertisementEntity extends Advertisement {
                 title,
                 description,
                 category,
-                status,
                 createdAt,
                 updatedAt,
-                createdBy,
-                orders
+                createdBy
         );
+        this.status = status;
+        this.orders = orders;
         this.dimensions = dimensions;
     }
 }

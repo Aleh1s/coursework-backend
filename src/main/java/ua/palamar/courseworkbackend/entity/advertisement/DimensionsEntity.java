@@ -33,5 +33,4 @@ public class DimensionsEntity {
             id = UUID.randomUUID().toString();
         }
     }
-
 }

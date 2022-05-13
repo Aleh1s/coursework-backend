@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
-import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus;
+import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
 import ua.palamar.courseworkbackend.service.GeneralizedAdvertisementService;
@@ -31,7 +31,7 @@ public class AdvertisementController {
             @RequestBody AdvertisementRequestModel advertisementRequestModel,
             HttpServletRequest request
     ) {
-        return advertisementService.saveAdvertisement(advertisementRequestModel, request);
+        return advertisementService.save(advertisementRequestModel, request);
     }
 
     @DeleteMapping
@@ -39,7 +39,7 @@ public class AdvertisementController {
             @RequestParam("_id") String id,
             HttpServletRequest request
     ) {
-        return advertisementService.removeAdvertisement(id, request);
+        return advertisementService.remove(id, request);
     }
     @GetMapping
     public ResponseEntity<?> getAdvertisementById(
@@ -53,7 +53,7 @@ public class AdvertisementController {
     public ResponseEntity<?> getSortedPageByCreatedAtByCategory(
             @RequestParam("_limit") Integer limit,
             @RequestParam("_page") Integer page,
-            @RequestParam("_status") AdvertisementStatus status,
+            @RequestParam("_status") ItemAdvertisementStatus status,
             @RequestParam("_category") Category category
     ) {
         return generalizedAdvertisementService.getPageOfSortedAdvertisementsByCategoryAndStatus(category, status, limit, page);

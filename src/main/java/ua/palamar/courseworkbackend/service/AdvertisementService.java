@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public interface AdvertisementService {
 
-    ResponseEntity<?> saveAdvertisement(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request);
+    ResponseEntity<?> save(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request);
 
 //    ResponseEntity<?> updateAdvertisement();
 
-    ResponseEntity<?> removeAdvertisement(String id, HttpServletRequest request);
+    ResponseEntity<?> remove(String id, HttpServletRequest request);
 }

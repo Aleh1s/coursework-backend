@@ -13,4 +13,5 @@ import javax.persistence.Entity;
 public class ServiceAdvertisementEntity extends Advertisement {
 
 
+
 }
