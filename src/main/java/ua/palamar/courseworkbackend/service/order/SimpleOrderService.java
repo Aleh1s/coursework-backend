@@ -1,6 +1,5 @@
 package ua.palamar.courseworkbackend.service.order;
 
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,12 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.palamar.courseworkbackend.dto.request.OrderRequestModel;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.order.DeliveryStatus;
+import ua.palamar.courseworkbackend.entity.advertisement.Category;
+import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementEntity;
 import ua.palamar.courseworkbackend.entity.order.Order;
 import ua.palamar.courseworkbackend.entity.order.OrderStatus;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.factory.OrderFactory;
+import ua.palamar.courseworkbackend.repository.ItemAdvertisementRepository;
 import ua.palamar.courseworkbackend.repository.OrderRepository;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
@@ -21,6 +22,8 @@ import ua.palamar.courseworkbackend.service.OrderService;
 import ua.palamar.courseworkbackend.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Set;
 
 import static ua.palamar.courseworkbackend.entity.order.DeliveryStatus.*;
 import static ua.palamar.courseworkbackend.entity.order.OrderStatus.CANCELED;
@@ -34,17 +37,20 @@ public class SimpleOrderService implements OrderService {
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final TokenProvider tokenProvider;
+    private final ItemAdvertisementRepository itemAdvertisementRepository;
     @Autowired
     public SimpleOrderService(OrderFactory orderFactory,
                               AdvertisementService advertisementService,
                               OrderRepository orderRepository,
                               UserService userService,
-                              TokenProvider tokenProvider) {
+                              TokenProvider tokenProvider,
+                              ItemAdvertisementRepository itemAdvertisementRepository) {
         this.orderFactory = orderFactory;
         this.advertisementService = advertisementService;
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.tokenProvider = tokenProvider;
+        this.itemAdvertisementRepository = itemAdvertisementRepository;
     }
 
     @Override
@@ -195,6 +201,22 @@ public class SimpleOrderService implements OrderService {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> getOrdersByUserEmail(HttpServletRequest request) {
+        String email = tokenProvider.getEmail(request);
+        UserEntity user = userService.getUserEntityByEmail(email);
+        Set<Order> orders = user.getUserInfo().getOrders();
+        return new ResponseEntity<>(orders, HttpStatus.ACCEPTED);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> getOrdersByAdvertisementId(String id) {
+        Set<Order> ordersByAdvertisement_id = orderRepository.getOrdersByAdvertisement_Id(id);
+        return new ResponseEntity<>(ordersByAdvertisement_id, HttpStatus.ACCEPTED);
     }
 
     @Override

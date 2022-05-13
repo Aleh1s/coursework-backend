@@ -60,4 +60,17 @@ public class OrderController {
         return orderService.changeDeliveryStatus(id, status, request);
     }
 
+    @GetMapping("/email")
+    public ResponseEntity<?> getAllByEmail(
+            HttpServletRequest request
+    ) {
+        return orderService.getOrdersByUserEmail(request);
+    }
+
+    @GetMapping("/advertisement")
+    public ResponseEntity<?> getAllByAdvertisementId(
+            @RequestParam("_id") String id
+    ) {
+        return orderService.getOrdersByAdvertisementId(id);
+    }
 }

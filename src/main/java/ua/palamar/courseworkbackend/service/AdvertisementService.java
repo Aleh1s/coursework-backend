@@ -27,7 +27,7 @@ public interface AdvertisementService {
 
     ResponseEntity<?> getByIdAndCategory(String category, String id);
 
-    ResponseEntity<?> getAllAdvertisementsByEmail(String email);
+    ResponseEntity<?> getAllAdvertisementsByEmail(HttpServletRequest request);
 
     ResponseEntity<?> remove(String id, HttpServletRequest request);
 }

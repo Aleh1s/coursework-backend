@@ -53,4 +53,11 @@ public class AdvertisementController {
     ) {
         return advertisementService.getSortedPageByCategory(category, limit, page, sortBy);
     }
+
+    @GetMapping("/email")
+    public ResponseEntity<?> getAllByEmail(
+        HttpServletRequest request
+    ) {
+        return advertisementService.getAllAdvertisementsByEmail(request);
+    }
 }

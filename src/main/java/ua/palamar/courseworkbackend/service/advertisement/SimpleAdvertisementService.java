@@ -99,11 +99,13 @@ public class SimpleAdvertisementService implements AdvertisementService {
         return new ResponseEntity<>("Post was successfully removed", HttpStatus.ACCEPTED);
     }
 
+    @Override
     public ResponseEntity<?> getAllByCategory(Category category) {
         List<Advertisement> advertisements = advertisementsRepository.findAllByCategory(category);
         return new ResponseEntity<>(advertisements, HttpStatus.ACCEPTED);
     }
 
+    @Override
     public ResponseEntity<?> getSortedPageByCategory(
             Category category,
             Integer numberOfPages,
@@ -120,6 +122,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
         return new ResponseEntity<>(advertisementPageResponseModel, HttpStatus.ACCEPTED);
     }
 
+    @Override
     @Transactional
     public ResponseEntity<?> getByIdAndCategory(String category, String id) {
         switch (category) {
@@ -135,8 +138,11 @@ public class SimpleAdvertisementService implements AdvertisementService {
         }
     }
 
-    public ResponseEntity<?> getAllAdvertisementsByEmail(String email) {
+    @Override
+    public ResponseEntity<?> getAllAdvertisementsByEmail(HttpServletRequest request) {
+        String email = tokenProvider.getEmail(request);
         List<Advertisement> advertisements = advertisementsRepository.findAllByCreatedByEmail(email);
         return new ResponseEntity<>(advertisements, HttpStatus.ACCEPTED);
     }
+
 }
