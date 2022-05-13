@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.palamar.courseworkbackend.adapter.ItemAdvertisementAdapter;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementPageResponseModel;
 import ua.palamar.courseworkbackend.dto.response.ItemAdvertisementResponse;
-import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementEntity;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
@@ -52,6 +51,14 @@ public class SimpleAdvertisementService implements AdvertisementService {
         this.tokenProvider = tokenProvider;
         this.userService = userService;
         this.itemAdvertisementAdapter = itemAdvertisementAdapter;
+    }
+
+    @Override
+    public Advertisement getById(String id) {
+        return advertisementsRepository.findById(id)
+                .orElseThrow(() -> new ApiRequestException(
+                        String.format("Advertisement with id %s does not exist", id)
+                ));
     }
 
     @Override

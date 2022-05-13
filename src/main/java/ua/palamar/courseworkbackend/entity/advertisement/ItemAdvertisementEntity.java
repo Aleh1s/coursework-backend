@@ -30,9 +30,6 @@ public class ItemAdvertisementEntity extends Advertisement {
     )
     private DimensionsEntity dimensions;
 
-    @Enumerated(STRING)
-    @Column(nullable = false)
-    private ItemAdvertisementStatus status;
 
     @JsonIgnore
     @OneToMany(
@@ -48,7 +45,6 @@ public class ItemAdvertisementEntity extends Advertisement {
             String title,
             String description,
             Category category,
-            ItemAdvertisementStatus status,
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
             UserEntity createdBy,
@@ -64,7 +60,6 @@ public class ItemAdvertisementEntity extends Advertisement {
                 updatedAt,
                 createdBy
         );
-        this.status = status;
         this.orders = orders;
         this.dimensions = dimensions;
     }

@@ -1,4 +1,4 @@
-package ua.palamar.courseworkbackend.factory;
+package ua.palamar.courseworkbackend.factory.advertisement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,6 +9,7 @@ import ua.palamar.courseworkbackend.entity.advertisement.HouseAdvertisementEntit
 import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementEntity;
 import ua.palamar.courseworkbackend.entity.advertisement.ServiceAdvertisementEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
+import ua.palamar.courseworkbackend.factory.AdvertisementFactory;
 import ua.palamar.courseworkbackend.repository.ItemAdvertisementRepository;
 
 @Component

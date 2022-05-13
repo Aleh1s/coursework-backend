@@ -4,15 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.adapter.AdvertisementAdapter;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
-import ua.palamar.courseworkbackend.entity.advertisement.*;
+import ua.palamar.courseworkbackend.entity.advertisement.DimensionsEntity;
+import ua.palamar.courseworkbackend.entity.advertisement.HouseAdvertisementEntity;
+import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementEntity;
+import ua.palamar.courseworkbackend.entity.advertisement.ServiceAdvertisementEntity;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.service.UserService;
 
 import java.time.LocalDateTime;
 
-import static ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementStatus.*;
-import static ua.palamar.courseworkbackend.entity.advertisement.Category.*;
+import static ua.palamar.courseworkbackend.entity.advertisement.Category.ITEM;
 
 @Component
 public class AdvertisementAdapterImpl implements AdvertisementAdapter {
@@ -47,7 +49,6 @@ public class AdvertisementAdapterImpl implements AdvertisementAdapter {
                 advertisementRequestModel.title(),
                 advertisementRequestModel.description(),
                 ITEM,
-                UNCONFIRMED,
                 LocalDateTime.now(),
                 null,
                 creator,

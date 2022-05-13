@@ -94,4 +94,9 @@ public class TokenProvider {
 
         throw new ApiRequestException("Token can not be empty or null");
     }
+
+    public String getEmail(HttpServletRequest request) {
+        String token = resolveToken(request);
+        return getEmailByToken(token);
+    }
 }

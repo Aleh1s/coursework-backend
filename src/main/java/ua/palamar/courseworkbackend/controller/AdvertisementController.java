@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
-import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
 import ua.palamar.courseworkbackend.service.GeneralizedAdvertisementService;

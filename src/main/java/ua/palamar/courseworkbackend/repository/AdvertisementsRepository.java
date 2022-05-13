@@ -3,7 +3,6 @@ package ua.palamar.courseworkbackend.repository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.advertisement.ItemAdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
 
 import java.util.List;

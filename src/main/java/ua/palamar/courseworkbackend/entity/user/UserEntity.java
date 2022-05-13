@@ -3,6 +3,7 @@ package ua.palamar.courseworkbackend.entity.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
+import ua.palamar.courseworkbackend.entity.order.Order;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserStatus;
 
@@ -75,5 +76,6 @@ public class UserEntity {
     public int getAge() {
         return Period.between(dob, LocalDate.now()).getYears();
     }
+
 
 }
