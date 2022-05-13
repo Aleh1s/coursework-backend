@@ -1,5 +1,6 @@
 package ua.palamar.courseworkbackend.service.order;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,10 @@ import ua.palamar.courseworkbackend.service.OrderService;
 import ua.palamar.courseworkbackend.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static ua.palamar.courseworkbackend.entity.order.DeliveryStatus.*;
+import static ua.palamar.courseworkbackend.entity.order.OrderStatus.CANCELED;
+import static ua.palamar.courseworkbackend.entity.order.OrderStatus.CONFIRMED;
 
 @Service
 public class SimpleOrderService implements OrderService {
@@ -46,9 +51,16 @@ public class SimpleOrderService implements OrderService {
     @Transactional
     public ResponseEntity<?> makeOrder(OrderRequestModel orderRequest, HttpServletRequest request) {
         String email = tokenProvider.getEmail(request);
+        Advertisement advertisement = advertisementService.getByIdAndCategory(orderRequest.advertisementId());
+
+        if (advertisement.getCreatedBy().getEmail().equals(email)) {
+            throw new ApiRequestException(
+                    String.format("User with email %s is owner", email)
+            );
+        }
+
         UserEntity buyer = userService.getUserEntityByEmail(email);
-        Advertisement advertisement = advertisementService.getById(orderRequest.advertisementId());
-        Order order = orderFactory.createOrder(orderRequest, advertisement, buyer.getUserInfo());
+        Order order = orderFactory.createOrder(orderRequest, buyer.getUserInfo(), advertisement);
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
@@ -68,7 +80,13 @@ public class SimpleOrderService implements OrderService {
 
         Advertisement advertisement = order.getAdvertisement();
 
-        if (!order.getStatus().equals(DeliveryStatus.IN_PROCESS)) {
+        if (!order.getDeliveryStatus().equals(IN_PROCESS)) {
+            throw new ApiRequestException(
+                    String.format("Can not decline order with id %s", id)
+            );
+        }
+
+        if (order.getOrderStatus().equals(CANCELED)){
             throw new ApiRequestException(
                     String.format("Can not decline order with id %s", id)
             );
@@ -93,7 +111,7 @@ public class SimpleOrderService implements OrderService {
 
         Advertisement advertisement = order.getAdvertisement();
 
-        if (order.getOrderStatus().equals(OrderStatus.DECLINED)) {
+        if (order.getOrderStatus().equals(CANCELED)) {
             throw new ApiRequestException(
                     String.format("Order with id %s was declined", id)
             );
@@ -110,21 +128,71 @@ public class SimpleOrderService implements OrderService {
     }
 
     @Override
-    public ResponseEntity<?> inRoad(String id) {
+    @Transactional
+    public ResponseEntity<?> cancelOrder(String id, HttpServletRequest request) {
+        String email = tokenProvider.getEmail(request);
+        UserEntity user = userService.getUserEntityByEmail(email);
+
         Order order = getOrderById(id);
 
-        order.setStatus(DeliveryStatus.IN_ROAD);
+        if (!order.getOrderedBy().equals(user.getUserInfo())) {
+            throw new ApiRequestException(
+                    String.format("User with id %s can't cancel order with id %s", email, id)
+            );
+        }
 
+        if (!order.getDeliveryStatus().equals(IN_PROCESS)) {
+            throw new ApiRequestException(
+                    String.format("Can not cancel order with id %s", id)
+            );
+        }
+
+        order.setOrderStatus(CANCELED);
         return ResponseEntity.ok().build();
     }
 
-
     @Override
     @Transactional
-    public ResponseEntity<?> onDelivered(String id) {
+    public ResponseEntity<?> changeDeliveryStatus(String id, String status, HttpServletRequest request) {
         Order order = getOrderById(id);
+        String email = tokenProvider.getEmail(request);
+        String ownerEmail = order.getAdvertisement().getCreatedBy().getEmail();
 
-        order.setStatus(DeliveryStatus.DELIVERED);
+        switch (status) {
+            case "IN_ROAD" -> {
+
+                if (!email.equals(ownerEmail)) {
+                    throw new ApiRequestException(
+                            String.format("User with email %s can not change delivery status of order with id %s", email, id)
+                    );
+                }
+
+                if (!order.getOrderStatus().equals(CONFIRMED)) {
+                    throw new ApiRequestException(
+                            String.format("Order is not accepted")
+                    );
+                }
+                order.setDeliveryStatus(IN_ROAD);
+            }
+            case "DELIVERED" -> {
+
+                if (!email.equals(ownerEmail)) {
+                    throw new ApiRequestException(
+                            String.format("User with email %s can not change delivery status of order with id %s", email, id)
+                    );
+                }
+
+                if (!order.getOrderStatus().equals(CONFIRMED)) {
+                    throw new ApiRequestException(
+                            String.format("Order is not accepted")
+                    );
+                }
+                order.setDeliveryStatus(DELIVERED);
+            }
+            default -> throw new ApiRequestException(
+                    String.format("Invalid status %s", status)
+            );
+        }
 
         return ResponseEntity.ok().build();
     }

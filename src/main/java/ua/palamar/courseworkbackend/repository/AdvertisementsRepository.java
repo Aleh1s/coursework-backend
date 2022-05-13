@@ -13,6 +13,6 @@ public interface AdvertisementsRepository extends PagingAndSortingRepository<Adv
 
     List<Advertisement> findAllByCategory(Category category);
 
-    List<Advertisement> findAllByCategoryAndStatus(Category category, ItemAdvertisementStatus status, Pageable pageable);
+    List<Advertisement> findAllByCategory(Category category, Pageable pageable);
 
 }

@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.entity.user.UserInfo;
 
 import javax.persistence.*;
@@ -30,6 +28,14 @@ public abstract class Order {
     @Id
     private String id;
 
+    @Column
+    private String city;
+
+    @Column
+    private String address;
+
+    @Column
+    private String postNumber;
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -42,7 +48,7 @@ public abstract class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private DeliveryStatus status;
+    private DeliveryStatus deliveryStatus;
 
     @Enumerated(STRING)
     @Column(nullable = false)
@@ -60,6 +66,13 @@ public abstract class Order {
             id = UUID.randomUUID().toString();
         }
         createdAt = LocalDateTime.now();
+        deliveryStatus = DeliveryStatus.IN_PROCESS;
+        orderStatus = OrderStatus.UNCONFIRMED;
     }
 
+    public Order(String city, String address, String postNumber) {
+        this.city = city;
+        this.address = address;
+        this.postNumber = postNumber;
+    }
 }

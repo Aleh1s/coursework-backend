@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
-import ua.palamar.courseworkbackend.service.GeneralizedAdvertisementService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,13 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 public class AdvertisementController {
 
     private final AdvertisementService advertisementService;
-    private final GeneralizedAdvertisementService generalizedAdvertisementService;
 
     @Autowired
-    public AdvertisementController(AdvertisementService advertisementService,
-                                   GeneralizedAdvertisementService generalizedAdvertisementService) {
+    public AdvertisementController(AdvertisementService advertisementService) {
         this.advertisementService = advertisementService;
-        this.generalizedAdvertisementService = generalizedAdvertisementService;
     }
 
     @PostMapping
@@ -41,20 +37,20 @@ public class AdvertisementController {
         return advertisementService.remove(id, request);
     }
     @GetMapping
-    public ResponseEntity<?> getAdvertisementById(
+    public ResponseEntity<?> getByIdAndCategory(
             @RequestParam("_category") String category,
             @RequestParam("_id") String id
     ) {
-        return generalizedAdvertisementService.getAdvertisementById(category, id);
+        return advertisementService.getByIdAndCategory(category, id);
     }
 
     @GetMapping("/page")
-    public ResponseEntity<?> getSortedPageByCreatedAtByCategory(
+    public ResponseEntity<?> getPage(
             @RequestParam("_limit") Integer limit,
             @RequestParam("_page") Integer page,
-            @RequestParam("_status") ItemAdvertisementStatus status,
-            @RequestParam("_category") Category category
+            @RequestParam("_category") Category category,
+            @RequestParam("_sortBy") String sortBy
     ) {
-        return generalizedAdvertisementService.getPageOfSortedAdvertisementsByCategoryAndStatus(category, status, limit, page);
+        return advertisementService.getSortedPageByCategory(category, limit, page, sortBy);
     }
 }

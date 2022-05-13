@@ -4,16 +4,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
+import ua.palamar.courseworkbackend.entity.advertisement.Category;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Service
 public interface AdvertisementService {
 
-    Advertisement getById(String id);
+    Advertisement getByIdAndCategory(String id);
     ResponseEntity<?> save(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request);
 
 //    ResponseEntity<?> updateAdvertisement();
+
+    ResponseEntity<?> getAllByCategory(Category category);
+
+    ResponseEntity<?> getSortedPageByCategory(
+            Category category,
+            Integer numberOfPages,
+            Integer pageNumber,
+            String sortBy
+    );
+
+    ResponseEntity<?> getByIdAndCategory(String category, String id);
+
+    ResponseEntity<?> getAllAdvertisementsByEmail(String email);
 
     ResponseEntity<?> remove(String id, HttpServletRequest request);
 }

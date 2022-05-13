@@ -63,4 +63,13 @@ public class ItemAdvertisementEntity extends Advertisement {
         this.orders = orders;
         this.dimensions = dimensions;
     }
+
+    public void addOrder(Order order) {
+        order.setAdvertisement(this);
+        this.getOrders().add(order);
+    }
+    public void removeOrder(Order order) {
+        order.setAdvertisement(null);
+        this.getOrders().remove(order);
+    }
 }

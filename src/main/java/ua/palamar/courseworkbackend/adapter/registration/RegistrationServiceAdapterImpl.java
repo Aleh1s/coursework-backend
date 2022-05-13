@@ -43,7 +43,8 @@ public class RegistrationServiceAdapterImpl implements RegistrationServiceAdapte
                 registrationRequestModel.phoneNumber(),
                 registrationRequestModel.city(),
                 registrationRequestModel.address(),
-                registrationRequestModel.postNumber()
+                registrationRequestModel.postNumber(),
+                null
         );
     }
 }

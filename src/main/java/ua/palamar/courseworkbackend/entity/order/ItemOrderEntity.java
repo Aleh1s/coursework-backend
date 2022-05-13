@@ -1,6 +1,5 @@
 package ua.palamar.courseworkbackend.entity.order;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,36 +8,28 @@ import ua.palamar.courseworkbackend.entity.user.UserInfo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
-
 import java.time.LocalDateTime;
-
-import static javax.persistence.EnumType.STRING;
-import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class ItemOrderEntity extends Order {
 
+    @Column
+    private String wishes;
+
     public ItemOrderEntity(
-            String id,
-            LocalDateTime createdAt,
-            Advertisement advertisement,
-            DeliveryStatus status,
-            UserInfo buyerInfo,
-            OrderStatus orderStatus
+            String city,
+            String address,
+            String postNumber,
+            String wishes
     ) {
         super(
-                id,
-                createdAt,
-                advertisement,
-                status,
-                orderStatus,
-                buyerInfo
+                city,
+                address,
+                postNumber
         );
+        this.wishes = wishes;
     }
 }

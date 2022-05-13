@@ -1,14 +1,13 @@
 package ua.palamar.courseworkbackend.dto.request;
 
+import java.util.Optional;
+
 public record OrderRequestModel(
         String advertisementId,
-        String firstName,
-        String lastName,
-        String city,
-        String phoneNumber,
-        String address,
-        String postNumber,
-        String wishes,
+        Optional<String> city,
+        Optional<String> address,
+        Optional<String> postNumber,
+        Optional<String> wishes,
         String advertisementCategory
 ) {
 }

@@ -13,8 +13,9 @@ public interface OrderService {
 
     ResponseEntity<?> acceptOrder(String id, HttpServletRequest request);
 
-    ResponseEntity<?> inRoad(String id);
-    ResponseEntity<?> onDelivered(String id);
+    ResponseEntity<?> cancelOrder(String id, HttpServletRequest request);
+
+    ResponseEntity<?> changeDeliveryStatus(String id, String status, HttpServletRequest request);
 
     ResponseEntity<?> deleteOrder(String id, HttpServletRequest request);
 }

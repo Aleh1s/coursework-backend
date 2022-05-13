@@ -54,7 +54,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
     }
 
     @Override
-    public Advertisement getById(String id) {
+    public Advertisement getByIdAndCategory(String id) {
         return advertisementsRepository.findById(id)
                 .orElseThrow(() -> new ApiRequestException(
                         String.format("Advertisement with id %s does not exist", id)
@@ -104,14 +104,14 @@ public class SimpleAdvertisementService implements AdvertisementService {
         return new ResponseEntity<>(advertisements, HttpStatus.ACCEPTED);
     }
 
-    public ResponseEntity<?> getSortedPageByCategoryAndStatus(
+    public ResponseEntity<?> getSortedPageByCategory(
             Category category,
-            ItemAdvertisementStatus status,
             Integer numberOfPages,
-            Integer pageNumber
+            Integer pageNumber,
+            String sortBy
     ) {
-        Pageable dynamicPage = PageRequest.of(pageNumber, numberOfPages, Sort.by("createdAt").descending());
-        List<Advertisement> advertisementsPage = advertisementsRepository.findAllByCategoryAndStatus(category, status, dynamicPage);
+        Pageable dynamicPage = PageRequest.of(pageNumber, numberOfPages, Sort.by(sortBy).descending());
+        List<Advertisement> advertisementsPage = advertisementsRepository.findAllByCategory(category, dynamicPage);
         Long totalCount = advertisementsRepository.count();
         AdvertisementPageResponseModel advertisementPageResponseModel = new AdvertisementPageResponseModel(
                 advertisementsPage,
@@ -121,7 +121,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
     }
 
     @Transactional
-    public ResponseEntity<?> getById(String category, String id) {
+    public ResponseEntity<?> getByIdAndCategory(String category, String id) {
         switch (category) {
             case "ITEM":
                 ItemAdvertisementEntity advertisement = itemAdvertisementService.getById(id);
