@@ -3,13 +3,10 @@ package ua.palamar.courseworkbackend.entity.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.order.Order;
+import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
-import ua.palamar.courseworkbackend.entity.user.permissions.UserStatus;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -24,7 +21,6 @@ import static lombok.AccessLevel.PRIVATE;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class UserEntity {
 
     @Id
@@ -37,24 +33,17 @@ public class UserEntity {
     private String password;
 
     @Column(nullable = false)
-    private LocalDate dob;
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
 
     @Enumerated(STRING)
     @Column(nullable = false)
     private UserRole role;
 
-    @Enumerated(STRING)
     @Column(nullable = false)
-    private UserStatus status;
-
-    @JsonIgnore
-    @OneToOne(
-            fetch = LAZY,
-            optional = false,
-            orphanRemoval = true,
-            cascade = ALL
-    )
-    private UserInfo userInfo;
+    private String phoneNumber;
 
     @JsonIgnore
     @Setter(PRIVATE)
@@ -62,9 +51,19 @@ public class UserEntity {
             fetch = LAZY,
             orphanRemoval = true,
             cascade = ALL,
-            mappedBy = "createdBy"
+            mappedBy = "creator"
     )
     private Set<Advertisement> advertisements = new HashSet<>();
+
+    @JsonIgnore
+    @Setter(PRIVATE)
+    @OneToMany(
+            fetch = LAZY,
+            orphanRemoval = true,
+            cascade = ALL,
+            mappedBy = "receiver"
+    )
+    private Set<OrderEntity> orderEntities = new HashSet<>();
 
     @PrePersist
     public void setId() {
@@ -73,9 +72,19 @@ public class UserEntity {
         }
     }
 
-    public int getAge() {
-        return Period.between(dob, LocalDate.now()).getYears();
+    public UserEntity(
+            String email,
+            String password,
+            String firstName,
+            String lastName,
+            UserRole role,
+            String phoneNumber
+    ) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.phoneNumber = phoneNumber;
     }
-
-
 }

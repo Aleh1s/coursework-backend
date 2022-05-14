@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public interface AdvertisementService {
 
-    Advertisement getByIdAndCategory(String id);
     ResponseEntity<?> save(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request);
 
 //    ResponseEntity<?> updateAdvertisement();
@@ -25,7 +24,9 @@ public interface AdvertisementService {
             String sortBy
     );
 
-    ResponseEntity<?> getByIdAndCategory(String category, String id);
+    ResponseEntity<?> getAdvertisementResponseModelByAdvertisementId(String id);
+
+    Advertisement getAdvertisementById(String id);
 
     ResponseEntity<?> getAllAdvertisementsByEmail(HttpServletRequest request);
 

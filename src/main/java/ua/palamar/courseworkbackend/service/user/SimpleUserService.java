@@ -36,6 +36,6 @@ public class SimpleUserService implements UserService, UserServiceValidator {
 
     @Override
     public boolean userWithPhoneNumberExists(String phoneNumber) {
-        return userRepository.existsByUserInfoPhoneNumber(phoneNumber);
+        return userRepository.existsByPhoneNumber(phoneNumber);
     }
 }

@@ -37,11 +37,10 @@ public class AdvertisementController {
         return advertisementService.remove(id, request);
     }
     @GetMapping
-    public ResponseEntity<?> getByIdAndCategory(
-            @RequestParam("_category") String category,
+    public ResponseEntity<?> getAdvertisementResponseModelById(
             @RequestParam("_id") String id
     ) {
-        return advertisementService.getByIdAndCategory(category, id);
+        return advertisementService.getAdvertisementResponseModelByAdvertisementId(id);
     }
 
     @GetMapping("/page")
@@ -60,4 +59,5 @@ public class AdvertisementController {
     ) {
         return advertisementService.getAllAdvertisementsByEmail(request);
     }
+
 }

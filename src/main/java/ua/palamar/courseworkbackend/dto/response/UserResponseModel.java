@@ -4,8 +4,6 @@ public record UserResponseModel(
         String email,
         String firstName,
         String lastName,
-        String city,
-        String phoneNumber,
-        int age
+        String phoneNumber
 ) {
 }

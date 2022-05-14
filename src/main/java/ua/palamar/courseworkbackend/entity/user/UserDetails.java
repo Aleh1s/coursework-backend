@@ -3,17 +3,13 @@ package ua.palamar.courseworkbackend.entity.user;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
-import ua.palamar.courseworkbackend.entity.user.permissions.UserStatus;
 
 import java.util.Collection;
-
-import static ua.palamar.courseworkbackend.entity.user.permissions.UserStatus.*;
 @AllArgsConstructor
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
 
     private String email;
     private String password;
-    private UserStatus status;
     private UserRole role;
 
     @Override
@@ -33,21 +29,21 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     @Override
     public boolean isAccountNonExpired() {
-        return status.equals(ACTIVE);
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return status.equals(ACTIVE);
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return status.equals(ACTIVE);
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return status.equals(ACTIVE);
+        return true;
     }
 }

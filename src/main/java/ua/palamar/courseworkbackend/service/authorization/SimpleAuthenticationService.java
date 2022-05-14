@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.palamar.courseworkbackend.adapter.AuthenticationServiceAdapter;
 import ua.palamar.courseworkbackend.dto.request.AuthenticationRequestModel;
 import ua.palamar.courseworkbackend.dto.response.AuthenticationResponseModel;
 import ua.palamar.courseworkbackend.dto.response.UserResponseModel;
@@ -23,17 +22,16 @@ public class SimpleAuthenticationService implements AuthenticationService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final AuthenticationServiceAdapter authenticationServiceAdapter;
 
     @Autowired
-    public SimpleAuthenticationService(UserService userService,
-                                       PasswordEncoder passwordEncoder,
-                                       TokenProvider tokenProvider,
-                                       AuthenticationServiceAdapter authenticationServiceAdapter) {
+    public SimpleAuthenticationService(
+            UserService userService,
+            PasswordEncoder passwordEncoder,
+            TokenProvider tokenProvider
+    ) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
-        this.authenticationServiceAdapter = authenticationServiceAdapter;
     }
 
     @Override
@@ -48,8 +46,7 @@ public class SimpleAuthenticationService implements AuthenticationService {
         String refreshToken = tokenProvider.generateRefreshToken(currentUser);
 
 
-        UserResponseModel userResponseModel
-                = authenticationServiceAdapter.getUserModel(currentUser);
+        UserResponseModel userResponseModel = getUserResponseModel(currentUser);
 
         return new ResponseEntity<>(new AuthenticationResponseModel(
                 accessToken,
@@ -69,8 +66,7 @@ public class SimpleAuthenticationService implements AuthenticationService {
 
             String newAccessToken = tokenProvider.generateToken(currentUser);
 
-            UserResponseModel userResponseModel
-                    = authenticationServiceAdapter.getUserModel(currentUser);
+            UserResponseModel userResponseModel = getUserResponseModel(currentUser);
 
             AuthenticationResponseModel authenticationResponseModel = new AuthenticationResponseModel(
                     newAccessToken,
@@ -83,5 +79,14 @@ public class SimpleAuthenticationService implements AuthenticationService {
 
             throw new ApiRequestException("Token isn't valid");
         }
+    }
+
+    private UserResponseModel getUserResponseModel(UserEntity userEntity) {
+        return new UserResponseModel(
+                userEntity.getEmail(),
+                userEntity.getFirstName(),
+                userEntity.getLastName(),
+                userEntity.getPhoneNumber()
+        );
     }
 }

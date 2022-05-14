@@ -1,11 +1,8 @@
 package ua.palamar.courseworkbackend.entity.advertisement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import ua.palamar.courseworkbackend.entity.order.Order;
+import lombok.*;
+import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 
 import javax.persistence.*;
@@ -13,18 +10,16 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+import static lombok.AccessLevel.PRIVATE;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = TABLE_PER_CLASS)
-public abstract class Advertisement {
+public class Advertisement {
 
     @Id
     private String id;
@@ -42,24 +37,47 @@ public abstract class Advertisement {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column
-    private LocalDateTime updatedAt;
+    @JsonIgnore
+    @Setter(PRIVATE)
+    @OneToMany(
+            fetch = LAZY,
+            orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            mappedBy = "product"
+    )
+    private Set<OrderEntity> orderEntities;
 
     @JsonIgnore
     @ManyToOne(
             fetch = LAZY
     )
-    private UserEntity createdBy;
+    private UserEntity creator;
 
     @PrePersist
-    public void setId() {
+    public void setUp() {
         if (id == null) {
             id = UUID.randomUUID().toString();
         }
+        createdAt = LocalDateTime.now();
     }
 
-    @PreUpdate
-    public void setUpdatedAt() {
-        updatedAt = LocalDateTime.now();
+    public void addCreator(UserEntity creator) {
+        this.creator = creator;
+        creator.getAdvertisements().add(this);
+    }
+
+    public void removeCreator(UserEntity creator) {
+        this.creator = null;
+        creator.getAdvertisements().remove(this);
+    }
+
+    public Advertisement(
+            String title,
+            String description,
+            Category category
+    ) {
+        this.title = title;
+        this.description = description;
+        this.category = category;
     }
 }

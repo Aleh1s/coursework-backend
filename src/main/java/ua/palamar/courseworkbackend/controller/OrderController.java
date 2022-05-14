@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.palamar.courseworkbackend.dto.request.OrderRequestModel;
+import ua.palamar.courseworkbackend.entity.order.DeliveryStatus;
 import ua.palamar.courseworkbackend.service.OrderService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +56,7 @@ public class OrderController {
     @PutMapping("/change-status")
     public ResponseEntity<?> changeDeliveryStatus(
             @RequestParam("_id") String id,
-            @RequestParam("_status") String status,
+            @RequestParam("_status") DeliveryStatus status,
             HttpServletRequest request
     ) {
         return orderService.changeDeliveryStatus(id, status, request);
@@ -65,7 +66,7 @@ public class OrderController {
     public ResponseEntity<?> getAllByEmail(
             HttpServletRequest request
     ) {
-        return orderService.getOrdersByUserEmail(request);
+        return orderService.getSortedPageOfOrdersByUserEmail(request);
     }
 
     @GetMapping("/advertisement")
@@ -73,12 +74,5 @@ public class OrderController {
             @RequestParam("_id") String id
     ) {
         return orderService.getOrdersByAdvertisementId(id);
-    }
-
-    @GetMapping
-    public ResponseEntity<?> getOrderDetailsModelById(
-            @RequestParam("_id") String id
-    ) {
-        return orderService.getOrderDetailsModelById(id);
     }
 }

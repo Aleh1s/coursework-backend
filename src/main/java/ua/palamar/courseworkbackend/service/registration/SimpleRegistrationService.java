@@ -3,13 +3,12 @@ package ua.palamar.courseworkbackend.service.registration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.palamar.courseworkbackend.adapter.RegistrationServiceAdapter;
 import ua.palamar.courseworkbackend.dto.request.RegistrationRequestModel;
-import ua.palamar.courseworkbackend.entity.user.UserInfo;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
-import ua.palamar.courseworkbackend.repository.UserInfoRepository;
 import ua.palamar.courseworkbackend.repository.UserRepository;
 import ua.palamar.courseworkbackend.service.RegistrationService;
 import ua.palamar.courseworkbackend.service.UserService;
@@ -23,23 +22,20 @@ public class SimpleRegistrationService implements RegistrationService {
     private final UserRepository userRepository;
     private final UserServiceValidator userServiceValidator;
     private final RegistrationValidator registrationValidator;
-
-    private final UserInfoRepository userInfoRepository;
-    private final RegistrationServiceAdapter registrationServiceAdapter;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public SimpleRegistrationService(UserService userService,
-                                     UserRepository userRepository,
-                                     UserServiceValidator userServiceValidator,
-                                     RegistrationValidator registrationValidator,
-                                     UserInfoRepository userInfoRepository,
-                                     RegistrationServiceAdapter registrationServiceAdapter) {
+    public SimpleRegistrationService(
+            UserService userService,
+            UserRepository userRepository,
+            UserServiceValidator userServiceValidator,
+            RegistrationValidator registrationValidator,
+            PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.userServiceValidator = userServiceValidator;
         this.registrationValidator = registrationValidator;
-        this.userInfoRepository = userInfoRepository;
-        this.registrationServiceAdapter = registrationServiceAdapter;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -67,22 +63,18 @@ public class SimpleRegistrationService implements RegistrationService {
         if (!registrationValidator.isLastNameValid(registrationRequestModel.lastName()))
             throw new IllegalStateException("Invalid last name");
 
-        if (!registrationValidator.isCityValid(registrationRequestModel.city()))
-            throw new IllegalStateException("Invalid city");
-
-        if (!registrationValidator.isPostNumberValid(registrationRequestModel.postNumber()))
-            throw new IllegalStateException("Invalid post number");
-
-        if (!registrationValidator.isAddressValid(registrationRequestModel.address()))
-            throw new IllegalStateException("Invalid address");
-
         if (!registrationValidator.isPhoneNumberValid(registrationRequestModel.phoneNumber()))
             throw new IllegalStateException("Invalid phone number");
 
-        UserInfo newUserInfo = registrationServiceAdapter.getUserInfo(registrationRequestModel);
-        UserEntity newUser = registrationServiceAdapter.getUserEntity(registrationRequestModel, newUserInfo);
+        UserEntity newUser = new UserEntity(
+                registrationRequestModel.email(),
+                passwordEncoder.encode(registrationRequestModel.password()),
+                registrationRequestModel.firstName(),
+                registrationRequestModel.lastName(),
+                UserRole.USER,
+                registrationRequestModel.phoneNumber()
+        );
 
-        userInfoRepository.save(newUserInfo);
         userRepository.save(newUser);
 
         return new ResponseEntity<>("Successful registration", HttpStatus.CREATED);
