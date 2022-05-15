@@ -8,6 +8,7 @@ import ua.palamar.courseworkbackend.entity.advertisement.Category;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface AdvertisementsRepository extends PagingAndSortingRepository<Advertisement, String> {
 

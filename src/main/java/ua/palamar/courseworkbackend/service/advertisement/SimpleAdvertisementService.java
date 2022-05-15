@@ -17,12 +17,16 @@ import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.AdvertisementsRepository;
+import ua.palamar.courseworkbackend.repository.OrderRepository;
+import ua.palamar.courseworkbackend.repository.UserRepository;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
 import ua.palamar.courseworkbackend.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SimpleAdvertisementService implements AdvertisementService {
@@ -30,16 +34,22 @@ public class SimpleAdvertisementService implements AdvertisementService {
     private final AdvertisementsRepository advertisementsRepository;
     private final TokenProvider tokenProvider;
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
     public SimpleAdvertisementService(
             AdvertisementsRepository advertisementsRepository,
             TokenProvider tokenProvider,
-            UserService userService
+            UserService userService,
+            UserRepository userRepository,
+            OrderRepository orderRepository
     ) {
         this.advertisementsRepository = advertisementsRepository;
         this.tokenProvider = tokenProvider;
         this.userService = userService;
+        this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -141,8 +151,10 @@ public class SimpleAdvertisementService implements AdvertisementService {
         );
 
         AdvertisementResponse response = new AdvertisementResponse(
+                advertisement.getId(),
                 advertisement.getTitle(),
                 advertisement.getDescription(),
+                advertisement.getCategory(),
                 advertisement.getCreatedAt(),
                 userResponseModel
         );
@@ -153,8 +165,31 @@ public class SimpleAdvertisementService implements AdvertisementService {
     @Override
     public ResponseEntity<?> getAllAdvertisementsByEmail(HttpServletRequest request) {
         String email = tokenProvider.getEmail(request);
-        List<Advertisement> advertisements = advertisementsRepository.findAllByCreatorEmail(email);
-        return new ResponseEntity<>(advertisements, HttpStatus.ACCEPTED);
+
+        UserEntity user = userRepository.findUserEntityByEmailJoinFetchAdvertisements(email)
+                .orElseThrow(() -> new ApiRequestException(
+                                String.format(
+                                        "User with email does not exist", email
+                                )
+                        )
+                );
+
+        Set<AdvertisementResponse> responses = user.getAdvertisements().stream()
+                .map(advertisement -> new AdvertisementResponse(
+                        advertisement.getId(),
+                        advertisement.getTitle(),
+                        advertisement.getDescription(),
+                        advertisement.getCategory(),
+                        advertisement.getCreatedAt(),
+                        new UserResponseModel(
+                                user.getEmail(),
+                                user.getFirstName(),
+                                user.getLastName(),
+                                user.getPhoneNumber()
+                        )
+                )).collect(Collectors.toSet());
+
+        return new ResponseEntity<>(responses, HttpStatus.ACCEPTED);
     }
 
 }

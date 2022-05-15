@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.palamar.courseworkbackend.dto.request.OrderRequestModel;
+import ua.palamar.courseworkbackend.dto.response.OrderDetailsModelResponse;
 import ua.palamar.courseworkbackend.dto.response.OrderResponseModel;
 import ua.palamar.courseworkbackend.dto.response.UserResponseModel;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
@@ -280,15 +281,24 @@ public class SimpleOrderService implements OrderService {
 
     @Override
     public ResponseEntity<?> getOrdersByAdvertisementId(String id) {
-        Advertisement advertisement = advertisementsRepository.findAdvertisementByIdJoinFetchOrders(id)
-                .orElseThrow(() -> new ApiRequestException(
-                                String.format("Advertisement with id %s does not exist", id)
-                        )
-                );
+        Set<OrderEntity> orders = orderRepository.findAllByProductIdJoinFetchDeliveryAndReceiver(id);
 
-        Set<OrderEntity> orderEntities = advertisement.getOrderEntities();
+        Set<OrderDetailsModelResponse> responses = orders.stream()
+                .map(orderEntity -> new OrderDetailsModelResponse(
+                        orderEntity.getId(),
+                        orderEntity.getCreatedAt(),
+                        orderEntity.getOrderStatus(),
+                        orderEntity.getDeliveryEntity(),
+                        new UserResponseModel(
+                                orderEntity.getReceiver().getEmail(),
+                                orderEntity.getReceiver().getFirstName(),
+                                orderEntity.getReceiver().getLastName(),
+                                orderEntity.getReceiver().getPhoneNumber()
+                        ),
+                        orderEntity.getWishes()
+                )).collect(Collectors.toSet());
 
-        return new ResponseEntity<>(orderEntities, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(responses, HttpStatus.ACCEPTED);
     }
     @Override
     public ResponseEntity<?> deleteOrder(String id, HttpServletRequest request) {
