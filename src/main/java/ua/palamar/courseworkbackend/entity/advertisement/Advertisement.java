@@ -30,6 +30,9 @@ public class Advertisement {
     @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
+    private String city;
+
     @Enumerated(STRING)
     @Column(nullable = false)
     private Category category;
@@ -74,10 +77,12 @@ public class Advertisement {
     public Advertisement(
             String title,
             String description,
-            Category category
+            Category category,
+            String city
     ) {
         this.title = title;
         this.description = description;
         this.category = category;
+        this.city = city;
     }
 }

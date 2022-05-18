@@ -8,6 +8,7 @@ public record AdvertisementResponse(
         String uniqueId,
         String title,
         String description,
+        String city,
         Category category,
         LocalDateTime createdAt,
         UserResponseModel userResponseModel

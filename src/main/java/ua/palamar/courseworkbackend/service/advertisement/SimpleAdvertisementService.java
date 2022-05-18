@@ -70,7 +70,8 @@ public class SimpleAdvertisementService implements AdvertisementService {
         Advertisement advertisement = new Advertisement(
                 advertisementRequestModel.title(),
                 advertisementRequestModel.description(),
-                advertisementRequestModel.category()
+                advertisementRequestModel.category(),
+                advertisementRequestModel.city()
         );
 
         advertisement.addCreator(creator);
@@ -154,6 +155,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
                 advertisement.getId(),
                 advertisement.getTitle(),
                 advertisement.getDescription(),
+                advertisement.getCity(),
                 advertisement.getCategory(),
                 advertisement.getCreatedAt(),
                 userResponseModel
@@ -179,6 +181,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
                         advertisement.getId(),
                         advertisement.getTitle(),
                         advertisement.getDescription(),
+                        advertisement.getCity(),
                         advertisement.getCategory(),
                         advertisement.getCreatedAt(),
                         new UserResponseModel(
