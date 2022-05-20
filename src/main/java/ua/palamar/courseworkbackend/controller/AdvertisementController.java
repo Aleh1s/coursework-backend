@@ -60,4 +60,17 @@ public class AdvertisementController {
         return advertisementService.getAllAdvertisementsByEmail(request);
     }
 
+    @GetMapping("/query")
+    public ResponseEntity<?> findAdvertisementsByCategoryAndTitleContainingOrDescriptionContaining(
+            @RequestParam("_limit") Integer limit,
+            @RequestParam("_page") Integer page,
+            @RequestParam("_sortBy") String sortBy,
+            @RequestParam("_query") String query,
+            @RequestParam("_category") Category category
+    ) {
+        return advertisementService.findAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
+                category, query, sortBy, limit, page
+        );
+    }
+
 }

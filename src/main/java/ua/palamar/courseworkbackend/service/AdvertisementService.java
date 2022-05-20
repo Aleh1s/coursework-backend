@@ -1,5 +1,6 @@
 package ua.palamar.courseworkbackend.service;
 
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
@@ -29,4 +30,6 @@ public interface AdvertisementService {
     ResponseEntity<?> getAllAdvertisementsByEmail(HttpServletRequest request);
 
     ResponseEntity<?> remove(String id, HttpServletRequest request);
+
+    ResponseEntity<?> findAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(Category category, String query, String sortBy, Integer limit, Integer page);
 }

@@ -111,6 +111,18 @@ public class SimpleAdvertisementService implements AdvertisementService {
     }
 
     @Override
+    public ResponseEntity<?> findAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(Category category, String query, String sortBy, Integer limit, Integer page) {
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(sortBy).descending());
+        List<Advertisement> advertisements = advertisementsRepository.findAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(category, query, query, pageable);
+        Long totalCount = advertisementsRepository.countAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(category, query, query);
+        AdvertisementPageResponseModel responseModel = new AdvertisementPageResponseModel(
+                advertisements,
+                totalCount
+        );
+        return new ResponseEntity<>(responseModel, HttpStatus.ACCEPTED); //todo: Parameter value [\] did not match expected type
+    }
+
+    @Override
     public ResponseEntity<?> getAllByCategory(Category category) {
         List<Advertisement> advertisements = advertisementsRepository.findAllByCategory(category);
         return new ResponseEntity<>(advertisements, HttpStatus.ACCEPTED);
@@ -194,5 +206,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
 
         return new ResponseEntity<>(responses, HttpStatus.ACCEPTED);
     }
+
+
 
 }

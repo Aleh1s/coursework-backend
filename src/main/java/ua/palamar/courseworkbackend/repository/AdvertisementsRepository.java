@@ -1,6 +1,7 @@
 package ua.palamar.courseworkbackend.repository;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public interface AdvertisementsRepository extends PagingAndSortingRepository<Advertisement, String> {
+public interface AdvertisementsRepository extends JpaRepository<Advertisement, String> {
 
     List<Advertisement> findAllByCreatorEmail(String email);
 
@@ -24,4 +25,7 @@ public interface AdvertisementsRepository extends PagingAndSortingRepository<Adv
     @Query("select a from Advertisement a join fetch a.orderEntities where a.id = :id")
     Optional<Advertisement> findAdvertisementByIdJoinFetchOrders(String id);
 
+    List<Advertisement> findAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(Category category, String title, String description, Pageable pageable);
+
+    Long countAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(Category category, String title, String description);
 }

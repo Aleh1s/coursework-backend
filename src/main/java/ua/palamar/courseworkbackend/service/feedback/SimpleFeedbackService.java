@@ -26,6 +26,8 @@ public class SimpleFeedbackService implements FeedbackService {
     @Override
     public ResponseEntity<?> create(FeedbackModelRequest request) {
 
+
+
         FeedbackEntity feedbackEntity = new FeedbackEntity(
                 request.email(),
                 request.text()
