@@ -13,8 +13,6 @@ public interface AdvertisementService {
 
     ResponseEntity<?> save(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request);
 
-//    ResponseEntity<?> updateAdvertisement();
-
     ResponseEntity<?> getAllByCategory(Category category);
 
     ResponseEntity<?> getSortedPageByCategory(

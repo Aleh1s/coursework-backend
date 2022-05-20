@@ -38,9 +38,10 @@ public class SimpleFeedbackService implements FeedbackService {
 
     @Override
     public ResponseEntity<?> getSortedPage(Integer limit, Integer page, String sortBy) {
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(sortBy));
-        Page<FeedbackEntity> sortedPage = feedbackRepository.getAll(pageable);
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(sortBy).descending());
+        Page<FeedbackEntity> sortedPage = feedbackRepository.findAll(pageable);
         return new ResponseEntity<>(sortedPage, HttpStatus.ACCEPTED);
     }
+
 
 }

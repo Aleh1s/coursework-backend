@@ -8,6 +8,7 @@ import ua.palamar.courseworkbackend.service.FeedbackService;
 
 @RestController
 @RequestMapping("/api/v1/feedback")
+@CrossOrigin("http://localhost:3000")
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
