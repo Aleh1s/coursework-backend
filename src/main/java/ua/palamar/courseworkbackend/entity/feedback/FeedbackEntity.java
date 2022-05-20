@@ -35,4 +35,9 @@ public class FeedbackEntity {
         }
         this.createdAt = LocalDateTime.now();
     }
+
+    public FeedbackEntity(String email, String text) {
+        this.email = email;
+        this.text = text;
+    }
 }
