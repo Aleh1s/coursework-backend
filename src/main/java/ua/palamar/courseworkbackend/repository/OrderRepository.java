@@ -27,4 +27,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, String> {
             "where o.product.id = :id")
     Set<OrderEntity> findAllByProductIdJoinFetchDeliveryAndReceiver(String id);
 
+
+
 }

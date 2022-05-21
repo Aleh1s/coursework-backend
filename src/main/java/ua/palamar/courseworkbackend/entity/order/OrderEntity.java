@@ -36,7 +36,8 @@ public class OrderEntity {
     @OneToOne(
             fetch = LAZY,
             orphanRemoval = true,
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            optional = true
     )
     private DeliveryEntity deliveryEntity;
 

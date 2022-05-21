@@ -82,10 +82,20 @@ public class SimpleOrderService implements OrderService {
 
         UserEntity receiver = userService.getUserEntityByEmail(email);
 
+        boolean receiverOrderedBefore = receiverOrderedBefore(receiver, advertisement);
+
+        if (receiverOrderedBefore) {
+            throw new ApiRequestException(
+                    String.format(
+                        "User %s already has order for this advertisement", receiver.getEmail()
+                    )
+            );
+        }
+
         DeliveryEntity deliveryEntity = new DeliveryEntity(
-                orderRequest.deliveryCity(),
-                orderRequest.deliveryAddress(),
-                orderRequest.deliveryPostOffice()
+                orderRequest.city(),
+                orderRequest.address(),
+                orderRequest.postOffice()
         );
 
         OrderEntity orderEntity = new OrderEntity(
@@ -97,11 +107,15 @@ public class SimpleOrderService implements OrderService {
         orderEntity.addAdvertisement(advertisement);
         orderEntity.addReceiver(receiver);
 
-
         deliveryRepository.save(deliveryEntity);
         orderRepository.save(orderEntity);
 
         return new ResponseEntity<>(orderEntity, HttpStatus.CREATED);
+    }
+
+    private boolean receiverOrderedBefore(UserEntity receiver, Advertisement advertisement) {
+        return receiver.getOrderEntities().stream()
+                .anyMatch(order -> order.getProduct() == advertisement);
     }
 
     public OrderEntity getOrderById(String id) {
