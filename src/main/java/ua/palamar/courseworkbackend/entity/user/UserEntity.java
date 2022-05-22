@@ -3,6 +3,7 @@ package ua.palamar.courseworkbackend.entity.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
+import ua.palamar.courseworkbackend.entity.image.ImageEntity;
 import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
 
@@ -44,6 +45,15 @@ public class UserEntity {
 
     @Column(nullable = false)
     private String phoneNumber;
+
+    @JsonIgnore
+    @OneToOne(
+            fetch = LAZY,
+            cascade = ALL,
+            optional = true,
+            orphanRemoval = true
+    )
+    private ImageEntity image;
 
     @JsonIgnore
     @Setter(PRIVATE)

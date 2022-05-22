@@ -37,7 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/authentication/**",
                         "/api/v1/registration/**",
                         "/api/v1/advertisements/**",
-                        "/api/v1/feedback/**"
+                        "/api/v1/feedback/**",
+                        "/api/v1/users/**"
                 ).permitAll()
                 .antMatchers(
                         "/api/v1/advertisements/page/**"

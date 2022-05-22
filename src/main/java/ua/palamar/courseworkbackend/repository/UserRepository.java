@@ -16,4 +16,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 
     @Query("select u from UserEntity u join fetch u.advertisements where u.email = :email")
     Optional<UserEntity> findUserEntityByEmailJoinFetchAdvertisements(String email);
+
+    @Query("select u from UserEntity u join fetch u.image where u.email = :email")
+    Optional<UserEntity> findUserEntityByEmailJoinFetchImage(String email);
 }

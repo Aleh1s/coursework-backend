@@ -28,4 +28,7 @@ public interface AdvertisementsRepository extends JpaRepository<Advertisement, S
     List<Advertisement> findAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(Category category, String title, String description, Pageable pageable);
 
     Long countAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(Category category, String title, String description);
+
+    @Query("select a from Advertisement a join fetch a.image where a.id = :id")
+    Optional<Advertisement> findAdvertisementByIdJoinFetchImage(String id);
 }

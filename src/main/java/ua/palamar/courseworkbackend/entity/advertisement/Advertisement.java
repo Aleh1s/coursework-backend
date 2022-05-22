@@ -2,10 +2,13 @@ package ua.palamar.courseworkbackend.entity.advertisement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+import ua.palamar.courseworkbackend.entity.image.ImageEntity;
 import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 
 import javax.persistence.*;
+import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -56,6 +59,15 @@ public class Advertisement {
     )
     private UserEntity creator;
 
+    @JsonIgnore
+    @OneToOne(
+            fetch = LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            optional = false
+    )
+    private ImageEntity image;
+
     @PrePersist
     public void setUp() {
         if (id == null) {
@@ -78,11 +90,13 @@ public class Advertisement {
             String title,
             String description,
             Category category,
-            String city
+            String city,
+            ImageEntity image
     ) {
         this.title = title;
         this.description = description;
         this.category = category;
         this.city = city;
+        this.image = image;
     }
 }

@@ -8,15 +8,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementPageResponseModel;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
 import ua.palamar.courseworkbackend.dto.response.UserResponseModel;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
+import ua.palamar.courseworkbackend.entity.image.ImageEntity;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.AdvertisementsRepository;
+import ua.palamar.courseworkbackend.repository.ImageRepository;
 import ua.palamar.courseworkbackend.repository.OrderRepository;
 import ua.palamar.courseworkbackend.repository.UserRepository;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
@@ -24,6 +27,7 @@ import ua.palamar.courseworkbackend.service.AdvertisementService;
 import ua.palamar.courseworkbackend.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,6 +40,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
     private final UserService userService;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final ImageRepository imageRepository;
 
     @Autowired
     public SimpleAdvertisementService(
@@ -43,13 +48,15 @@ public class SimpleAdvertisementService implements AdvertisementService {
             TokenProvider tokenProvider,
             UserService userService,
             UserRepository userRepository,
-            OrderRepository orderRepository
+            OrderRepository orderRepository,
+            ImageRepository imageRepository
     ) {
         this.advertisementsRepository = advertisementsRepository;
         this.tokenProvider = tokenProvider;
         this.userService = userService;
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -62,16 +69,36 @@ public class SimpleAdvertisementService implements AdvertisementService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> save(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request) {
+    public ResponseEntity<?> save(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request, MultipartFile file) {
         String email = tokenProvider.getEmail(request);
 
         UserEntity creator = userService.getUserEntityByEmail(email);
+
+        ImageEntity image;
+
+        if (file == null) {
+            throw new ApiRequestException("The image must exists");
+        }
+
+        try {
+            image = new ImageEntity(
+                    file.getName(),
+                    file.getOriginalFilename(),
+                    file.getSize(),
+                    file.getContentType(),
+                    file.getBytes()
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        imageRepository.save(image);
 
         Advertisement advertisement = new Advertisement(
                 advertisementRequestModel.title(),
                 advertisementRequestModel.description(),
                 advertisementRequestModel.category(),
-                advertisementRequestModel.city()
+                advertisementRequestModel.city(),
+                image
         );
 
         advertisement.addCreator(creator);
@@ -119,7 +146,19 @@ public class SimpleAdvertisementService implements AdvertisementService {
                 advertisements,
                 totalCount
         );
-        return new ResponseEntity<>(responseModel, HttpStatus.ACCEPTED); //todo: Parameter value [\] did not match expected type
+        return new ResponseEntity<>(responseModel, HttpStatus.ACCEPTED);
+    }
+
+    @Override
+    public ImageEntity getImageById(String id) {
+        Advertisement advertisement = advertisementsRepository.findAdvertisementByIdJoinFetchImage(id)
+                .orElseThrow(() -> new ApiRequestException(
+                        String.format(
+                                "Advertisement with id %s does not exist", id
+                        )
+                ));
+
+        return advertisement.getImage();
     }
 
     @Override
@@ -206,7 +245,6 @@ public class SimpleAdvertisementService implements AdvertisementService {
 
         return new ResponseEntity<>(responses, HttpStatus.ACCEPTED);
     }
-
 
 
 }
