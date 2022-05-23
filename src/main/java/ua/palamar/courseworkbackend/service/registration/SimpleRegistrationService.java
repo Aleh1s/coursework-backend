@@ -13,7 +13,6 @@ import ua.palamar.courseworkbackend.repository.UserRepository;
 import ua.palamar.courseworkbackend.service.RegistrationService;
 import ua.palamar.courseworkbackend.service.UserService;
 import ua.palamar.courseworkbackend.service.UserServiceValidator;
-import ua.palamar.courseworkbackend.validator.RegistrationValidator;
 
 @Service
 public class SimpleRegistrationService implements RegistrationService {
@@ -21,7 +20,6 @@ public class SimpleRegistrationService implements RegistrationService {
     private final UserService userService;
     private final UserRepository userRepository;
     private final UserServiceValidator userServiceValidator;
-    private final RegistrationValidator registrationValidator;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -29,12 +27,10 @@ public class SimpleRegistrationService implements RegistrationService {
             UserService userService,
             UserRepository userRepository,
             UserServiceValidator userServiceValidator,
-            RegistrationValidator registrationValidator,
             PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.userServiceValidator = userServiceValidator;
-        this.registrationValidator = registrationValidator;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -50,21 +46,6 @@ public class SimpleRegistrationService implements RegistrationService {
             throw new ApiRequestException(
                     String.format("User with phone number: %s already exists", registrationRequestModel.phoneNumber())
             );
-
-        if (!registrationValidator.isEmailValid(registrationRequestModel.email()))
-            throw new IllegalStateException("Invalid email");
-
-        if (!registrationValidator.isPasswordValid(registrationRequestModel.password()))
-            throw new IllegalStateException("Invalid password");
-
-        if (!registrationValidator.isFirstNameValid(registrationRequestModel.firstName()))
-            throw new IllegalStateException("Invalid first name");
-
-        if (!registrationValidator.isLastNameValid(registrationRequestModel.lastName()))
-            throw new IllegalStateException("Invalid last name");
-
-        if (!registrationValidator.isPhoneNumberValid(registrationRequestModel.phoneNumber()))
-            throw new IllegalStateException("Invalid phone number");
 
         UserEntity newUser = new UserEntity(
                 registrationRequestModel.email(),
