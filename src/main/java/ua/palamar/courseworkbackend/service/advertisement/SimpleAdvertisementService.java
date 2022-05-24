@@ -109,6 +109,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> remove(String id, HttpServletRequest request) {
         String email = tokenProvider.getEmail(request);
 
@@ -121,9 +122,9 @@ public class SimpleAdvertisementService implements AdvertisementService {
                 );
 
         boolean userHasAdvertisement = userEntity.getAdvertisements().contains(advertisement);
-
+        int count;
         if (userHasAdvertisement) {
-            advertisementsRepository.delete(advertisement);
+            count = advertisementsRepository.removeAdvertisementById(id);
         } else {
             throw new ApiRequestException(
                     String.format(
@@ -134,13 +135,13 @@ public class SimpleAdvertisementService implements AdvertisementService {
             );
         }
 
-        return new ResponseEntity<>("Post was successfully removed", HttpStatus.ACCEPTED);
+        return ResponseEntity.ok(count); //todo: removing
     }
 
     @Override
     public ResponseEntity<?> findAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(Category category, String query, String sortBy, Integer limit, Integer page) {
         Pageable pageable = PageRequest.of(page, limit, Sort.by(sortBy).descending());
-        List<Advertisement> advertisements = advertisementsRepository.findAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(category, query, query, pageable);
+        List<Advertisement> advertisements = advertisementsRepository.findAdvertisementsByCategoryAndTitleContainingIgnoreCase(category, query, pageable);
         Long totalCount = advertisementsRepository.countAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(category, query, query);
         AdvertisementPageResponseModel responseModel = new AdvertisementPageResponseModel(
                 advertisements,

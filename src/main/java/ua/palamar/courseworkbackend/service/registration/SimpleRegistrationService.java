@@ -42,9 +42,15 @@ public class SimpleRegistrationService implements RegistrationService {
                     String.format("User with email: %s already exists", registrationRequestModel.email())
             );
 
-        if (userServiceValidator.userWithPhoneNumberExists(registrationRequestModel.phoneNumber()))
+        String phoneNumber = registrationRequestModel.phoneNumber();
+
+        if (phoneNumber.startsWith("+38")) {
+            phoneNumber = phoneNumber.substring("+38".length());
+        }
+
+        if (userServiceValidator.userWithPhoneNumberExists(phoneNumber))
             throw new ApiRequestException(
-                    String.format("User with phone number: %s already exists", registrationRequestModel.phoneNumber())
+                    String.format("User with phone number: %s already exists", phoneNumber)
             );
 
         UserEntity newUser = new UserEntity(
@@ -53,7 +59,7 @@ public class SimpleRegistrationService implements RegistrationService {
                 registrationRequestModel.firstName(),
                 registrationRequestModel.lastName(),
                 UserRole.USER,
-                registrationRequestModel.phoneNumber()
+                phoneNumber
         );
 
         userRepository.save(newUser);

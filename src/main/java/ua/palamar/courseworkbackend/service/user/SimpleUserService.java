@@ -18,6 +18,7 @@ import ua.palamar.courseworkbackend.service.UserServiceValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 public class SimpleUserService implements UserService, UserServiceValidator {
@@ -82,9 +83,30 @@ public class SimpleUserService implements UserService, UserServiceValidator {
         String email = tokenProvider.getEmail(request);
         UserEntity user = getUserEntityByEmail(email);
 
-        user.setFirstName(userDto.firstName().orElse(user.getFirstName()));
-        user.setLastName(userDto.lastName().orElse(user.getLastName()));
-        user.setPhoneNumber(userDto.phoneNumber().orElse(user.getPhoneNumber()));
+        String phoneNumber = userDto.phoneNumber();
+        if (!phoneNumber.equals("")) {
+            if (phoneNumber.startsWith("+38")) {
+                phoneNumber = phoneNumber.substring("+38".length());
+            }
+
+            if (!phoneNumber.equals(user.getPhoneNumber()) && userRepository.existsByPhoneNumber(phoneNumber)) {
+                throw new ApiRequestException(
+                        String.format("User with phone number %s already exists", phoneNumber)
+                );
+            }
+
+            user.setPhoneNumber(phoneNumber);
+        }
+
+        String firstName = userDto.firstName();
+        if (!firstName.equals("")) {
+            user.setFirstName(firstName);
+        }
+
+        String lastName = userDto.lastName();
+        if (!lastName.equals("")) {
+            user.setLastName(lastName);
+        }
 
         userRepository.save(user);
         return ResponseEntity.ok().build();
