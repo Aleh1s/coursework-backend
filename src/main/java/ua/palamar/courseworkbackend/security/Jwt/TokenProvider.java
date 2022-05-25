@@ -79,6 +79,7 @@ public class TokenProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }

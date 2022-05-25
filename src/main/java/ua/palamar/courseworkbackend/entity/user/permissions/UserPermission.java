@@ -2,13 +2,14 @@ package ua.palamar.courseworkbackend.entity.user.permissions;
 
 public enum UserPermission {
 
-    POST_READ("post:read"),
-    POST_DELETE("post:delete"),
-    POST_CREATE("post:create"),
-    POST_UPDATE("post:update"),
-    ORDER_ITEM("order:item"),
-    ORDER_SERVICE("order:service"),
-    RENT_HOUSE("rent:house");
+    ADVERTISEMENT_READ("advertisement:read"),
+    ADVERTISEMENT_CREATE("advertisement:create"),
+    ADVERTISEMENT_DELETE("advertisement:delete"),
+    ORDER_READ("order:read"),
+    ORDER_MAKE("order:make"),
+    ORDER_CHANGE("order:change"),
+    USER_UPDATE("user:update");
+
 
     private final String permission;
 

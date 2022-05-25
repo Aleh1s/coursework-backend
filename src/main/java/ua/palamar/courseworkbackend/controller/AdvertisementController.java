@@ -14,7 +14,6 @@ import ua.palamar.courseworkbackend.service.AdvertisementService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/advertisements")

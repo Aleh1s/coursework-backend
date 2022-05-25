@@ -62,14 +62,6 @@ public class SimpleAdvertisementService implements AdvertisementService {
     }
 
     @Override
-    public Advertisement getAdvertisementById(String id) {
-        return advertisementsRepository.findById(id)
-                .orElseThrow(() -> new ApiRequestException(
-                        String.format("Advertisement with id %s does not exist", id)
-                ));
-    }
-
-    @Override
     @Transactional
     public ResponseEntity<?> save(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request, MultipartFile file) {
         String email = tokenProvider.getEmail(request);
@@ -137,7 +129,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
                     )
             );
         }
-        
+
         int count;
         if (userIsOwner) {
             advertisement.removeOrders(orders);

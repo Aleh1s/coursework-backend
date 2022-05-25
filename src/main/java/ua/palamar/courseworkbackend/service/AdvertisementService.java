@@ -28,8 +28,6 @@ public interface AdvertisementService {
 
     ResponseEntity<?> getAdvertisementResponseModelByAdvertisementId(String id);
 
-    Advertisement getAdvertisementById(String id);
-
     ResponseEntity<?> getAllAdvertisementsByEmail(HttpServletRequest request);
 
     ResponseEntity<?> remove(String id, HttpServletRequest request);

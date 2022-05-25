@@ -33,5 +33,4 @@ public class FeedbackController {
     ) {
         return feedbackService.getSortedPage(limit, page, sortBy);
     }
-
 }

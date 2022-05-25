@@ -11,9 +11,15 @@ import static ua.palamar.courseworkbackend.entity.user.permissions.UserPermissio
 
 public enum UserRole {
 
-    VIEWER(Sets.newHashSet(POST_READ)),
-    USER(Sets.newHashSet(POST_READ, POST_CREATE, POST_DELETE, POST_UPDATE, ORDER_ITEM, ORDER_SERVICE, RENT_HOUSE)),
-    ADMIN(Sets.newHashSet(POST_READ, POST_CREATE, POST_DELETE, POST_UPDATE, ORDER_ITEM, ORDER_SERVICE, RENT_HOUSE));
+    USER(Sets.newHashSet(
+            ADVERTISEMENT_READ,
+            ADVERTISEMENT_CREATE,
+            ADVERTISEMENT_DELETE,
+            ORDER_READ,
+            ORDER_CHANGE,
+            ORDER_MAKE,
+            USER_UPDATE
+    ));
 
     private final Set<UserPermission> permissions;
 
@@ -25,7 +31,7 @@ public enum UserRole {
         return permissions;
     }
 
-    public Set<GrantedAuthority> getAuthorities () {
+    public Set<GrantedAuthority> getAuthorities() {
         return getPermissions().stream()
                 .map(userPermission -> new SimpleGrantedAuthority(userPermission.getPermission()))
                 .collect(Collectors.toSet());
