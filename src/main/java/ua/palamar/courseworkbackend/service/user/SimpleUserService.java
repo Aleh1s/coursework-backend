@@ -36,11 +36,6 @@ public class SimpleUserService implements UserService, UserServiceValidator {
     }
 
     @Override
-    public UserEntity getUserEntityById(String id) {
-        return null;
-    }
-
-    @Override
     public UserEntity getUserEntityByEmail(String email) {
         return userRepository.getUserEntityByEmail(email)
                 .orElseThrow(() -> new ApiRequestException(

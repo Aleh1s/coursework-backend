@@ -86,6 +86,11 @@ public class Advertisement {
         creator.getAdvertisements().remove(this);
     }
 
+    public void removeOrders(Set<OrderEntity> orders) {
+        orders.forEach(order -> order.setProduct(null));
+        this.orderEntities.removeAll(orders);
+    }
+
     public Advertisement(
             String title,
             String description,

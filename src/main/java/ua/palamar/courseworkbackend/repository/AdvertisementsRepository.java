@@ -29,4 +29,7 @@ public interface AdvertisementsRepository extends JpaRepository<Advertisement, S
     @Modifying
     @Transactional
     int removeAdvertisementById(String id);
+
+    @Query("select a from Advertisement a join fetch a.orderEntities where a.id = :id")
+    Optional<Advertisement> findAdvertisementByIdJoinFetchOrders(String id);
 }

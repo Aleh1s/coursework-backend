@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
 
-    UserEntity getUserEntityById(String id);
     UserEntity getUserEntityByEmail(String email);
 
     ResponseEntity<?> addImage(MultipartFile image, HttpServletRequest request);

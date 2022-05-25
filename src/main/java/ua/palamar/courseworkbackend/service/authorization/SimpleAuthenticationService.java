@@ -39,7 +39,7 @@ public class SimpleAuthenticationService implements AuthenticationService {
         UserEntity currentUser = userService.getUserEntityByEmail(authenticationRequestModel.email());
 
         if (!passwordEncoder.matches(authenticationRequestModel.password(), currentUser.getPassword())) {
-            throw new IllegalStateException("Wrong password");
+            throw new ApiRequestException("Wrong password");
         }
 
         String accessToken = tokenProvider.generateToken(currentUser);

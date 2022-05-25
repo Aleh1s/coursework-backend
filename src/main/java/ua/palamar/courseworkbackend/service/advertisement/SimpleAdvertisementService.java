@@ -16,6 +16,8 @@ import ua.palamar.courseworkbackend.dto.response.UserResponseModel;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.entity.image.ImageEntity;
+import ua.palamar.courseworkbackend.entity.order.OrderEntity;
+import ua.palamar.courseworkbackend.entity.order.OrderStatus;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.AdvertisementsRepository;
@@ -121,10 +123,26 @@ public class SimpleAdvertisementService implements AdvertisementService {
                         )
                 );
 
-        boolean userHasAdvertisement = userEntity.getAdvertisements().contains(advertisement);
+        boolean userIsOwner = userEntity.getAdvertisements().contains(advertisement);
+
+        Set<OrderEntity> orders = advertisement.getOrderEntities();
+
+        boolean hasConfirmedOrders = orders.stream()
+                .anyMatch(order -> order.getOrderStatus().equals(OrderStatus.CONFIRMED));
+
+        if (hasConfirmedOrders) {
+            throw new ApiRequestException(
+                    String.format(
+                            "User with email %s has confirmed orders", email
+                    )
+            );
+        }
+        
         int count;
-        if (userHasAdvertisement) {
-            count = advertisementsRepository.removeAdvertisementById(id);
+        if (userIsOwner) {
+            advertisement.removeOrders(orders);
+            advertisement.removeCreator(userEntity);
+            count = advertisementsRepository.removeAdvertisementById(advertisement.getId());
         } else {
             throw new ApiRequestException(
                     String.format(
@@ -135,7 +153,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
             );
         }
 
-        return ResponseEntity.ok(count); //todo: removing
+        return ResponseEntity.ok(count);
     }
 
     @Override
