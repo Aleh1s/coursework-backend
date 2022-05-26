@@ -1,3 +1,7 @@
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
 spring:
   datasource:
     url: jdbc:h2:mem:mydb;DB_CLOSE_DELAY=-1
