@@ -11,7 +11,7 @@ import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import java.util.List;
 import java.util.Optional;
 
-public interface AdvertisementsRepository extends JpaRepository<Advertisement, String> {
+public interface AdvertisementRepository extends JpaRepository<Advertisement, String> {
 
     List<Advertisement> findAllByCategory(Category category);
 
@@ -22,7 +22,7 @@ public interface AdvertisementsRepository extends JpaRepository<Advertisement, S
 
     List<Advertisement> findAdvertisementsByCategoryAndTitleContainingIgnoreCase(Category category, String title, Pageable pageable);
 
-    Long countAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(Category category, String title, String description);
+    Long countAdvertisementsByCategoryAndTitleContainingIgnoreCase(Category category, String title);
 
     @Query("select a from Advertisement a join fetch a.image where a.id = :id")
     Optional<Advertisement> findAdvertisementByIdJoinFetchImage(String id);

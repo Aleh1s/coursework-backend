@@ -1,9 +1,11 @@
 package ua.palamar.courseworkbackend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.palamar.courseworkbackend.dto.request.AuthenticationRequestModel;
+import ua.palamar.courseworkbackend.dto.response.AuthenticationResponseModel;
 import ua.palamar.courseworkbackend.service.AuthenticationService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +23,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestModel authenticationRequestModel) {
-        return authenticationService.authenticate(authenticationRequestModel);
+    public ResponseEntity<AuthenticationResponseModel> authenticate(
+            @RequestBody AuthenticationRequestModel authenticationRequestModel
+    ) {
+        return new ResponseEntity<>(authenticationService.authenticate(authenticationRequestModel), HttpStatus.OK);
     }
 
     @GetMapping("/refresh")
     public ResponseEntity<?> refresh(HttpServletRequest request) {
-        return authenticationService.refresh(request);
+        return new ResponseEntity<>(authenticationService.refresh(request), HttpStatus.OK);
     }
 }

@@ -16,7 +16,7 @@ import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.entity.order.OrderStatus;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
-import ua.palamar.courseworkbackend.repository.AdvertisementsRepository;
+import ua.palamar.courseworkbackend.repository.AdvertisementRepository;
 import ua.palamar.courseworkbackend.repository.DeliveryRepository;
 import ua.palamar.courseworkbackend.repository.OrderRepository;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
@@ -37,7 +37,7 @@ public class SimpleOrderService implements OrderService {
 
     private final AdvertisementService advertisementService;
     private final DeliveryRepository deliveryRepository;
-    private final AdvertisementsRepository advertisementsRepository;
+    private final AdvertisementRepository advertisementRepository;
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final TokenProvider tokenProvider;
@@ -46,14 +46,14 @@ public class SimpleOrderService implements OrderService {
     public SimpleOrderService(
             AdvertisementService advertisementService,
             DeliveryRepository deliveryRepository,
-            AdvertisementsRepository advertisementsRepository,
+            AdvertisementRepository advertisementRepository,
             OrderRepository orderRepository,
             UserService userService,
             TokenProvider tokenProvider
     ) {
         this.advertisementService = advertisementService;
         this.deliveryRepository = deliveryRepository;
-        this.advertisementsRepository = advertisementsRepository;
+        this.advertisementRepository = advertisementRepository;
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.tokenProvider = tokenProvider;
@@ -65,7 +65,7 @@ public class SimpleOrderService implements OrderService {
         String email = tokenProvider.getEmail(request);
         String advertisementId = orderRequest.advertisementId();
 
-        Advertisement advertisement = advertisementsRepository.findAdvertisementByIdJoinFetchCreator(advertisementId)
+        Advertisement advertisement = advertisementRepository.findAdvertisementByIdJoinFetchCreator(advertisementId)
                 .orElseThrow(() -> new ApiRequestException(
                         String.format(
                                 "Advertisement with id %s does not exist", advertisementId

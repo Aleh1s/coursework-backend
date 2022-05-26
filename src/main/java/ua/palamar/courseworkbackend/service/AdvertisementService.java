@@ -1,38 +1,25 @@
 package ua.palamar.courseworkbackend.service;
 
-import org.apache.coyote.Response;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ua.palamar.courseworkbackend.dto.AdvertisementCriteria;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
-import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.advertisement.Category;
-import ua.palamar.courseworkbackend.entity.image.ImageEntity;
+import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
+import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
 public interface AdvertisementService {
 
-    ResponseEntity<?> save(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request, MultipartFile file);
+    AdvertisementResponse save(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request, MultipartFile file);
 
-    ResponseEntity<?> getAllByCategory(Category category);
+    AdvertisementsResponse getAllByCriteria(AdvertisementCriteria criteria);
 
-    ResponseEntity<?> getSortedPageByCategory(
-            Category category,
-            Integer numberOfPages,
-            Integer pageNumber,
-            String sortBy
-    );
+    AdvertisementResponse getByIdJoinFetchCreator(String id);
 
-    ResponseEntity<?> getAdvertisementResponseModelByAdvertisementId(String id);
+    Set<AdvertisementResponse> getAllByEmail(String email);
 
-    ResponseEntity<?> getAllAdvertisementsByEmail(HttpServletRequest request);
-
-    ResponseEntity<?> remove(String id, HttpServletRequest request);
-
-    ResponseEntity<?> findAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(Category category, String query, String sortBy, Integer limit, Integer page);
-
-    ImageEntity getImageById(String id);
+    void remove(String id, HttpServletRequest request);
 }

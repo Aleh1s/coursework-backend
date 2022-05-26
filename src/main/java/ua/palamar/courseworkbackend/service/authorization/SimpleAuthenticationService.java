@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.dto.request.AuthenticationRequestModel;
 import ua.palamar.courseworkbackend.dto.response.AuthenticationResponseModel;
+import ua.palamar.courseworkbackend.dto.response.RefreshTokenResponse;
 import ua.palamar.courseworkbackend.dto.response.UserResponseModel;
 import ua.palamar.courseworkbackend.entity.user.UserEntity;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
@@ -15,6 +16,7 @@ import ua.palamar.courseworkbackend.service.AuthenticationService;
 import ua.palamar.courseworkbackend.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 @Service
 public class SimpleAuthenticationService implements AuthenticationService {
@@ -35,7 +37,7 @@ public class SimpleAuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public ResponseEntity<?> authenticate(AuthenticationRequestModel authenticationRequestModel) {
+    public AuthenticationResponseModel authenticate(AuthenticationRequestModel authenticationRequestModel) {
         UserEntity currentUser = userService.getUserEntityByEmail(authenticationRequestModel.email());
 
         if (!passwordEncoder.matches(authenticationRequestModel.password(), currentUser.getPassword())) {
@@ -48,35 +50,32 @@ public class SimpleAuthenticationService implements AuthenticationService {
 
         UserResponseModel userResponseModel = getUserResponseModel(currentUser);
 
-        return new ResponseEntity<>(new AuthenticationResponseModel(
+        return new AuthenticationResponseModel(
                 accessToken,
                 refreshToken,
                 userResponseModel
-        ), HttpStatus.ACCEPTED);
+        );
     }
 
     @Override
-    public ResponseEntity<?> refresh(HttpServletRequest request) {
+    public RefreshTokenResponse refresh(HttpServletRequest request) {
         String refreshToken = tokenProvider.resolveToken(request);
 
-        if (refreshToken != null && tokenProvider.validateToken(refreshToken)) {
+        if (Objects.nonNull(refreshToken) && tokenProvider.validateToken(refreshToken)) {
             UserEntity currentUser = userService.getUserEntityByEmail(
                     tokenProvider.getEmailByToken(refreshToken)
             );
 
-            String newAccessToken = tokenProvider.generateToken(currentUser);
+            String token = tokenProvider.generateToken(currentUser);
 
             UserResponseModel userResponseModel = getUserResponseModel(currentUser);
 
-            AuthenticationResponseModel authenticationResponseModel = new AuthenticationResponseModel(
-                    newAccessToken,
-                    refreshToken,
+            return new RefreshTokenResponse(
+                    token,
                     userResponseModel
             );
 
-            return new ResponseEntity<>(authenticationResponseModel, HttpStatus.ACCEPTED);
         } else {
-
             throw new ApiRequestException("Token isn't valid");
         }
     }

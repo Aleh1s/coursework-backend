@@ -1,19 +1,19 @@
 package ua.palamar.courseworkbackend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ua.palamar.courseworkbackend.dto.AdvertisementCriteria;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
+import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
+import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
-import ua.palamar.courseworkbackend.entity.image.ImageEntity;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/advertisements")
@@ -28,7 +28,7 @@ public class AdvertisementController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAdvertisement(
+    public ResponseEntity<AdvertisementResponse> create(
             @RequestParam("_image") MultipartFile file,
             @RequestParam("_title") String title,
             @RequestParam("_description") String description,
@@ -36,72 +36,42 @@ public class AdvertisementController {
             @RequestParam("_category") Category category,
             HttpServletRequest request
     ) {
-        AdvertisementRequestModel dto = new AdvertisementRequestModel(
-                title,
-                description,
-                category,
-                city
-        );
-        return advertisementService.save(dto, request, file);
+        AdvertisementRequestModel model = new AdvertisementRequestModel(title, description, category, city);
+        return new ResponseEntity<>(advertisementService.save(model, request, file), HttpStatus.CREATED);
     }
 
     @DeleteMapping
-    public ResponseEntity<?> removeAdvertisement(
+    public ResponseEntity<?> removeById(
             @RequestParam("_id") String id,
             HttpServletRequest request
     ) {
-        return advertisementService.remove(id, request);
+        advertisementService.remove(id, request);
+        return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity<AdvertisementResponse> getById(@PathVariable("id") String id) {
+        return new ResponseEntity<>(advertisementService.getByIdJoinFetchCreator(id), HttpStatus.OK);
+    }
+
     @GetMapping
-    public ResponseEntity<?> getAdvertisementResponseModelById(
-            @RequestParam("_id") String id
+    public ResponseEntity<AdvertisementsResponse> getAll(
+            @RequestParam(value = "_limit", defaultValue = "12") Integer limit,
+            @RequestParam(value = "_page", defaultValue = "0") Integer page,
+            @RequestParam(value = "_category", defaultValue = "ITEM") Category category,
+            @RequestParam(value = "_sortBy", defaultValue = "createdAt") String sortBy,
+            @RequestParam(value = "query", defaultValue = "") String query
     ) {
-        return advertisementService.getAdvertisementResponseModelByAdvertisementId(id);
+        return new ResponseEntity<>(
+                advertisementService.getAllByCriteria(
+                        new AdvertisementCriteria(category, limit, page, sortBy, query)
+                ), HttpStatus.OK);
     }
 
-    @GetMapping("/page")
-    public ResponseEntity<?> getPage(
-            @RequestParam("_limit") Integer limit,
-            @RequestParam("_page") Integer page,
-            @RequestParam("_category") Category category,
-            @RequestParam("_sortBy") String sortBy
+    @GetMapping
+    public ResponseEntity<Set<AdvertisementResponse>> getAllByEmail(
+            @RequestParam("_email") String email
     ) {
-        return advertisementService.getSortedPageByCategory(category, limit, page, sortBy);
+        return new ResponseEntity<>(advertisementService.getAllByEmail(email), HttpStatus.OK);
     }
-
-    @GetMapping("/email")
-    public ResponseEntity<?> getAllByEmail(
-        HttpServletRequest request
-    ) {
-        return advertisementService.getAllAdvertisementsByEmail(request);
-    }
-
-    @GetMapping("/query")
-    public ResponseEntity<?> findAdvertisementsByCategoryAndTitleContainingOrDescriptionContaining(
-            @RequestParam("_limit") Integer limit,
-            @RequestParam("_page") Integer page,
-            @RequestParam("_sortBy") String sortBy,
-            @RequestParam("_query") String query,
-            @RequestParam("_category") Category category
-    ) {
-        return advertisementService.findAdvertisementsByCategoryAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
-                category, query, sortBy, limit, page
-        );
-    }
-
-    @Transactional
-    @GetMapping("/image")
-    public ResponseEntity<Object> getImageById(@RequestParam("_id") String id) {
-        ImageEntity image = advertisementService.getImageById(id);
-        if (image == null)
-            return ResponseEntity.badRequest()
-                    .body(null);
-
-        return ResponseEntity.ok()
-                .header("fileName", image.getOriginalFileName())
-                .contentType(MediaType.valueOf(image.getContentType()))
-                .contentLength(image.getSize())
-                .body(new InputStreamResource(new ByteArrayInputStream(image.getBytes())));
-    }
-
 }
