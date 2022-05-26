@@ -1,14 +1,14 @@
 package ua.palamar.courseworkbackend.service;
 
 import org.springframework.http.ResponseEntity;
-import ua.palamar.courseworkbackend.dto.request.OrderRequestModel;
+import ua.palamar.courseworkbackend.dto.request.OrderRequest;
 import ua.palamar.courseworkbackend.entity.order.DeliveryStatus;
 
 import javax.servlet.http.HttpServletRequest;
 
 public interface OrderService {
 
-    ResponseEntity<?> makeOrder(OrderRequestModel orderRequestModel, HttpServletRequest request);
+    ResponseEntity<?> makeOrder(OrderRequest orderRequest, HttpServletRequest request);
 
     ResponseEntity<?> declineOrder(String id, HttpServletRequest request);
 

@@ -3,7 +3,7 @@ package ua.palamar.courseworkbackend.service.image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.image.ImageEntity;
+import ua.palamar.courseworkbackend.entity.image.Image;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.AdvertisementRepository;
 import ua.palamar.courseworkbackend.service.ImageService;
@@ -19,7 +19,7 @@ public class SimpleImageService implements ImageService {
     }
 
     @Override
-    public ImageEntity getImageByAdvertisementId(String advertisementId) {
+    public Image getImageByAdvertisementId(String advertisementId) {
         Advertisement advertisement = advertisementRepository.findAdvertisementByIdJoinFetchImage(advertisementId)
                 .orElseThrow(() -> new ApiRequestException(
                         String.format(

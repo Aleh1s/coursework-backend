@@ -1,9 +1,9 @@
 package ua.palamar.courseworkbackend.service;
 
-import ua.palamar.courseworkbackend.entity.image.ImageEntity;
+import ua.palamar.courseworkbackend.entity.image.Image;
 
 public interface ImageService {
 
-    ImageEntity getImageByAdvertisementId(String advertisementId);
+    Image getImageByAdvertisementId(String advertisementId);
 
 }

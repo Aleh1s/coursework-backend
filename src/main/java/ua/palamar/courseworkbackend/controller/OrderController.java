@@ -3,7 +3,7 @@ package ua.palamar.courseworkbackend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.palamar.courseworkbackend.dto.request.OrderRequestModel;
+import ua.palamar.courseworkbackend.dto.request.OrderRequest;
 import ua.palamar.courseworkbackend.entity.order.DeliveryStatus;
 import ua.palamar.courseworkbackend.service.OrderService;
 
@@ -23,7 +23,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<?> makeOrder(
-            @RequestBody OrderRequestModel model,
+            @RequestBody OrderRequest model,
             HttpServletRequest request
     ) {
         return orderService.makeOrder(model, request);

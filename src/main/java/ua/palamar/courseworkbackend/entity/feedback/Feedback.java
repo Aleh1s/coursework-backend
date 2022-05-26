@@ -17,7 +17,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FeedbackEntity {
+public class Feedback {
 
     @Id
     private String id;
@@ -36,7 +36,7 @@ public class FeedbackEntity {
         this.createdAt = LocalDateTime.now();
     }
 
-    public FeedbackEntity(String email, String text) {
+    public Feedback(String email, String text) {
         this.email = email;
         this.text = text;
     }

@@ -1,4 +1,4 @@
-package ua.palamar.courseworkbackend.dto;
+package ua.palamar.courseworkbackend.dto.criteria;
 
 public record FeedbackCriteria(
         Integer limit,

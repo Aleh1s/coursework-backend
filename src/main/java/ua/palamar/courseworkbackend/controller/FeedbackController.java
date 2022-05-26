@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.palamar.courseworkbackend.dto.FeedbackCriteria;
-import ua.palamar.courseworkbackend.dto.request.FeedbackModelRequest;
+import ua.palamar.courseworkbackend.dto.criteria.FeedbackCriteria;
+import ua.palamar.courseworkbackend.dto.request.FeedbackRequest;
 import ua.palamar.courseworkbackend.dto.response.FeedbackResponse;
 import ua.palamar.courseworkbackend.dto.response.FeedbacksResponse;
 import ua.palamar.courseworkbackend.service.FeedbackService;
@@ -24,7 +24,7 @@ public class FeedbackController {
 
     @PostMapping
     public ResponseEntity<FeedbackResponse> create(
-            @RequestBody FeedbackModelRequest request
+            @RequestBody FeedbackRequest request
     ) {
         return new ResponseEntity<>(feedbackService.create(request), HttpStatus.OK);
     }

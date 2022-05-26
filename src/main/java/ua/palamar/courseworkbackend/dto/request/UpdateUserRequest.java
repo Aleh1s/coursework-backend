@@ -1,11 +1,8 @@
 package ua.palamar.courseworkbackend.dto.request;
 
-public record RegistrationRequestModel(
-        String email,
-        String password,
+public record UpdateUserRequest(
         String firstName,
         String lastName,
         String phoneNumber
 ) {
-
 }

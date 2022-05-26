@@ -1,10 +1,10 @@
 package ua.palamar.courseworkbackend.adapter.user;
 
-import ua.palamar.courseworkbackend.dto.response.UserResponseModel;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.dto.response.UserResponse;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 
 public interface UserDtoAdapter {
 
-    UserResponseModel getModel(UserEntity user);
+    UserResponse getModel(UserAccount user);
 
 }

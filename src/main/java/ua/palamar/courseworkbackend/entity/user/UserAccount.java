@@ -3,8 +3,8 @@ package ua.palamar.courseworkbackend.entity.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.image.ImageEntity;
-import ua.palamar.courseworkbackend.entity.order.OrderEntity;
+import ua.palamar.courseworkbackend.entity.image.Image;
+import ua.palamar.courseworkbackend.entity.order.Order;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
 
 import javax.persistence.*;
@@ -22,7 +22,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity {
+public class UserAccount {
 
     @Id
     private String id;
@@ -53,7 +53,7 @@ public class UserEntity {
             optional = true,
             orphanRemoval = true
     )
-    private ImageEntity image;
+    private Image image;
 
     @JsonIgnore
     @Setter(PRIVATE)
@@ -73,7 +73,7 @@ public class UserEntity {
             cascade = ALL,
             mappedBy = "receiver"
     )
-    private Set<OrderEntity> orderEntities = new HashSet<>();
+    private Set<Order> orderEntities = new HashSet<>();
 
     @PrePersist
     public void setId() {
@@ -82,7 +82,7 @@ public class UserEntity {
         }
     }
 
-    public UserEntity(
+    public UserAccount(
             String email,
             String password,
             String firstName,

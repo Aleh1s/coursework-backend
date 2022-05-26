@@ -1,18 +1,18 @@
 package ua.palamar.courseworkbackend.dto.response;
 
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.order.DeliveryEntity;
+import ua.palamar.courseworkbackend.entity.order.Delivery;
 import ua.palamar.courseworkbackend.entity.order.OrderStatus;
 
 import java.time.LocalDateTime;
 
-public record OrderResponseModel(
+public record OrderResponse(
         String uniqueId,
         LocalDateTime createdAt,
         OrderStatus orderStatus,
-        DeliveryEntity deliveryEntity,
+        Delivery delivery,
         Advertisement product,
-        UserResponseModel sender,
+        UserResponse sender,
         String wishes
 ) {
 }

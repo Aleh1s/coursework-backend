@@ -2,16 +2,16 @@ package ua.palamar.courseworkbackend.adapter;
 
 import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.entity.user.UserDetails;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 
 @Component
 public class UserDetailsAdapterImpl implements UserDetailsAdapter{
     @Override
-    public UserDetails getUserDetails(UserEntity userEntity) {
+    public UserDetails getUserDetails(UserAccount userAccount) {
         return new UserDetails(
-                userEntity.getEmail(),
-                userEntity.getPassword(),
-                userEntity.getRole()
+                userAccount.getEmail(),
+                userAccount.getPassword(),
+                userAccount.getRole()
         );
     }
 }

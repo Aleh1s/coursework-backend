@@ -2,13 +2,11 @@ package ua.palamar.courseworkbackend.entity.advertisement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-import ua.palamar.courseworkbackend.entity.image.ImageEntity;
-import ua.palamar.courseworkbackend.entity.order.OrderEntity;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.entity.image.Image;
+import ua.palamar.courseworkbackend.entity.order.Order;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 
 import javax.persistence.*;
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -51,13 +49,13 @@ public class Advertisement {
             cascade = CascadeType.ALL,
             mappedBy = "product"
     )
-    private Set<OrderEntity> orderEntities;
+    private Set<Order> orderEntities;
 
     @JsonIgnore
     @ManyToOne(
             fetch = LAZY
     )
-    private UserEntity creator;
+    private UserAccount creator;
 
     @JsonIgnore
     @OneToOne(
@@ -66,7 +64,7 @@ public class Advertisement {
             orphanRemoval = true,
             optional = false
     )
-    private ImageEntity image;
+    private Image image;
 
     @PrePersist
     public void setUp() {
@@ -76,17 +74,17 @@ public class Advertisement {
         createdAt = LocalDateTime.now();
     }
 
-    public void addCreator(UserEntity creator) {
+    public void addCreator(UserAccount creator) {
         this.creator = creator;
         creator.getAdvertisements().add(this);
     }
 
-    public void removeCreator(UserEntity creator) {
+    public void removeCreator(UserAccount creator) {
         this.creator = null;
         creator.getAdvertisements().remove(this);
     }
 
-    public void removeOrders(Set<OrderEntity> orders) {
+    public void removeOrders(Set<Order> orders) {
         orders.forEach(order -> order.setProduct(null));
         this.orderEntities.removeAll(orders);
     }
@@ -96,7 +94,7 @@ public class Advertisement {
             String description,
             Category category,
             String city,
-            ImageEntity image
+            Image image
     ) {
         this.title = title;
         this.description = description;

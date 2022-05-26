@@ -1,15 +1,13 @@
 package ua.palamar.courseworkbackend.service.authorization;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.palamar.courseworkbackend.dto.request.AuthenticationRequestModel;
-import ua.palamar.courseworkbackend.dto.response.AuthenticationResponseModel;
+import ua.palamar.courseworkbackend.dto.request.AuthenticationRequest;
+import ua.palamar.courseworkbackend.dto.response.AuthenticationResponse;
 import ua.palamar.courseworkbackend.dto.response.RefreshTokenResponse;
-import ua.palamar.courseworkbackend.dto.response.UserResponseModel;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.dto.response.UserResponse;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
 import ua.palamar.courseworkbackend.service.AuthenticationService;
@@ -37,10 +35,10 @@ public class SimpleAuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponseModel authenticate(AuthenticationRequestModel authenticationRequestModel) {
-        UserEntity currentUser = userService.getUserEntityByEmail(authenticationRequestModel.email());
+    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
+        UserAccount currentUser = userService.getUserEntityByEmail(authenticationRequest.email());
 
-        if (!passwordEncoder.matches(authenticationRequestModel.password(), currentUser.getPassword())) {
+        if (!passwordEncoder.matches(authenticationRequest.password(), currentUser.getPassword())) {
             throw new ApiRequestException("Wrong password");
         }
 
@@ -48,12 +46,12 @@ public class SimpleAuthenticationService implements AuthenticationService {
         String refreshToken = tokenProvider.generateRefreshToken(currentUser);
 
 
-        UserResponseModel userResponseModel = getUserResponseModel(currentUser);
+        UserResponse userResponse = getUserResponseModel(currentUser);
 
-        return new AuthenticationResponseModel(
+        return new AuthenticationResponse(
                 accessToken,
                 refreshToken,
-                userResponseModel
+                userResponse
         );
     }
 
@@ -62,17 +60,17 @@ public class SimpleAuthenticationService implements AuthenticationService {
         String refreshToken = tokenProvider.resolveToken(request);
 
         if (Objects.nonNull(refreshToken) && tokenProvider.validateToken(refreshToken)) {
-            UserEntity currentUser = userService.getUserEntityByEmail(
+            UserAccount currentUser = userService.getUserEntityByEmail(
                     tokenProvider.getEmailByToken(refreshToken)
             );
 
             String token = tokenProvider.generateToken(currentUser);
 
-            UserResponseModel userResponseModel = getUserResponseModel(currentUser);
+            UserResponse userResponse = getUserResponseModel(currentUser);
 
             return new RefreshTokenResponse(
                     token,
-                    userResponseModel
+                    userResponse
             );
 
         } else {
@@ -80,12 +78,12 @@ public class SimpleAuthenticationService implements AuthenticationService {
         }
     }
 
-    private UserResponseModel getUserResponseModel(UserEntity userEntity) {
-        return new UserResponseModel(
-                userEntity.getEmail(),
-                userEntity.getFirstName(),
-                userEntity.getLastName(),
-                userEntity.getPhoneNumber()
+    private UserResponse getUserResponseModel(UserAccount userAccount) {
+        return new UserResponse(
+                userAccount.getEmail(),
+                userAccount.getFirstName(),
+                userAccount.getLastName(),
+                userAccount.getPhoneNumber()
         );
     }
 }

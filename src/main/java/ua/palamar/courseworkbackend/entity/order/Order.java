@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ import static javax.persistence.FetchType.LAZY;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderEntity {
+public class Order {
 
     @Id
     private String id;
@@ -39,7 +39,7 @@ public class OrderEntity {
             cascade = CascadeType.ALL,
             optional = true
     )
-    private DeliveryEntity deliveryEntity;
+    private Delivery delivery;
 
     @JsonIgnore
     @ManyToOne(
@@ -53,14 +53,14 @@ public class OrderEntity {
             fetch = LAZY,
             optional = false
     )
-    private UserEntity sender;
+    private UserAccount sender;
 
     @JsonIgnore
     @ManyToOne(
             fetch = LAZY,
             optional = false
     )
-    private UserEntity receiver;
+    private UserAccount receiver;
 
     @Column
     private String wishes;
@@ -74,22 +74,22 @@ public class OrderEntity {
         orderStatus = OrderStatus.UNCONFIRMED;
     }
 
-    public OrderEntity(
-            DeliveryEntity deliveryEntity,
-            UserEntity sender,
+    public Order(
+            Delivery delivery,
+            UserAccount sender,
             String wishes
     ) {
         this.wishes = wishes;
         this.sender = sender;
-        this.deliveryEntity = deliveryEntity;
+        this.delivery = delivery;
     }
 
-    public void addReceiver(UserEntity receiver) {
+    public void addReceiver(UserAccount receiver) {
         receiver.getOrderEntities().add(this);
         this.receiver = receiver;
     }
 
-    public void removeReceiver(UserEntity receiver) {
+    public void removeReceiver(UserAccount receiver) {
         receiver.getOrderEntities().remove(this);
         this.receiver = null;
     }

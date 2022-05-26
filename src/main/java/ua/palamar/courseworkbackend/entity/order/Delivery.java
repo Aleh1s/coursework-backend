@@ -16,7 +16,7 @@ import static ua.palamar.courseworkbackend.entity.order.DeliveryStatus.IN_PROCES
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeliveryEntity {
+public class Delivery {
 
     @Id
     @Column(nullable = false)
@@ -43,7 +43,7 @@ public class DeliveryEntity {
         deliveryStatus = IN_PROCESS;
     }
 
-    public DeliveryEntity(String city, String address, String postOffice) {
+    public Delivery(String city, String address, String postOffice) {
         this.city = city;
         this.address = address;
         this.postOffice = postOffice;

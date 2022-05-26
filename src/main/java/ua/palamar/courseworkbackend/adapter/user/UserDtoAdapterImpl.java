@@ -1,15 +1,15 @@
 package ua.palamar.courseworkbackend.adapter.user;
 
 import org.springframework.stereotype.Component;
-import ua.palamar.courseworkbackend.dto.response.UserResponseModel;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.dto.response.UserResponse;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 
 @Component
 public class UserDtoAdapterImpl implements UserDtoAdapter{
 
     @Override
-    public UserResponseModel getModel(UserEntity user) {
-        return new UserResponseModel(
+    public UserResponse getModel(UserAccount user) {
+        return new UserResponse(
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),

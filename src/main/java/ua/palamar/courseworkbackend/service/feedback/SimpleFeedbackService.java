@@ -1,18 +1,15 @@
 package ua.palamar.courseworkbackend.service.feedback;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ua.palamar.courseworkbackend.dto.FeedbackCriteria;
-import ua.palamar.courseworkbackend.dto.request.FeedbackModelRequest;
+import ua.palamar.courseworkbackend.dto.criteria.FeedbackCriteria;
+import ua.palamar.courseworkbackend.dto.request.FeedbackRequest;
 import ua.palamar.courseworkbackend.dto.response.FeedbackResponse;
 import ua.palamar.courseworkbackend.dto.response.FeedbacksResponse;
-import ua.palamar.courseworkbackend.entity.feedback.FeedbackEntity;
+import ua.palamar.courseworkbackend.entity.feedback.Feedback;
 import ua.palamar.courseworkbackend.repository.FeedbackRepository;
 import ua.palamar.courseworkbackend.service.FeedbackService;
 
@@ -29,13 +26,13 @@ public class SimpleFeedbackService implements FeedbackService {
     }
 
     @Override
-    public FeedbackResponse create(FeedbackModelRequest request) {
-        FeedbackEntity feedbackEntity = new FeedbackEntity(
+    public FeedbackResponse create(FeedbackRequest request) {
+        Feedback feedbackEntity = new Feedback(
                 request.email(),
                 request.text()
         );
 
-        FeedbackEntity feedback = feedbackRepository.save(feedbackEntity);
+        Feedback feedback = feedbackRepository.save(feedbackEntity);
 
         return new FeedbackResponse(
                 feedback.getId(),
@@ -48,7 +45,7 @@ public class SimpleFeedbackService implements FeedbackService {
     public FeedbacksResponse getAll(FeedbackCriteria criteria) {
         Pageable pageable = PageRequest.of(criteria.page(), criteria.limit(), Sort.by(criteria.sortBy()).descending());
 
-        Set<FeedbackEntity> feedbacks = feedbackRepository.getAll(pageable);
+        Set<Feedback> feedbacks = feedbackRepository.getAll(pageable);
         Long count = feedbackRepository.count();
 
         return new FeedbacksResponse(

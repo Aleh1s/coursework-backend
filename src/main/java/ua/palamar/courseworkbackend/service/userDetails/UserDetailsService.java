@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.adapter.UserDetailsAdapter;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.service.UserService;
 
 @Service
@@ -25,7 +25,7 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity user = userService.getUserEntityByEmail(email);
+        UserAccount user = userService.getUserEntityByEmail(email);
         return userDetailsAdapter.getUserDetails(user);
     }
 }

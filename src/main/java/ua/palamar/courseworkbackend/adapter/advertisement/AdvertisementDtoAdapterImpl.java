@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.adapter.user.UserDtoAdapter;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 
 @Component
 public class AdvertisementDtoAdapterImpl implements AdvertisementDtoAdapter{
@@ -20,7 +20,7 @@ public class AdvertisementDtoAdapterImpl implements AdvertisementDtoAdapter{
     @Override
     public AdvertisementResponse getModel(
             Advertisement advertisement,
-            UserEntity creator
+            UserAccount creator
     ) {
         return new AdvertisementResponse(
                 advertisement.getId(),

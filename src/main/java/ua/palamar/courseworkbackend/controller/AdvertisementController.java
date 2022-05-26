@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ua.palamar.courseworkbackend.dto.AdvertisementCriteria;
-import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
+import ua.palamar.courseworkbackend.dto.criteria.AdvertisementCriteria;
+import ua.palamar.courseworkbackend.dto.request.AdvertisementRequest;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
@@ -36,7 +36,7 @@ public class AdvertisementController {
             @RequestParam("_category") Category category,
             HttpServletRequest request
     ) {
-        AdvertisementRequestModel model = new AdvertisementRequestModel(title, description, category, city);
+        AdvertisementRequest model = new AdvertisementRequest(title, description, category, city);
         return new ResponseEntity<>(advertisementService.save(model, request, file), HttpStatus.CREATED);
     }
 

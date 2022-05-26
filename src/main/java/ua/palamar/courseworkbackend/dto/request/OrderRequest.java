@@ -1,6 +1,6 @@
 package ua.palamar.courseworkbackend.dto.request;
 
-public record OrderRequestModel(
+public record OrderRequest(
         String advertisementId,
         String city,
         String address,

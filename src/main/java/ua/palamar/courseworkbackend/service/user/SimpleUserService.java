@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ua.palamar.courseworkbackend.dto.request.UserDto;
-import ua.palamar.courseworkbackend.entity.image.ImageEntity;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.dto.request.UpdateUserRequest;
+import ua.palamar.courseworkbackend.entity.image.Image;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.ImageRepository;
 import ua.palamar.courseworkbackend.repository.UserRepository;
@@ -18,7 +18,6 @@ import ua.palamar.courseworkbackend.service.UserServiceValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Objects;
 
 @Service
 public class SimpleUserService implements UserService, UserServiceValidator {
@@ -36,7 +35,7 @@ public class SimpleUserService implements UserService, UserServiceValidator {
     }
 
     @Override
-    public UserEntity getUserEntityByEmail(String email) {
+    public UserAccount getUserEntityByEmail(String email) {
         return userRepository.getUserEntityByEmail(email)
                 .orElseThrow(() -> new ApiRequestException(
                         String.format("User with email: %s does not exist", email))
@@ -47,13 +46,13 @@ public class SimpleUserService implements UserService, UserServiceValidator {
     @Transactional
     public ResponseEntity<?> addImage(MultipartFile file, HttpServletRequest request) {
         String email = tokenProvider.getEmail(request);
-        UserEntity user = getUserEntityByEmail(email);
+        UserAccount user = getUserEntityByEmail(email);
 
-        ImageEntity image;
+        Image image;
 
         if (file.getSize() != 0) {
             try {
-                image = new ImageEntity(
+                image = new Image(
                         file.getName(),
                         file.getOriginalFilename(),
                         file.getSize(),
@@ -74,11 +73,11 @@ public class SimpleUserService implements UserService, UserServiceValidator {
     }
 
     @Override
-    public ResponseEntity<?> updateUser(UserDto userDto, HttpServletRequest request) {
+    public ResponseEntity<?> updateUser(UpdateUserRequest updateUserRequest, HttpServletRequest request) {
         String email = tokenProvider.getEmail(request);
-        UserEntity user = getUserEntityByEmail(email);
+        UserAccount user = getUserEntityByEmail(email);
 
-        String phoneNumber = userDto.phoneNumber();
+        String phoneNumber = updateUserRequest.phoneNumber();
         if (!phoneNumber.equals("")) {
             if (phoneNumber.startsWith("+38")) {
                 phoneNumber = phoneNumber.substring("+38".length());
@@ -93,12 +92,12 @@ public class SimpleUserService implements UserService, UserServiceValidator {
             user.setPhoneNumber(phoneNumber);
         }
 
-        String firstName = userDto.firstName();
+        String firstName = updateUserRequest.firstName();
         if (!firstName.equals("")) {
             user.setFirstName(firstName);
         }
 
-        String lastName = userDto.lastName();
+        String lastName = updateUserRequest.lastName();
         if (!lastName.equals("")) {
             user.setLastName(lastName);
         }
@@ -110,7 +109,7 @@ public class SimpleUserService implements UserService, UserServiceValidator {
     @Override
     @Transactional
     public ResponseEntity<?> imageExists(String email) {
-        UserEntity user = getUserEntityByEmail(email);
+        UserAccount user = getUserEntityByEmail(email);
 
         if (user.getImage() != null) {
             return new ResponseEntity<>(true, HttpStatus.ACCEPTED);

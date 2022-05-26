@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ua.palamar.courseworkbackend.dto.request.UserDto;
-import ua.palamar.courseworkbackend.entity.image.ImageEntity;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.dto.request.UpdateUserRequest;
+import ua.palamar.courseworkbackend.entity.image.Image;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.UserRepository;
 import ua.palamar.courseworkbackend.service.UserService;
@@ -42,14 +42,14 @@ public class UserController {
     @Transactional
     @GetMapping("/image")
     public ResponseEntity<Object> getImageByEmail(@RequestParam("_email") String email) {
-        UserEntity user = userRepository.findUserEntityByEmailJoinFetchImage(email)
+        UserAccount user = userRepository.findUserEntityByEmailJoinFetchImage(email)
                 .orElseThrow(() -> new ApiRequestException(
                         String.format(
                                 "User with email %s does not exist", email
                         )
                 ));
 
-        ImageEntity image = user.getImage();
+        Image image = user.getImage();
 
         if (image == null)
             return ResponseEntity.badRequest()
@@ -64,10 +64,10 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<?> updateUser(
-            @RequestBody UserDto userDto,
+            @RequestBody UpdateUserRequest updateUserRequest,
             HttpServletRequest request
     ) {
-        return userService.updateUser(userDto, request);
+        return userService.updateUser(updateUserRequest, request);
     }
 
     @GetMapping("/image/check")

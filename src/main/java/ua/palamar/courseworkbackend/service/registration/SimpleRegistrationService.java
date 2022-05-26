@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.palamar.courseworkbackend.dto.request.RegistrationRequestModel;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.dto.request.RegistrationRequest;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.UserRepository;
@@ -35,14 +35,14 @@ public class SimpleRegistrationService implements RegistrationService {
     }
 
     @Override
-    public ResponseEntity<?> register(RegistrationRequestModel registrationRequestModel) {
+    public ResponseEntity<?> register(RegistrationRequest registrationRequest) {
 
-        if (userServiceValidator.userWithEmailExists(registrationRequestModel.email()))
+        if (userServiceValidator.userWithEmailExists(registrationRequest.email()))
             throw new ApiRequestException(
-                    String.format("User with email: %s already exists", registrationRequestModel.email())
+                    String.format("User with email: %s already exists", registrationRequest.email())
             );
 
-        String phoneNumber = registrationRequestModel.phoneNumber();
+        String phoneNumber = registrationRequest.phoneNumber();
 
         if (phoneNumber.startsWith("+38")) {
             phoneNumber = phoneNumber.substring("+38".length());
@@ -53,11 +53,11 @@ public class SimpleRegistrationService implements RegistrationService {
                     String.format("User with phone number: %s already exists", phoneNumber)
             );
 
-        UserEntity newUser = new UserEntity(
-                registrationRequestModel.email(),
-                passwordEncoder.encode(registrationRequestModel.password()),
-                registrationRequestModel.firstName(),
-                registrationRequestModel.lastName(),
+        UserAccount newUser = new UserAccount(
+                registrationRequest.email(),
+                passwordEncoder.encode(registrationRequest.password()),
+                registrationRequest.firstName(),
+                registrationRequest.lastName(),
                 UserRole.USER,
                 phoneNumber
         );

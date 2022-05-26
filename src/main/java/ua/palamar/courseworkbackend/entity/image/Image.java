@@ -1,6 +1,5 @@
 package ua.palamar.courseworkbackend.entity.image;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImageEntity {
+public class Image {
 
     @Id
     private String id;
@@ -38,7 +37,7 @@ public class ImageEntity {
         uploadedAt = LocalDateTime.now();
     }
 
-    public ImageEntity(String name, String originalFileName, Long size, String contentType, byte[] bytes) {
+    public Image(String name, String originalFileName, Long size, String contentType, byte[] bytes) {
         this.name = name;
         this.originalFileName = originalFileName;
         this.size = size;

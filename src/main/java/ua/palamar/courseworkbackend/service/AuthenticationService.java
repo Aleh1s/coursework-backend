@@ -1,15 +1,14 @@
 package ua.palamar.courseworkbackend.service;
 
-import org.springframework.http.ResponseEntity;
-import ua.palamar.courseworkbackend.dto.request.AuthenticationRequestModel;
-import ua.palamar.courseworkbackend.dto.response.AuthenticationResponseModel;
+import ua.palamar.courseworkbackend.dto.request.AuthenticationRequest;
+import ua.palamar.courseworkbackend.dto.response.AuthenticationResponse;
 import ua.palamar.courseworkbackend.dto.response.RefreshTokenResponse;
 
 import javax.servlet.http.HttpServletRequest;
 
 public interface AuthenticationService {
 
-    AuthenticationResponseModel authenticate(AuthenticationRequestModel authenticationRequestModel);
+    AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest);
 
     RefreshTokenResponse refresh(HttpServletRequest request);
 }

@@ -11,6 +11,6 @@ public record AdvertisementResponse(
         String city,
         Category category,
         LocalDateTime createdAt,
-        UserResponseModel userResponseModel
+        UserResponse userResponse
 ) {
 }

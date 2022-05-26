@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ua.palamar.courseworkbackend.entity.image.ImageEntity;
+import ua.palamar.courseworkbackend.entity.image.Image;
 import ua.palamar.courseworkbackend.service.ImageService;
 
 import java.io.ByteArrayInputStream;
@@ -28,7 +28,7 @@ public class ImageController {
     @Transactional
     @GetMapping
     public ResponseEntity<Object> getImageByAdvertisementId(@RequestParam("_advertisementId") String advertisementId) {
-        ImageEntity image = imageService.getImageByAdvertisementId(advertisementId);
+        Image image = imageService.getImageByAdvertisementId(advertisementId);
         if (image == null)
             return ResponseEntity.badRequest()
                     .body(null);

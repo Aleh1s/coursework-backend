@@ -9,17 +9,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ua.palamar.courseworkbackend.adapter.advertisement.AdvertisementDtoAdapter;
 import ua.palamar.courseworkbackend.adapter.user.UserDtoAdapter;
-import ua.palamar.courseworkbackend.dto.AdvertisementCriteria;
-import ua.palamar.courseworkbackend.dto.request.AdvertisementRequestModel;
+import ua.palamar.courseworkbackend.dto.criteria.AdvertisementCriteria;
+import ua.palamar.courseworkbackend.dto.request.AdvertisementRequest;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
-import ua.palamar.courseworkbackend.dto.response.UserResponseModel;
+import ua.palamar.courseworkbackend.dto.response.UserResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
-import ua.palamar.courseworkbackend.entity.image.ImageEntity;
-import ua.palamar.courseworkbackend.entity.order.OrderEntity;
+import ua.palamar.courseworkbackend.entity.image.Image;
+import ua.palamar.courseworkbackend.entity.order.Order;
 import ua.palamar.courseworkbackend.entity.order.OrderStatus;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.AdvertisementRepository;
 import ua.palamar.courseworkbackend.repository.ImageRepository;
@@ -66,19 +66,19 @@ public class SimpleAdvertisementService implements AdvertisementService {
 
     @Override
     @Transactional
-    public AdvertisementResponse save(AdvertisementRequestModel advertisementRequestModel, HttpServletRequest request, MultipartFile file) {
+    public AdvertisementResponse save(AdvertisementRequest advertisementRequest, HttpServletRequest request, MultipartFile file) {
         String email = tokenProvider.getEmail(request);
 
-        UserEntity creator = userService.getUserEntityByEmail(email);
+        UserAccount creator = userService.getUserEntityByEmail(email);
 
-        ImageEntity image;
+        Image image;
 
         if (Objects.nonNull(file)) {
             throw new ApiRequestException("The image must exists");
         }
 
         try {
-            image = new ImageEntity(
+            image = new Image(
                     file.getName(),
                     file.getOriginalFilename(),
                     file.getSize(),
@@ -91,10 +91,10 @@ public class SimpleAdvertisementService implements AdvertisementService {
         imageRepository.save(image);
 
         Advertisement advertisement = new Advertisement(
-                advertisementRequestModel.title(),
-                advertisementRequestModel.description(),
-                advertisementRequestModel.category(),
-                advertisementRequestModel.city(),
+                advertisementRequest.title(),
+                advertisementRequest.description(),
+                advertisementRequest.category(),
+                advertisementRequest.city(),
                 image
         );
 
@@ -110,7 +110,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
     public void remove(String id, HttpServletRequest request) {
         String email = tokenProvider.getEmail(request);
 
-        UserEntity userEntity = userService.getUserEntityByEmail(email);
+        UserAccount userAccount = userService.getUserEntityByEmail(email);
 
         Advertisement advertisement = advertisementRepository.findById(id)
                 .orElseThrow(() -> new ApiRequestException(
@@ -118,9 +118,9 @@ public class SimpleAdvertisementService implements AdvertisementService {
                         )
                 );
 
-        boolean userIsOwner = userEntity.getAdvertisements().contains(advertisement);
+        boolean userIsOwner = userAccount.getAdvertisements().contains(advertisement);
 
-        Set<OrderEntity> orders = advertisement.getOrderEntities();
+        Set<Order> orders = advertisement.getOrderEntities();
 
         boolean hasConfirmedOrders = orders.stream()
                 .anyMatch(order -> order.getOrderStatus().equals(OrderStatus.CONFIRMED));
@@ -135,7 +135,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
 
         if (userIsOwner) {
             advertisement.removeOrders(orders);
-            advertisement.removeCreator(userEntity);
+            advertisement.removeCreator(userAccount);
             advertisementRepository.removeAdvertisementById(advertisement.getId());
         } else {
             throw new ApiRequestException(
@@ -177,8 +177,8 @@ public class SimpleAdvertisementService implements AdvertisementService {
                         )
                 );
 
-        UserEntity creator = advertisement.getCreator();
-        UserResponseModel userResponseModel = userDtoAdapter.getModel(creator);
+        UserAccount creator = advertisement.getCreator();
+        UserResponse userResponse = userDtoAdapter.getModel(creator);
 
         return new AdvertisementResponse(
                 advertisement.getId(),
@@ -187,13 +187,13 @@ public class SimpleAdvertisementService implements AdvertisementService {
                 advertisement.getCity(),
                 advertisement.getCategory(),
                 advertisement.getCreatedAt(),
-                userResponseModel
+                userResponse
         );
     }
 
     @Override
     public Set<AdvertisementResponse> getAllByEmail(String email) {
-        UserEntity user = userRepository.findUserEntityByEmailJoinFetchAdvertisements(email)
+        UserAccount user = userRepository.findUserEntityByEmailJoinFetchAdvertisements(email)
                 .orElseThrow(() -> new ApiRequestException(
                                 String.format(
                                         "User with email does not exist", email
@@ -201,17 +201,17 @@ public class SimpleAdvertisementService implements AdvertisementService {
                         )
                 );
 
-        UserResponseModel userResponseModel = new UserResponseModel(
+        UserResponse userResponse = new UserResponse(
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getPhoneNumber()
         );
 
-        return getAdvertisementResponses(user.getAdvertisements(), userResponseModel);
+        return getAdvertisementResponses(user.getAdvertisements(), userResponse);
     }
 
-    private Set<AdvertisementResponse> getAdvertisementResponses(Set<Advertisement> advertisements, UserResponseModel userResponseModel) {
+    private Set<AdvertisementResponse> getAdvertisementResponses(Set<Advertisement> advertisements, UserResponse userResponse) {
         return advertisements.stream()
                 .map(advertisement -> new AdvertisementResponse(
                         advertisement.getId(),
@@ -220,7 +220,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
                         advertisement.getCity(),
                         advertisement.getCategory(),
                         advertisement.getCreatedAt(),
-                        userResponseModel
+                        userResponse
                 )).collect(Collectors.toSet());
     }
 

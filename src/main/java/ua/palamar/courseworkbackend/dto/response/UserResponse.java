@@ -1,6 +1,6 @@
 package ua.palamar.courseworkbackend.dto.response;
 
-public record UserResponseModel(
+public record UserResponse(
         String email,
         String firstName,
         String lastName,

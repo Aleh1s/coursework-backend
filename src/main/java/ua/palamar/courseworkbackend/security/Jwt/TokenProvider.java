@@ -8,7 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.service.userDetails.UserDetailsService;
 
@@ -41,19 +41,19 @@ public class TokenProvider {
 
     }
 
-    public String generateToken (UserEntity userEntity) {
+    public String generateToken (UserAccount userAccount) {
         Date now = new Date();
         Date expired = new Date(now.getTime() + TimeUnit.DAYS.toMillis(15));
 
         return Jwts.builder()
-                .setSubject(userEntity.getEmail())
+                .setSubject(userAccount.getEmail())
                 .setIssuedAt(now)
                 .setExpiration(expired)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
-    public String generateRefreshToken(UserEntity user) {
+    public String generateRefreshToken(UserAccount user) {
         Date now = new Date();
         Date validPeriod = new Date(now.getTime() + TimeUnit.DAYS.toMillis(30));
         return Jwts.builder()
