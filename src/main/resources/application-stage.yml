@@ -4,6 +4,7 @@ server:
 secret:
   key: ENC(3E7Jc0tOMwJADvlBOXsChnuRqmFNvOtWzqSRbM8zhZEYBi7S50VXtpv+FW8Wd/cO)
 
+
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:mydb;DB_CLOSE_DELAY=-1}
@@ -19,3 +20,7 @@ spring:
         dialect: ${SPRING_JPA_DATABASE-PLATFORM:org.hibernate.dialect.H2Dialect}
         format_sql: true
     show-sql: true
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
