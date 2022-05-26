@@ -3,7 +3,7 @@ server:
 
 jasypt:
   encryptor:
-    password: palamar
+    private-key-string: ${JASYPT_PASSWORD}
 
 secret:
   key: ENC(3E7Jc0tOMwJADvlBOXsChnuRqmFNvOtWzqSRbM8zhZEYBi7S50VXtpv+FW8Wd/cO)
