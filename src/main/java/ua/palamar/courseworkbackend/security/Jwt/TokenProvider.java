@@ -8,7 +8,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import ua.palamar.courseworkbackend.entity.UserEntity;
+import ua.palamar.courseworkbackend.entity.user.UserEntity;
+import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.service.userDetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +43,7 @@ public class TokenProvider {
 
     public String generateToken (UserEntity userEntity) {
         Date now = new Date();
-        Date expired = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(15));
+        Date expired = new Date(now.getTime() + TimeUnit.DAYS.toMillis(15));
 
         return Jwts.builder()
                 .setSubject(userEntity.getEmail())
@@ -78,15 +79,25 @@ public class TokenProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public String getEmailByToken (String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        if (token != null && !token.equals("")) {
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        }
+
+        throw new ApiRequestException("Token can not be empty or null");
+    }
+
+    public String getEmail(HttpServletRequest request) {
+        String token = resolveToken(request);
+        return getEmailByToken(token);
     }
 }

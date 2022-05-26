@@ -3,7 +3,7 @@ package ua.palamar.courseworkbackend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.palamar.courseworkbackend.dto.RegistrationModel;
+import ua.palamar.courseworkbackend.dto.request.RegistrationRequestModel;
 import ua.palamar.courseworkbackend.service.RegistrationService;
 
 @RestController
@@ -19,8 +19,8 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegistrationModel registrationModel) {
-        return registrationService.register(registrationModel);
+    public ResponseEntity<?> register(@RequestBody RegistrationRequestModel registrationRequestModel) {
+        return registrationService.register(registrationRequestModel);
     }
 
 }

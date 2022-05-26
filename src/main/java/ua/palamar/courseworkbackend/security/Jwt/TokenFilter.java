@@ -28,7 +28,12 @@ public class TokenFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        if(!request.getServletPath().equals("/token/refresh")) {
+        boolean isNotServicePath =
+                !request.getServletPath().equals("/api/v1/authentication/authenticate")
+                && !request.getServletPath().equals("/api/v1/authentication/refresh")
+                && !request.getServletPath().equals("/api/v1/registration/register");
+
+        if (isNotServicePath) {
             String token = tokenProvider.resolveToken(request);
 
             if (token != null && tokenProvider.validateToken(token)) {
@@ -41,7 +46,6 @@ public class TokenFilter extends OncePerRequestFilter {
             }
 
         }
-
         filterChain.doFilter(request, response);
     }
 }
