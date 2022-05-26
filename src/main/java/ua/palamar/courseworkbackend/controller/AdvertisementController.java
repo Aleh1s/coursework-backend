@@ -68,7 +68,7 @@ public class AdvertisementController {
                 ), HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/one")
     public ResponseEntity<Set<AdvertisementResponse>> getAllByEmail(
             @RequestParam("_email") String email
     ) {

@@ -3,7 +3,7 @@ package ua.palamar.courseworkbackend.entity.advertisement;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ua.palamar.courseworkbackend.entity.image.Image;
-import ua.palamar.courseworkbackend.entity.order.Order;
+import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.entity.user.UserAccount;
 
 import javax.persistence.*;
@@ -49,7 +49,7 @@ public class Advertisement {
             cascade = CascadeType.ALL,
             mappedBy = "product"
     )
-    private Set<Order> orderEntities;
+    private Set<OrderEntity> orders;
 
     @JsonIgnore
     @ManyToOne(
@@ -84,9 +84,9 @@ public class Advertisement {
         creator.getAdvertisements().remove(this);
     }
 
-    public void removeOrders(Set<Order> orders) {
-        orders.forEach(order -> order.setProduct(null));
-        this.orderEntities.removeAll(orders);
+    public void removeOrders(Set<OrderEntity> orderEntities) {
+        orderEntities.forEach(order -> order.setProduct(null));
+        this.orders.removeAll(orderEntities);
     }
 
     public Advertisement(

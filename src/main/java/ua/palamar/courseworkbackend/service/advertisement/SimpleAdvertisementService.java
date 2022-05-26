@@ -17,7 +17,7 @@ import ua.palamar.courseworkbackend.dto.response.UserResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.advertisement.Category;
 import ua.palamar.courseworkbackend.entity.image.Image;
-import ua.palamar.courseworkbackend.entity.order.Order;
+import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.entity.order.OrderStatus;
 import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
@@ -120,9 +120,9 @@ public class SimpleAdvertisementService implements AdvertisementService {
 
         boolean userIsOwner = userAccount.getAdvertisements().contains(advertisement);
 
-        Set<Order> orders = advertisement.getOrderEntities();
+        Set<OrderEntity> orderEntities = advertisement.getOrders();
 
-        boolean hasConfirmedOrders = orders.stream()
+        boolean hasConfirmedOrders = orderEntities.stream()
                 .anyMatch(order -> order.getOrderStatus().equals(OrderStatus.CONFIRMED));
 
         if (hasConfirmedOrders) {
@@ -134,7 +134,7 @@ public class SimpleAdvertisementService implements AdvertisementService {
         }
 
         if (userIsOwner) {
-            advertisement.removeOrders(orders);
+            advertisement.removeOrders(orderEntities);
             advertisement.removeCreator(userAccount);
             advertisementRepository.removeAdvertisementById(advertisement.getId());
         } else {

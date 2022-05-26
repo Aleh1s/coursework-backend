@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.image.Image;
-import ua.palamar.courseworkbackend.entity.order.Order;
+import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
 
 import javax.persistence.*;
@@ -73,7 +73,7 @@ public class UserAccount {
             cascade = ALL,
             mappedBy = "receiver"
     )
-    private Set<Order> orderEntities = new HashSet<>();
+    private Set<OrderEntity> orderEntityEntities = new HashSet<>();
 
     @PrePersist
     public void setId() {

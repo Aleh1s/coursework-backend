@@ -20,7 +20,7 @@ import static javax.persistence.FetchType.LAZY;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order {
+public class OrderEntity {
 
     @Id
     private String id;
@@ -74,7 +74,7 @@ public class Order {
         orderStatus = OrderStatus.UNCONFIRMED;
     }
 
-    public Order(
+    public OrderEntity(
             Delivery delivery,
             UserAccount sender,
             String wishes
@@ -85,22 +85,22 @@ public class Order {
     }
 
     public void addReceiver(UserAccount receiver) {
-        receiver.getOrderEntities().add(this);
+        receiver.getOrderEntityEntities().add(this);
         this.receiver = receiver;
     }
 
     public void removeReceiver(UserAccount receiver) {
-        receiver.getOrderEntities().remove(this);
+        receiver.getOrderEntityEntities().remove(this);
         this.receiver = null;
     }
 
     public void addAdvertisement(Advertisement product) {
-        product.getOrderEntities().add(this);
+        product.getOrders().add(this);
         this.product = product;
     }
 
     public void removerAdvertisement(Advertisement product) {
-        product.getOrderEntities().remove(this);
+        product.getOrders().remove(this);
         this.product = null;
     }
 }

@@ -1,6 +1,7 @@
 package ua.palamar.courseworkbackend.service.feedback;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,6 +14,7 @@ import ua.palamar.courseworkbackend.entity.feedback.Feedback;
 import ua.palamar.courseworkbackend.repository.FeedbackRepository;
 import ua.palamar.courseworkbackend.service.FeedbackService;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -45,7 +47,7 @@ public class SimpleFeedbackService implements FeedbackService {
     public FeedbacksResponse getAll(FeedbackCriteria criteria) {
         Pageable pageable = PageRequest.of(criteria.page(), criteria.limit(), Sort.by(criteria.sortBy()).descending());
 
-        Set<Feedback> feedbacks = feedbackRepository.getAll(pageable);
+        Page<Feedback> feedbacks = feedbackRepository.findAll(pageable);
         Long count = feedbackRepository.count();
 
         return new FeedbacksResponse(
