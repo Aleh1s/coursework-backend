@@ -2,13 +2,13 @@ server:
   port: 8080
 
 secret:
-  key: test
+  key: ENC(3E7Jc0tOMwJADvlBOXsChnuRqmFNvOtWzqSRbM8zhZEYBi7S50VXtpv+FW8Wd/cO)
 
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/refugees
-    username: postgres
-    password: QWE13579qwe
+    username: ENC(2X4fn996pdGgVlkm+ieYpKXwg8bayIv23xyFKoxW+YKs9uxbvisDeQC2yse6JQx7)
+    password: ENC(8q5/fsSUBy5cUewPr7MbX+Pal/uR2zKLlibdhpQoGPKaXJadHpnqz6ZXTWiMP7KF)
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

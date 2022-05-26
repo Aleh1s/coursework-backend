@@ -1,5 +1,6 @@
-secret:
-  key: test
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
 
 spring:
   datasource:
@@ -15,3 +16,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
+
+secret:
+  key: ENC(3E7Jc0tOMwJADvlBOXsChnuRqmFNvOtWzqSRbM8zhZEYBi7S50VXtpv+FW8Wd/cO)
