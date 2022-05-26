@@ -2,8 +2,7 @@ server:
   port: ${PORT:8080}
 
 secret:
-  key: ENC(3E7Jc0tOMwJADvlBOXsChnuRqmFNvOtWzqSRbM8zhZEYBi7S50VXtpv+FW8Wd/cO)
-
+  key: ${SECRET_KEY}
 
 spring:
   datasource:
@@ -20,7 +19,3 @@ spring:
         dialect: ${SPRING_JPA_DATABASE-PLATFORM:org.hibernate.dialect.H2Dialect}
         format_sql: true
     show-sql: true
-
-jasypt:
-  encryptor:
-    password: ${JASYPT_PASSWORD:palamar}

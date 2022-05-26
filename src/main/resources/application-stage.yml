@@ -1,12 +1,8 @@
 server:
   port: ${PORT:8080}
 
-jasypt:
-  encryptor:
-    password: ${JASYPT_PASSWORD}
-
 secret:
-  key: ENC(3E7Jc0tOMwJADvlBOXsChnuRqmFNvOtWzqSRbM8zhZEYBi7S50VXtpv+FW8Wd/cO)
+  key: ${SECRET_KEY}
 
 spring:
   datasource:
