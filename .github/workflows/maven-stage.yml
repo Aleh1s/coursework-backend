@@ -25,4 +25,4 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn -B clean install -Djasypt.encryptor.password=palamar
+        run: mvn -B clean install
