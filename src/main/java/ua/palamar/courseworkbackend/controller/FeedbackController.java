@@ -1,9 +1,13 @@
 package ua.palamar.courseworkbackend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.palamar.courseworkbackend.dto.FeedbackCriteria;
 import ua.palamar.courseworkbackend.dto.request.FeedbackModelRequest;
+import ua.palamar.courseworkbackend.dto.response.FeedbackResponse;
+import ua.palamar.courseworkbackend.dto.response.FeedbacksResponse;
 import ua.palamar.courseworkbackend.service.FeedbackService;
 
 @RestController
@@ -19,18 +23,18 @@ public class FeedbackController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(
+    public ResponseEntity<FeedbackResponse> create(
             @RequestBody FeedbackModelRequest request
     ) {
-        return feedbackService.create(request);
+        return new ResponseEntity<>(feedbackService.create(request), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<?> getSortedPage(
+    public ResponseEntity<FeedbacksResponse> getSortedPage(
             @RequestParam("_limit") Integer limit,
             @RequestParam("_page") Integer page,
             @RequestParam("_sortBy") String sortBy
     ) {
-        return feedbackService.getSortedPage(limit, page, sortBy);
+        return new ResponseEntity<>(feedbackService.getAll(new FeedbackCriteria(limit, page, sortBy)), HttpStatus.OK);
     }
 }

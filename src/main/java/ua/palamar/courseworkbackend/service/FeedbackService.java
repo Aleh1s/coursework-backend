@@ -1,11 +1,14 @@
 package ua.palamar.courseworkbackend.service;
 
 import org.springframework.http.ResponseEntity;
+import ua.palamar.courseworkbackend.dto.FeedbackCriteria;
 import ua.palamar.courseworkbackend.dto.request.FeedbackModelRequest;
+import ua.palamar.courseworkbackend.dto.response.FeedbackResponse;
+import ua.palamar.courseworkbackend.dto.response.FeedbacksResponse;
 
 public interface FeedbackService {
 
-    ResponseEntity<?> create(FeedbackModelRequest request);
+    FeedbackResponse create(FeedbackModelRequest request);
 
-    ResponseEntity<?> getSortedPage(Integer limit, Integer page, String sortBy);
+    FeedbacksResponse getAll(FeedbackCriteria criteria);
 }

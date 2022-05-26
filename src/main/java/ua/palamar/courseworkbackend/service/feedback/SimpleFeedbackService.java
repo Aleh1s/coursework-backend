@@ -8,10 +8,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ua.palamar.courseworkbackend.dto.FeedbackCriteria;
 import ua.palamar.courseworkbackend.dto.request.FeedbackModelRequest;
+import ua.palamar.courseworkbackend.dto.response.FeedbackResponse;
+import ua.palamar.courseworkbackend.dto.response.FeedbacksResponse;
 import ua.palamar.courseworkbackend.entity.feedback.FeedbackEntity;
 import ua.palamar.courseworkbackend.repository.FeedbackRepository;
 import ua.palamar.courseworkbackend.service.FeedbackService;
+
+import java.util.Set;
 
 @Service
 public class SimpleFeedbackService implements FeedbackService {
@@ -24,26 +29,31 @@ public class SimpleFeedbackService implements FeedbackService {
     }
 
     @Override
-    public ResponseEntity<?> create(FeedbackModelRequest request) {
-
-
-
+    public FeedbackResponse create(FeedbackModelRequest request) {
         FeedbackEntity feedbackEntity = new FeedbackEntity(
                 request.email(),
                 request.text()
         );
 
-        FeedbackEntity save = feedbackRepository.save(feedbackEntity);
+        FeedbackEntity feedback = feedbackRepository.save(feedbackEntity);
 
-        return new ResponseEntity<>(save, HttpStatus.CREATED);
+        return new FeedbackResponse(
+                feedback.getId(),
+                feedback.getEmail(),
+                feedback.getText()
+        );
     }
 
     @Override
-    public ResponseEntity<?> getSortedPage(Integer limit, Integer page, String sortBy) {
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(sortBy).descending());
-        Page<FeedbackEntity> sortedPage = feedbackRepository.findAll(pageable);
-        return new ResponseEntity<>(sortedPage, HttpStatus.ACCEPTED);
+    public FeedbacksResponse getAll(FeedbackCriteria criteria) {
+        Pageable pageable = PageRequest.of(criteria.page(), criteria.limit(), Sort.by(criteria.sortBy()).descending());
+
+        Set<FeedbackEntity> feedbacks = feedbackRepository.getAll(pageable);
+        Long count = feedbackRepository.count();
+
+        return new FeedbacksResponse(
+                feedbacks,
+                count
+        );
     }
-
-
 }
