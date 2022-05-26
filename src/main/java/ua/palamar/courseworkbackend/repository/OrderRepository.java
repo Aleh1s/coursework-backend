@@ -1,9 +1,7 @@
 package ua.palamar.courseworkbackend.repository;
 
-import org.jasypt.iv.StringFixedIvGenerator;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 
 import java.util.Optional;
