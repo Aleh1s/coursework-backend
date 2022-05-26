@@ -6,16 +6,16 @@ secret:
 
 spring:
   datasource:
-    url: jdbc:postgresql://ec2-52-48-159-67.eu-west-1.compute.amazonaws.com
-    username: oarrjqmkmmpcng
-    password: 41896ccba8401f3c2f01c178ccd8a14a816c3fb47a79c237cbcff2fa583b4aa6
-    driver-class-name: org.postgresql.Driver
-    type: org.apache.tomcat.jdbc.pool.DataSource
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:mydb;DB_CLOSE_DELAY=-1}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:sa}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER-CLASS-NAME:org.h2.Driver}
+    type: ${SPRING_DATASOURCE_TYPE:org.apache.tomcat.jdbc.pool.DataSource}
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
     show-sql: true
