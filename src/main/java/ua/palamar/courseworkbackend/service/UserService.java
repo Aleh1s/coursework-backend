@@ -11,7 +11,7 @@ public interface UserService {
 
     UserAccount getUserEntityByEmail(String email);
 
-    ResponseEntity<?> addImage(MultipartFile image, HttpServletRequest request);
+    ResponseEntity<?> addProfileImage(MultipartFile image, HttpServletRequest request);
 
     ResponseEntity<?> updateUser(UpdateUserRequest updateUserRequest, HttpServletRequest request);
 

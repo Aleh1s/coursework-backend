@@ -1,13 +1,20 @@
 package ua.palamar.courseworkbackend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.palamar.courseworkbackend.dto.criteria.OrderCriteria;
 import ua.palamar.courseworkbackend.dto.request.OrderRequest;
+import ua.palamar.courseworkbackend.dto.response.OrderDetailsResponse;
+import ua.palamar.courseworkbackend.dto.response.OrderResponse;
 import ua.palamar.courseworkbackend.entity.order.DeliveryStatus;
+import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.service.OrderService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -22,57 +29,66 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<?> makeOrder(
+    public ResponseEntity<OrderEntity> makeOrder(
             @RequestBody OrderRequest model,
             HttpServletRequest request
     ) {
-        return orderService.makeOrder(model, request);
+        return new ResponseEntity<>(orderService.makeOrder(model, request), HttpStatus.OK);
     }
 
-    @PutMapping("/decline")
+    @PatchMapping("/decline")
     public ResponseEntity<?> declineOrder(
             @RequestParam("_id") String id,
             HttpServletRequest request
     ) {
-        return orderService.declineOrder(id, request);
+        orderService.declineOrder(id, request);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/accept")
+    @PatchMapping("/accept")
     public ResponseEntity<?> acceptOrder(
             @RequestParam("_id") String id,
             HttpServletRequest request
     ) {
-        return orderService.acceptOrder(id, request);
+        orderService.acceptOrder(id, request);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/cancel")
+    @PatchMapping("/cancel")
     public ResponseEntity<?> cancelOrder(
             @RequestParam("_id") String id,
             HttpServletRequest request
     ) {
-        return orderService.cancelOrder(id, request);
+        orderService.cancelOrder(id, request);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/change-status")
+    @PatchMapping("/change-status")
     public ResponseEntity<?> changeDeliveryStatus(
             @RequestParam("_id") String id,
             @RequestParam("_status") DeliveryStatus status,
             HttpServletRequest request
     ) {
-        return orderService.changeDeliveryStatus(id, status, request);
+        orderService.changeDeliveryStatus(id, status, request);
+        return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/email")
-    public ResponseEntity<?> getAllByEmail(
-            HttpServletRequest request
+    @GetMapping("/users/{email}")
+    public ResponseEntity<List<OrderResponse>> getAllByUserEmail(
+            @PathVariable("email") String email,
+            @RequestParam(value = "_limit", defaultValue = "12") Integer limit,
+            @RequestParam(value = "_page", defaultValue = "0") Integer page,
+            @RequestParam(value = "_sortBy", defaultValue = "createdAt") String sortBy
     ) {
-        return orderService.getSortedPageOfOrdersByUserEmail(request);
+        return new ResponseEntity<>(orderService.getOrdersByUserEmail(email, new OrderCriteria(limit, page, sortBy)), HttpStatus.OK);
     }
+    @GetMapping("/advertisements/{id}")
+    public ResponseEntity<List<OrderDetailsResponse>> getAllByAdvertisementId(
+            @PathVariable("id") String id,
+            @RequestParam(value = "_limit", defaultValue = "12") Integer limit,
+            @RequestParam(value = "_page", defaultValue = "0") Integer page,
+            @RequestParam(value = "_sortBy", defaultValue = "createdAt") String sortBy
 
-    @GetMapping("/advertisement")
-    public ResponseEntity<?> getAllByAdvertisementId(
-            @RequestParam("_id") String id
     ) {
-        return orderService.getOrdersByAdvertisementId(id);
+        return new ResponseEntity<>(orderService.getOrdersByAdvertisementId(id, new OrderCriteria(limit, page, sortBy)), HttpStatus.OK);
     }
 }

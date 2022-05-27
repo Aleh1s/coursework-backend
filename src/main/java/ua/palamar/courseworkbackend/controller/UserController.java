@@ -1,5 +1,6 @@
 package ua.palamar.courseworkbackend.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,45 +22,11 @@ import java.io.ByteArrayInputStream;
 @CrossOrigin("http://localhost:3000")
 public class UserController {
     private final UserService userService;
-    private final UserRepository userRepository;
-
+    @Autowired
     public UserController(
-            UserService userService,
-            UserRepository userRepository
+            UserService userService
     ) {
         this.userService = userService;
-        this.userRepository = userRepository;
-    }
-
-    @PostMapping
-    public ResponseEntity<?> addImage(
-            @RequestParam("_image") MultipartFile image,
-            HttpServletRequest request
-    ) {
-        return userService.addImage(image, request);
-    }
-
-    @Transactional
-    @GetMapping("/image")
-    public ResponseEntity<Object> getImageByEmail(@RequestParam("_email") String email) {
-        UserAccount user = userRepository.findUserEntityByEmailJoinFetchImage(email)
-                .orElseThrow(() -> new ApiRequestException(
-                        String.format(
-                                "User with email %s does not exist", email
-                        )
-                ));
-
-        Image image = user.getImage();
-
-        if (image == null)
-            return ResponseEntity.badRequest()
-                    .body(null);
-
-        return ResponseEntity.ok()
-                .header("fileName", image.getOriginalFileName())
-                .contentType(MediaType.valueOf(image.getContentType()))
-                .contentLength(image.getSize())
-                .body(new InputStreamResource(new ByteArrayInputStream(image.getBytes())));
     }
 
     @PutMapping
@@ -68,12 +35,5 @@ public class UserController {
             HttpServletRequest request
     ) {
         return userService.updateUser(updateUserRequest, request);
-    }
-
-    @GetMapping("/image/check")
-    public ResponseEntity<?> imageExists(
-            @RequestParam("_email") String email
-    ) {
-        return userService.imageExists(email);
     }
 }

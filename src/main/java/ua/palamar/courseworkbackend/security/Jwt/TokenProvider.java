@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
-import ua.palamar.courseworkbackend.service.userDetails.UserDetailsService;
+import ua.palamar.courseworkbackend.service.userDetails.UserDetailsServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -22,10 +22,10 @@ public class TokenProvider {
     @Value("${secret.key}")
     private String secretKey;
 
-    private final UserDetailsService userDetailsServiceImpl;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Autowired
-    public TokenProvider(UserDetailsService userDetailsServiceImpl) {
+    public TokenProvider(UserDetailsServiceImpl userDetailsServiceImpl) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
 

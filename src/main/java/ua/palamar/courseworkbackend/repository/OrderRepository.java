@@ -1,9 +1,11 @@
 package ua.palamar.courseworkbackend.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,13 +19,13 @@ public interface OrderRepository extends JpaRepository<OrderEntity, String> {
             "join fetch o.product " +
             "join fetch o.sender " +
             "where o.receiver.email = :email")
-    Set<OrderEntity> findAllByReceiverEmailJoinFetchDeliveryStatusAndSenderAndProduct(String email);
+    List<OrderEntity> findAllByReceiverEmailJoinFetchDeliveryStatusAndSenderAndProduct(String email, Pageable pageable);
 
     @Query("select o from OrderEntity o " +
             "join fetch o.receiver " +
             "join fetch o.delivery " +
             "where o.product.id = :id")
-    Set<OrderEntity> findAllByProductIdJoinFetchDeliveryAndReceiver(String id);
+    List<OrderEntity> findAllByProductIdJoinFetchDeliveryAndReceiver(String id, Pageable pageable);
 
 
 

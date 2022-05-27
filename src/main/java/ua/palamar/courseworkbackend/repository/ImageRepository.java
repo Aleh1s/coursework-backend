@@ -5,6 +5,4 @@ import org.springframework.stereotype.Repository;
 import ua.palamar.courseworkbackend.entity.image.Image;
 
 @Repository
-public interface ImageRepository extends JpaRepository<Image, String> {
-
-}
+public interface ImageRepository extends JpaRepository<Image, String> {}

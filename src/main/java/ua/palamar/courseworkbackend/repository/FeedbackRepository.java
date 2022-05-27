@@ -5,6 +5,4 @@ import org.springframework.stereotype.Repository;
 import ua.palamar.courseworkbackend.entity.feedback.Feedback;
 
 @Repository
-public interface FeedbackRepository extends JpaRepository<Feedback, String> {
-
-}
+public interface FeedbackRepository extends JpaRepository<Feedback, String> { }
