@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 
 @RestController
 @RequestMapping("/api/v1/images")
+@CrossOrigin("http://localhost:3000")
 public class ImageController {
 
     private final ImageService imageService;
@@ -38,8 +39,8 @@ public class ImageController {
 
     @Transactional
     @GetMapping("/advertisements")
-    public ResponseEntity<Object> getImageByAdvertisementId(@RequestParam("_advertisementId") String advertisementId) {
-        Image image = imageService.getImageByAdvertisementId(advertisementId);
+    public ResponseEntity<Object> getImageByAdvertisementId(@RequestParam("_id") String id) {
+        Image image = imageService.getImageByAdvertisementId(id);
         if (image == null)
             return ResponseEntity.badRequest()
                     .body(null);

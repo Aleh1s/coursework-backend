@@ -25,8 +25,9 @@ public interface OrderRepository extends JpaRepository<OrderEntity, String> {
             "join fetch o.receiver " +
             "join fetch o.delivery " +
             "where o.product.id = :id")
-    List<OrderEntity> findAllByProductIdJoinFetchDeliveryAndReceiver(String id, Pageable pageable);
+    List<OrderEntity> findAllByProductIdJoinFetchDeliveryAndReceiver(String id);
 
-
+    Long countAllByReceiverEmail(String email);
+    Long countAllByProductId(String id);
 
 }

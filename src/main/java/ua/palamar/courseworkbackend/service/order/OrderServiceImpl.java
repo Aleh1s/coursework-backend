@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.palamar.courseworkbackend.dto.criteria.OrderCriteria;
 import ua.palamar.courseworkbackend.dto.request.OrderRequest;
-import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
-import ua.palamar.courseworkbackend.dto.response.OrderDetailsResponse;
-import ua.palamar.courseworkbackend.dto.response.OrderResponse;
-import ua.palamar.courseworkbackend.dto.response.UserResponse;
+import ua.palamar.courseworkbackend.dto.response.*;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.order.Delivery;
 import ua.palamar.courseworkbackend.entity.order.DeliveryStatus;
@@ -262,13 +259,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public List<OrderResponse> getOrdersByUserEmail(String email, OrderCriteria criteria) {
+    public OrdersResponse getOrdersByUserEmail(String email, OrderCriteria criteria) {
         Pageable pageable = PageRequest.of(criteria.page(), criteria.limit(), Sort.by(criteria.sortBy()));
 
         List<OrderEntity> orders =
                 orderRepository.findAllByReceiverEmailJoinFetchDeliveryStatusAndSenderAndProduct(email, pageable);
+        Long count = orderRepository.countAllByReceiverEmail(email);
 
-        return getOrderResponses(orders);
+        return new OrdersResponse(getOrderResponses(orders), count);
     }
 
     public List<OrderResponse> getOrderResponses(List<OrderEntity> orders) {
@@ -296,10 +294,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDetailsResponse> getOrdersByAdvertisementId(String id, OrderCriteria criteria) {
-        Pageable pageable = PageRequest.of(criteria.page(), criteria.limit(), Sort.by(criteria.sortBy()));
-        List<OrderEntity> orders = orderRepository.findAllByProductIdJoinFetchDeliveryAndReceiver(id, pageable);
-
+    public List<OrderDetailsResponse> getOrdersByAdvertisementId(String id) {
+        List<OrderEntity> orders = orderRepository.findAllByProductIdJoinFetchDeliveryAndReceiver(id);
         return getOrderDetails(orders);
     }
 

@@ -25,4 +25,7 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, St
     @Modifying
     @Transactional
     void removeAdvertisementById(String id);
+
+    List<Advertisement> findAdvertisementsByCreatorEmail(String email, Pageable pageable);
+    Long countAdvertisementsByCreatorEmail(String email);
 }

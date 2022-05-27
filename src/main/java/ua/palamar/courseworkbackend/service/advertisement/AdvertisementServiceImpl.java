@@ -12,6 +12,7 @@ import ua.palamar.courseworkbackend.adapter.user.UserDtoAdapter;
 import ua.palamar.courseworkbackend.dto.criteria.AdvertisementCriteria;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequest;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
+import ua.palamar.courseworkbackend.dto.response.AdvertisementsDetailsResponse;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
 import ua.palamar.courseworkbackend.dto.response.UserResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
@@ -73,7 +74,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         Image image;
 
-        if (Objects.nonNull(file)) {
+        if (!Objects.nonNull(file)) {
             throw new ApiRequestException("The image must exists");
         }
 
@@ -88,6 +89,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         imageRepository.save(image);
 
         Advertisement advertisement = new Advertisement(
@@ -192,7 +194,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Override
-    public Set<AdvertisementResponse> getAllByEmail(String email) {
+    public AdvertisementsDetailsResponse getAllByEmail(String email, AdvertisementCriteria criteria) {
         UserAccount user = userRepository.findUserEntityByEmailJoinFetchAdvertisements(email)
                 .orElseThrow(() -> new ApiRequestException(
                                 String.format(
@@ -201,6 +203,11 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                         )
                 );
 
+        Pageable pageable = PageRequest.of(criteria.page(), criteria.limit(), Sort.by(criteria.sortBy()).descending());
+
+        List<Advertisement> advertisements = advertisementRepository.findAdvertisementsByCreatorEmail(email, pageable);
+        Long count = advertisementRepository.countAdvertisementsByCreatorEmail(email);
+
         UserResponse userResponse = new UserResponse(
                 user.getEmail(),
                 user.getFirstName(),
@@ -208,10 +215,10 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                 user.getPhoneNumber()
         );
 
-        return getAdvertisementResponses(user.getAdvertisements(), userResponse);
+        return new AdvertisementsDetailsResponse(getAdvertisementResponses(advertisements, userResponse), count);
     }
 
-    private Set<AdvertisementResponse> getAdvertisementResponses(Set<Advertisement> advertisements, UserResponse userResponse) {
+    private List<AdvertisementResponse> getAdvertisementResponses(List<Advertisement> advertisements, UserResponse userResponse) {
         return advertisements.stream()
                 .map(advertisement -> new AdvertisementResponse(
                         advertisement.getId(),
@@ -221,7 +228,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                         advertisement.getCategory(),
                         advertisement.getCreatedAt(),
                         userResponse
-                )).collect(Collectors.toSet());
+                )).collect(Collectors.toList());
     }
 
 

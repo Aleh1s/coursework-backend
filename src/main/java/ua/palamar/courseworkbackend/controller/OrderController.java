@@ -8,6 +8,8 @@ import ua.palamar.courseworkbackend.dto.criteria.OrderCriteria;
 import ua.palamar.courseworkbackend.dto.request.OrderRequest;
 import ua.palamar.courseworkbackend.dto.response.OrderDetailsResponse;
 import ua.palamar.courseworkbackend.dto.response.OrderResponse;
+import ua.palamar.courseworkbackend.dto.response.OrdersDetailsResponse;
+import ua.palamar.courseworkbackend.dto.response.OrdersResponse;
 import ua.palamar.courseworkbackend.entity.order.DeliveryStatus;
 import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.service.OrderService;
@@ -73,7 +75,7 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/users/{email}")
-    public ResponseEntity<List<OrderResponse>> getAllByUserEmail(
+    public ResponseEntity<OrdersResponse> getAllByUserEmail(
             @PathVariable("email") String email,
             @RequestParam(value = "_limit", defaultValue = "12") Integer limit,
             @RequestParam(value = "_page", defaultValue = "0") Integer page,
@@ -83,12 +85,8 @@ public class OrderController {
     }
     @GetMapping("/advertisements/{id}")
     public ResponseEntity<List<OrderDetailsResponse>> getAllByAdvertisementId(
-            @PathVariable("id") String id,
-            @RequestParam(value = "_limit", defaultValue = "12") Integer limit,
-            @RequestParam(value = "_page", defaultValue = "0") Integer page,
-            @RequestParam(value = "_sortBy", defaultValue = "createdAt") String sortBy
-
+            @PathVariable("id") String id
     ) {
-        return new ResponseEntity<>(orderService.getOrdersByAdvertisementId(id, new OrderCriteria(limit, page, sortBy)), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.getOrdersByAdvertisementId(id), HttpStatus.OK);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.palamar.courseworkbackend.dto.criteria.AdvertisementCriteria;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequest;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
+import ua.palamar.courseworkbackend.dto.response.AdvertisementsDetailsResponse;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ public interface AdvertisementService {
 
     AdvertisementResponse getByIdJoinFetchCreator(String id);
 
-    Set<AdvertisementResponse> getAllByEmail(String email);
+    AdvertisementsDetailsResponse getAllByEmail(String email, AdvertisementCriteria advertisementCriteria);
 
     void remove(String id, HttpServletRequest request);
 }

@@ -3,9 +3,7 @@ package ua.palamar.courseworkbackend.service;
 import org.springframework.http.ResponseEntity;
 import ua.palamar.courseworkbackend.dto.criteria.OrderCriteria;
 import ua.palamar.courseworkbackend.dto.request.OrderRequest;
-import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
-import ua.palamar.courseworkbackend.dto.response.OrderDetailsResponse;
-import ua.palamar.courseworkbackend.dto.response.OrderResponse;
+import ua.palamar.courseworkbackend.dto.response.*;
 import ua.palamar.courseworkbackend.entity.order.DeliveryStatus;
 import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 
@@ -24,7 +22,7 @@ public interface OrderService {
 
     void changeDeliveryStatus(String id, DeliveryStatus status, HttpServletRequest request);
 
-    List<OrderResponse> getOrdersByUserEmail(String email, OrderCriteria criteria);
+    OrdersResponse getOrdersByUserEmail(String email, OrderCriteria criteria);
 
-    List<OrderDetailsResponse> getOrdersByAdvertisementId(String id, OrderCriteria criteria);
+    List<OrderDetailsResponse> getOrdersByAdvertisementId(String id);
 }

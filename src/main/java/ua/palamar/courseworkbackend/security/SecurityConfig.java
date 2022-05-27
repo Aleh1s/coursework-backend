@@ -37,12 +37,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         HttpMethod.GET,
-                        "/api/v1/advertisements/email/**"
+                        "/api/v1/advertisements/one/**"
                 ).hasAuthority(ADVERTISEMENT_READ.getPermission())
                 .antMatchers(
                         HttpMethod.GET,
-                        "/api/v1/orders/email/**",
-                        "/api/v1/orders/advertisement/**"
+                        "/api/v1/orders/users/**",
+                        "/api/v1/orders/advertisements/**"
                 ).hasAuthority(ORDER_READ.getPermission())
                 .antMatchers(
                         HttpMethod.POST,
@@ -50,14 +50,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ).hasAuthority(ADVERTISEMENT_CREATE.getPermission())
                 .antMatchers(
                         HttpMethod.POST,
-                        "/api/v1/users/**"
+                        "/api/v1/images/users/**"
                 ).hasAuthority(USER_UPDATE.getPermission())
                 .antMatchers(
                         HttpMethod.POST,
                         "/api/v1/orders/**"
                 ).hasAuthority(ORDER_MAKE.getPermission())
                 .antMatchers(
-                        HttpMethod.PUT,
+                        HttpMethod.PATCH,
                         "/api/v1/orders/decline/**",
                         "/api/v1/orders/accept/**",
                         "/api/v1/orders/cancel/**",
@@ -79,11 +79,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         HttpMethod.GET,
                         "/api/v1/advertisements/**",
-                        "/api/v1/advertisements/page/**",
-                        "/api/v1/advertisements/query/**",
-                        "/api/v1/advertisements/image/**",
-                        "/api/v1/users/image/**",
-                        "/api/v1/users/image/check/**"
+                        "/api/v1/images/advertisements/**",
+                        "/api/v1/images/users/**",
+                        "/api/v1/images/users/exists/**"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
