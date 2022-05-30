@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.dto.request.RegistrationRequest;
 import ua.palamar.courseworkbackend.entity.user.UserAccount;
+import ua.palamar.courseworkbackend.entity.user.UserStatus;
 import ua.palamar.courseworkbackend.entity.user.permissions.UserRole;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.UserRepository;

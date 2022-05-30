@@ -27,6 +27,7 @@ public class AdvertisementDtoAdapterImpl implements AdvertisementDtoAdapter{
                 advertisement.getTitle(),
                 advertisement.getDescription(),
                 advertisement.getCity(),
+                advertisement.getStatus(),
                 advertisement.getCategory(),
                 advertisement.getCreatedAt(),
                 userDtoAdapter.getModel(creator)

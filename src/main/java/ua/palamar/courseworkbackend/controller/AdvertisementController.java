@@ -10,11 +10,10 @@ import ua.palamar.courseworkbackend.dto.request.AdvertisementRequest;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsDetailsResponse;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
-import ua.palamar.courseworkbackend.entity.advertisement.Category;
+import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementCategory;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/advertisements")
@@ -34,7 +33,7 @@ public class AdvertisementController {
             @RequestParam("_title") String title,
             @RequestParam("_description") String description,
             @RequestParam("_city") String city,
-            @RequestParam("_category") Category category,
+            @RequestParam("_category") AdvertisementCategory category,
             HttpServletRequest request
     ) {
         AdvertisementRequest model = new AdvertisementRequest(title, description, category, city);
@@ -59,7 +58,7 @@ public class AdvertisementController {
     public ResponseEntity<AdvertisementsResponse> getAll(
             @RequestParam(value = "_limit", defaultValue = "12") Integer limit,
             @RequestParam(value = "_page", defaultValue = "0") Integer page,
-            @RequestParam(value = "_category", defaultValue = "ITEM") Category category,
+            @RequestParam(value = "_category", defaultValue = "ITEM") AdvertisementCategory category,
             @RequestParam(value = "_sortBy", defaultValue = "createdAt") String sortBy,
             @RequestParam(value = "_query", defaultValue = "") String query
     ) {

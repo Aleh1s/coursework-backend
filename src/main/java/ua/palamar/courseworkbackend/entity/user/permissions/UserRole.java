@@ -19,6 +19,13 @@ public enum UserRole {
             ORDER_CHANGE,
             ORDER_MAKE,
             USER_UPDATE
+    )),
+    ADMIN(Sets.newHashSet(
+            MODERATION,
+            USER_WRITE,
+            USER_UPDATE,
+            FEEDBACK_READ,
+            ADVERTISEMENT_READ
     ));
 
     private final Set<UserPermission> permissions;

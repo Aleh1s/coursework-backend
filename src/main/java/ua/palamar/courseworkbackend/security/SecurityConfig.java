@@ -72,6 +72,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/advertisements/**"
                 ).hasAuthority(ADVERTISEMENT_DELETE.getPermission())
                 .antMatchers(
+                        "/api/v1/admin/**"
+                ).hasAnyAuthority(USER_WRITE.getPermission(), MODERATION.getPermission())
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/api/v1/feedback/**"
+                ).hasAuthority(FEEDBACK_READ.getPermission())
+                .antMatchers(
                         "/api/v1/registration/**",
                         "/api/v1/authentication/**",
                         "/api/v1/feedback/**"
@@ -82,6 +89,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/images/advertisements/**",
                         "/api/v1/images/users/**",
                         "/api/v1/images/users/exists/**"
+                ).permitAll()
+                .antMatchers(
+                        HttpMethod.POST,
+                        "/api/v1/feedback/**"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);

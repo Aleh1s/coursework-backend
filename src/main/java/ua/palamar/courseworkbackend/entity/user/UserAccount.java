@@ -43,6 +43,10 @@ public class UserAccount {
     @Column(nullable = false)
     private UserRole role;
 
+    @Enumerated(STRING)
+    @Column(nullable = false)
+    private UserStatus status;
+
     @Column(nullable = false)
     private String phoneNumber;
 
@@ -80,6 +84,7 @@ public class UserAccount {
         if (id == null) {
             id = UUID.randomUUID().toString();
         }
+        status = UserStatus.ACTIVE;
     }
 
     public UserAccount(

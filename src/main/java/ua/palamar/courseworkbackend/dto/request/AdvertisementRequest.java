@@ -1,11 +1,11 @@
 package ua.palamar.courseworkbackend.dto.request;
 
-import ua.palamar.courseworkbackend.entity.advertisement.Category;
+import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementCategory;
 
 public record AdvertisementRequest(
         String title,
         String description,
-        Category category,
+        AdvertisementCategory category,
         String city
 ) {
 

@@ -1,6 +1,6 @@
 package ua.palamar.courseworkbackend.entity.advertisement;
 
-public enum Category {
+public enum AdvertisementCategory {
     ITEM,
     SERVICE,
     HOUSE

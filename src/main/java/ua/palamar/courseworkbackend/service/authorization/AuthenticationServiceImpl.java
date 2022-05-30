@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import ua.palamar.courseworkbackend.dto.request.AuthenticationRequest;
 import ua.palamar.courseworkbackend.dto.response.AuthenticationResponse;
 import ua.palamar.courseworkbackend.dto.response.RefreshTokenResponse;
+import ua.palamar.courseworkbackend.dto.response.UserAuthResponse;
 import ua.palamar.courseworkbackend.dto.response.UserResponse;
 import ua.palamar.courseworkbackend.entity.user.UserAccount;
+import ua.palamar.courseworkbackend.entity.user.UserStatus;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
 import ua.palamar.courseworkbackend.service.AuthenticationService;
@@ -38,6 +40,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
         UserAccount currentUser = userService.getUserEntityByEmail(authenticationRequest.email());
 
+        if (currentUser.getStatus().equals(UserStatus.BLOCKED)) {
+            throw new ApiRequestException("User is blocked");
+        }
+
         if (!passwordEncoder.matches(authenticationRequest.password(), currentUser.getPassword())) {
             throw new ApiRequestException("Wrong password");
         }
@@ -45,13 +51,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String accessToken = tokenProvider.generateToken(currentUser);
         String refreshToken = tokenProvider.generateRefreshToken(currentUser);
 
-
-        UserResponse userResponse = getUserResponseModel(currentUser);
+        UserAuthResponse response = new UserAuthResponse(
+                currentUser.getEmail(),
+                currentUser.getFirstName(),
+                currentUser.getLastName(),
+                currentUser.getPhoneNumber(),
+                currentUser.getRole()
+        );
 
         return new AuthenticationResponse(
                 accessToken,
                 refreshToken,
-                userResponse
+                response
         );
     }
 
@@ -64,26 +75,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     tokenProvider.getEmailByToken(refreshToken)
             );
 
+            if (currentUser.getStatus().equals(UserStatus.BLOCKED)) {
+                throw new ApiRequestException("User is blocked");
+            }
+
             String token = tokenProvider.generateToken(currentUser);
 
-            UserResponse userResponse = getUserResponseModel(currentUser);
+            UserAuthResponse response = new UserAuthResponse(
+                    currentUser.getEmail(),
+                    currentUser.getFirstName(),
+                    currentUser.getLastName(),
+                    currentUser.getPhoneNumber(),
+                    currentUser.getRole()
+            );
 
             return new RefreshTokenResponse(
                     token,
-                    userResponse
+                    response
             );
 
         } else {
             throw new ApiRequestException("Token isn't valid");
         }
-    }
-
-    private UserResponse getUserResponseModel(UserAccount userAccount) {
-        return new UserResponse(
-                userAccount.getEmail(),
-                userAccount.getFirstName(),
-                userAccount.getLastName(),
-                userAccount.getPhoneNumber()
-        );
     }
 }

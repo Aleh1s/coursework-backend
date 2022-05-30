@@ -11,7 +11,8 @@ public class UserDetailsAdapterImpl implements UserDetailsAdapter{
         return new UserDetails(
                 userAccount.getEmail(),
                 userAccount.getPassword(),
-                userAccount.getRole()
+                userAccount.getRole(),
+                userAccount.getStatus()
         );
     }
 }

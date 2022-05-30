@@ -11,6 +11,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
     private String email;
     private String password;
     private UserRole role;
+    private UserStatus status;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -29,22 +30,22 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return status.equals(UserStatus.ACTIVE);
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return status.equals(UserStatus.ACTIVE);
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return status.equals(UserStatus.ACTIVE);
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return status.equals(UserStatus.ACTIVE);
     }
 
 }

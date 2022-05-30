@@ -1,14 +1,12 @@
 package ua.palamar.courseworkbackend.service.order;
 
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.palamar.courseworkbackend.adapter.user.UserDtoAdapter;
 import ua.palamar.courseworkbackend.dto.criteria.OrderCriteria;
 import ua.palamar.courseworkbackend.dto.request.OrderRequest;
 import ua.palamar.courseworkbackend.dto.response.*;
@@ -23,13 +21,11 @@ import ua.palamar.courseworkbackend.repository.AdvertisementRepository;
 import ua.palamar.courseworkbackend.repository.DeliveryRepository;
 import ua.palamar.courseworkbackend.repository.OrderRepository;
 import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
-import ua.palamar.courseworkbackend.service.AdvertisementService;
 import ua.palamar.courseworkbackend.service.OrderService;
 import ua.palamar.courseworkbackend.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ua.palamar.courseworkbackend.entity.order.DeliveryStatus.*;
@@ -44,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final TokenProvider tokenProvider;
+    private final UserDtoAdapter userDtoAdapter;
 
     @Autowired
     public OrderServiceImpl(
@@ -51,13 +48,14 @@ public class OrderServiceImpl implements OrderService {
             AdvertisementRepository advertisementRepository,
             OrderRepository orderRepository,
             UserService userService,
-            TokenProvider tokenProvider
-    ) {
+            TokenProvider tokenProvider,
+            UserDtoAdapter userDtoAdapter) {
         this.deliveryRepository = deliveryRepository;
         this.advertisementRepository = advertisementRepository;
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.tokenProvider = tokenProvider;
+        this.userDtoAdapter = userDtoAdapter;
     }
 
     @Override
@@ -273,12 +271,7 @@ public class OrderServiceImpl implements OrderService {
         return orders.stream()
                 .map(orderEntity -> {
                     UserAccount sender = orderEntity.getSender();
-                    UserResponse senderModel = new UserResponse(
-                            sender.getEmail(),
-                            sender.getFirstName(),
-                            sender.getLastName(),
-                            sender.getPhoneNumber()
-                    );
+                    UserResponse senderModel = userDtoAdapter.getModel(sender);
 
                     return new OrderResponse(
                             orderEntity.getId(),
@@ -301,18 +294,16 @@ public class OrderServiceImpl implements OrderService {
 
     private List<OrderDetailsResponse> getOrderDetails(List<OrderEntity> orders) {
         return orders.stream()
-                .map(orderEntity -> new OrderDetailsResponse(
-                        orderEntity.getId(),
-                        orderEntity.getCreatedAt(),
-                        orderEntity.getOrderStatus(),
-                        orderEntity.getDelivery(),
-                        new UserResponse(
-                                orderEntity.getReceiver().getEmail(),
-                                orderEntity.getReceiver().getFirstName(),
-                                orderEntity.getReceiver().getLastName(),
-                                orderEntity.getReceiver().getPhoneNumber()
-                        ),
-                        orderEntity.getWishes()
-                )).collect(Collectors.toList());
+                .map(orderEntity -> {
+                    UserAccount receiver = orderEntity.getReceiver();
+                    return new OrderDetailsResponse(
+                            orderEntity.getId(),
+                            orderEntity.getCreatedAt(),
+                            orderEntity.getOrderStatus(),
+                            orderEntity.getDelivery(),
+                            userDtoAdapter.getModel(receiver),
+                            orderEntity.getWishes()
+                    );
+                }).collect(Collectors.toList());
     }
 }

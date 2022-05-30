@@ -16,7 +16,8 @@ import ua.palamar.courseworkbackend.dto.response.AdvertisementsDetailsResponse;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
 import ua.palamar.courseworkbackend.dto.response.UserResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
-import ua.palamar.courseworkbackend.entity.advertisement.Category;
+import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementCategory;
+import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.image.Image;
 import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.entity.order.OrderStatus;
@@ -157,12 +158,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         Pageable pageable = PageRequest.of(criteria.page(), criteria.limit(), Sort.by(criteria.sortBy()).descending());
 
         String query = criteria.query();
-        Category category = criteria.category();
+        AdvertisementCategory category = criteria.category();
 
         List<Advertisement> advertisements = advertisementRepository
-                .findAdvertisementsByCategoryAndTitleContainingIgnoreCase(category, query, pageable);
+                .findAdvertisementsByCategoryAndStatusAndTitleContainingIgnoreCase(category, AdvertisementStatus.CHECKED, query, pageable);
         Long count = advertisementRepository
-                .countAdvertisementsByCategoryAndTitleContainingIgnoreCase(category, query);
+                .countAdvertisementsByCategoryAndStatusAndTitleContainingIgnoreCase(category, AdvertisementStatus.CHECKED, query);
 
         return new AdvertisementsResponse(
                 advertisements,
@@ -187,6 +188,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                 advertisement.getTitle(),
                 advertisement.getDescription(),
                 advertisement.getCity(),
+                advertisement.getStatus(),
                 advertisement.getCategory(),
                 advertisement.getCreatedAt(),
                 userResponse
@@ -208,12 +210,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         List<Advertisement> advertisements = advertisementRepository.findAdvertisementsByCreatorEmail(email, pageable);
         Long count = advertisementRepository.countAdvertisementsByCreatorEmail(email);
 
-        UserResponse userResponse = new UserResponse(
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getPhoneNumber()
-        );
+        UserResponse userResponse = userDtoAdapter.getModel(user);
 
         return new AdvertisementsDetailsResponse(getAdvertisementResponses(advertisements, userResponse), count);
     }
@@ -225,6 +222,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                         advertisement.getTitle(),
                         advertisement.getDescription(),
                         advertisement.getCity(),
+                        advertisement.getStatus(),
                         advertisement.getCategory(),
                         advertisement.getCreatedAt(),
                         userResponse

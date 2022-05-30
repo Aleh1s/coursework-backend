@@ -36,7 +36,11 @@ public class Advertisement {
 
     @Enumerated(STRING)
     @Column(nullable = false)
-    private Category category;
+    private AdvertisementCategory category;
+
+    @Enumerated(STRING)
+    @Column(nullable = false)
+    private AdvertisementStatus status;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -72,6 +76,7 @@ public class Advertisement {
             id = UUID.randomUUID().toString();
         }
         createdAt = LocalDateTime.now();
+        status = AdvertisementStatus.UNCHECKED;
     }
 
     public void addCreator(UserAccount creator) {
@@ -92,7 +97,7 @@ public class Advertisement {
     public Advertisement(
             String title,
             String description,
-            Category category,
+            AdvertisementCategory category,
             String city,
             Image image
     ) {

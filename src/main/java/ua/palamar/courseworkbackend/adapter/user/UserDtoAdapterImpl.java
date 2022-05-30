@@ -13,7 +13,8 @@ public class UserDtoAdapterImpl implements UserDtoAdapter{
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getPhoneNumber()
+                user.getPhoneNumber(),
+                user.getStatus()
         );
     }
 }

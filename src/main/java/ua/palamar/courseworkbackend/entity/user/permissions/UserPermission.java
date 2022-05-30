@@ -8,7 +8,10 @@ public enum UserPermission {
     ORDER_READ("order:read"),
     ORDER_MAKE("order:make"),
     ORDER_CHANGE("order:change"),
-    USER_UPDATE("user:update");
+    USER_UPDATE("user:update"),
+    USER_WRITE("user:block"),
+    MODERATION("moderation"),
+    FEEDBACK_READ("feedback:read");
 
 
     private final String permission;

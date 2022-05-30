@@ -1,9 +1,9 @@
 package ua.palamar.courseworkbackend.dto.criteria;
 
-import ua.palamar.courseworkbackend.entity.advertisement.Category;
+import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementCategory;
 
 public record AdvertisementCriteria(
-        Category category,
+        AdvertisementCategory category,
         Integer limit,
         Integer page,
         String sortBy,
