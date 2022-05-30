@@ -44,9 +44,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         String phoneNumber = registrationRequest.phoneNumber();
 
-        if (phoneNumber.startsWith("+38")) {
+        if (phoneNumber.startsWith("+38"))
             phoneNumber = phoneNumber.substring("+38".length());
-        }
+
 
         if (userServiceValidator.userWithPhoneNumberExists(phoneNumber))
             throw new ApiRequestException(
