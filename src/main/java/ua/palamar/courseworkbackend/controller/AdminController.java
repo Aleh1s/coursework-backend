@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.palamar.courseworkbackend.dto.criteria.AdvertisementCriteria;
-import ua.palamar.courseworkbackend.dto.response.AdvertisementsDetailsResponse;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.user.UserStatus;
@@ -53,7 +52,7 @@ public class AdminController {
             @RequestParam("_status") AdvertisementStatus status,
             HttpServletRequest request
     ) {
-        adminService.changeAdvertisementsStatus(id, status, request);
+        adminService.changeAdvertisementStatus(id, status, request);
         return ResponseEntity.noContent().build();
     }
 

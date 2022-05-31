@@ -175,7 +175,7 @@ public class OrderServiceImpl implements OrderService {
 
         if (orderEntity.getOrderStatus().equals(CANCELED)) {
             throw new ApiRequestException(
-                    String.format("Order with id %s was declined", id)
+                    String.format("Order with id %s was canceled", id)
             );
         }
 
@@ -220,6 +220,7 @@ public class OrderServiceImpl implements OrderService {
         String email = tokenProvider.getEmail(request);
 
         UserAccount sender = orderEntity.getSender();
+        UserAccount receiver = orderEntity.getReceiver();
 
         final Delivery delivery = orderEntity.getDelivery();
 
@@ -242,11 +243,18 @@ public class OrderServiceImpl implements OrderService {
             }
             case "delivered" -> {
 
+                if (!email.equals(receiver.getEmail())) {
+                    throw new ApiRequestException(
+                            String.format("User with email %s can not change delivery status of order with id %s", email, id)
+                    );
+                }
+
                 if (!orderEntity.getOrderStatus().equals(CONFIRMED)) {
                     throw new ApiRequestException(
                             orderIsNotConfirmed
                     );
                 }
+
                 delivery.setDeliveryStatus(DELIVERED);
             }
             default -> throw new ApiRequestException(
@@ -257,7 +265,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrdersResponse getOrdersByUserEmail(String email, OrderCriteria criteria) {
+    public OrdersResponse getOrdersByReceiverEmail(String email, OrderCriteria criteria) {
         Pageable pageable = PageRequest.of(criteria.page(), criteria.limit(), Sort.by(criteria.sortBy()));
 
         List<OrderEntity> orders =
@@ -289,10 +297,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDetailsResponse> getOrdersByAdvertisementId(String id) {
         List<OrderEntity> orders = orderRepository.findAllByProductIdJoinFetchDeliveryAndReceiver(id);
-        return getOrderDetails(orders);
+        return getOrdersDetails(orders);
     }
 
-    private List<OrderDetailsResponse> getOrderDetails(List<OrderEntity> orders) {
+    private List<OrderDetailsResponse> getOrdersDetails(List<OrderEntity> orders) {
         return orders.stream()
                 .map(orderEntity -> {
                     UserAccount receiver = orderEntity.getReceiver();

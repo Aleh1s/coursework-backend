@@ -9,14 +9,11 @@ import ua.palamar.courseworkbackend.dto.criteria.AdvertisementCriteria;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus;
-import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.entity.user.UserStatus;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
 import ua.palamar.courseworkbackend.repository.AdvertisementRepository;
 import ua.palamar.courseworkbackend.repository.UserRepository;
-import ua.palamar.courseworkbackend.security.Jwt.TokenProvider;
 import ua.palamar.courseworkbackend.service.AdminService;
-import ua.palamar.courseworkbackend.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -48,7 +45,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void changeAdvertisementsStatus(String id, AdvertisementStatus status, HttpServletRequest request) {
+    public void changeAdvertisementStatus(String id, AdvertisementStatus status, HttpServletRequest request) {
         if (advertisementRepository.existsById(id)) {
             advertisementRepository.updateAdvertisementStatusById(id, status);
         } else {

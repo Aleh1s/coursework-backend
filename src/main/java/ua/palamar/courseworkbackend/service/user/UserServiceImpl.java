@@ -65,6 +65,8 @@ public class UserServiceImpl implements UserService, UserServiceValidator {
 
             user.setImage(image);
             imageRepository.save(image);
+        } else {
+            throw new ApiRequestException("Image must exists");
         }
 
 

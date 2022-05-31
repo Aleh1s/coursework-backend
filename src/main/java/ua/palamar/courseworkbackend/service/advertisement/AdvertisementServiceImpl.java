@@ -75,7 +75,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         Image image;
 
-        if (!Objects.nonNull(file)) {
+        if (file.getSize() == 0) {
             throw new ApiRequestException("The image must exists");
         }
 
@@ -128,7 +128,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         boolean hasConfirmedOrders = orderEntities.stream()
                 .anyMatch(order -> order.getOrderStatus().equals(OrderStatus.CONFIRMED));
 
-        if (hasConfirmedOrders) {
+        if (hasConfirmedOrders) { // todo:
             throw new ApiRequestException(
                     String.format(
                             "User with email %s has confirmed orders", email
@@ -228,7 +228,4 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                         userResponse
                 )).collect(Collectors.toList());
     }
-
-
-
 }

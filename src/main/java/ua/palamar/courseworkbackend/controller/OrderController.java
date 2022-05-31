@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ua.palamar.courseworkbackend.dto.criteria.OrderCriteria;
 import ua.palamar.courseworkbackend.dto.request.OrderRequest;
 import ua.palamar.courseworkbackend.dto.response.OrderDetailsResponse;
-import ua.palamar.courseworkbackend.dto.response.OrderResponse;
-import ua.palamar.courseworkbackend.dto.response.OrdersDetailsResponse;
 import ua.palamar.courseworkbackend.dto.response.OrdersResponse;
 import ua.palamar.courseworkbackend.entity.order.DeliveryStatus;
 import ua.palamar.courseworkbackend.entity.order.OrderEntity;
@@ -16,7 +14,6 @@ import ua.palamar.courseworkbackend.service.OrderService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -81,7 +78,7 @@ public class OrderController {
             @RequestParam(value = "_page", defaultValue = "0") Integer page,
             @RequestParam(value = "_sortBy", defaultValue = "createdAt") String sortBy
     ) {
-        return new ResponseEntity<>(orderService.getOrdersByUserEmail(email, new OrderCriteria(limit, page, sortBy)), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.getOrdersByReceiverEmail(email, new OrderCriteria(limit, page, sortBy)), HttpStatus.OK);
     }
     @GetMapping("/advertisements/{id}")
     public ResponseEntity<List<OrderDetailsResponse>> getAllByAdvertisementId(

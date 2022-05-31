@@ -10,6 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 public interface AdminService {
 
     void changeUserAccountStatus(String email, UserStatus status);
-    void changeAdvertisementsStatus(String id, AdvertisementStatus status, HttpServletRequest request);
+    void changeAdvertisementStatus(String id, AdvertisementStatus status, HttpServletRequest request);
     AdvertisementsResponse getAdvertisementsForModeration(AdvertisementCriteria criteria);
 }

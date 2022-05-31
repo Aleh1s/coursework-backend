@@ -1,4 +1,4 @@
-package ua.palamar.courseworkbackend.service.authorization;
+package ua.palamar.courseworkbackend.service.authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -7,7 +7,6 @@ import ua.palamar.courseworkbackend.dto.request.AuthenticationRequest;
 import ua.palamar.courseworkbackend.dto.response.AuthenticationResponse;
 import ua.palamar.courseworkbackend.dto.response.RefreshTokenResponse;
 import ua.palamar.courseworkbackend.dto.response.UserAuthResponse;
-import ua.palamar.courseworkbackend.dto.response.UserResponse;
 import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.entity.user.UserStatus;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;

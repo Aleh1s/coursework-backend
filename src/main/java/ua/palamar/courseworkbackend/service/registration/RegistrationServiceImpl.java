@@ -65,6 +65,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         userRepository.save(newUser);
 
-        return new ResponseEntity<>("Successful registration", HttpStatus.CREATED);
+        return ResponseEntity.ok().build();
     }
 }
