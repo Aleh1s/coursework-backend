@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ua.palamar.courseworkbackend.adapter.user.UserDtoAdapter;
 import ua.palamar.courseworkbackend.dto.request.UpdateUserRequest;
+import ua.palamar.courseworkbackend.dto.response.UserResponse;
 import ua.palamar.courseworkbackend.entity.image.Image;
 import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
@@ -25,13 +27,18 @@ public class UserServiceImpl implements UserService, UserServiceValidator {
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
     private final TokenProvider tokenProvider;
+    private final UserDtoAdapter userDtoAdapter;
+
     public UserServiceImpl(
             UserRepository userRepository,
             ImageRepository imageRepository,
-            @Lazy TokenProvider tokenProvider) {
+            @Lazy TokenProvider tokenProvider,
+            UserDtoAdapter userDtoAdapter
+    ) {
         this.userRepository = userRepository;
         this.imageRepository = imageRepository;
         this.tokenProvider = tokenProvider;
+        this.userDtoAdapter = userDtoAdapter;
     }
 
     @Override
@@ -104,8 +111,9 @@ public class UserServiceImpl implements UserService, UserServiceValidator {
             user.setLastName(lastName);
         }
 
-        userRepository.save(user);
-        return ResponseEntity.ok().build();
+        UserAccount updatedUser = userRepository.save(user);
+        UserResponse response = userDtoAdapter.getModel(updatedUser);
+        return ResponseEntity.ok(response);
     }
 
     @Override

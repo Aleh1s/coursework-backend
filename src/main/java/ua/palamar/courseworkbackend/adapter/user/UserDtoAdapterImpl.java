@@ -14,7 +14,8 @@ public class UserDtoAdapterImpl implements UserDtoAdapter{
                 user.getFirstName(),
                 user.getLastName(),
                 user.getPhoneNumber(),
-                user.getStatus()
+                user.getStatus(),
+                user.getRole()
         );
     }
 }

@@ -6,7 +6,7 @@ import ua.palamar.courseworkbackend.entity.feedback.Feedback;
 import java.util.List;
 
 public record FeedbacksResponse(
-        Page<Feedback> feedbacks,
+        List<FeedbackResponse> feedbacks,
         Long count
 ) {
 }

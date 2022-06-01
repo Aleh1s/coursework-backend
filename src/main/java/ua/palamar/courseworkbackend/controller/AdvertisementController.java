@@ -37,7 +37,7 @@ public class AdvertisementController {
             HttpServletRequest request
     ) {
         AdvertisementRequest model = new AdvertisementRequest(title, description, category, city);
-        return new ResponseEntity<>(advertisementService.save(model, request, file), HttpStatus.CREATED);
+        return new ResponseEntity<>(advertisementService.saveAdvertisement(model, request, file), HttpStatus.CREATED);
     }
 
     @DeleteMapping
@@ -45,7 +45,7 @@ public class AdvertisementController {
             @RequestParam("_id") String id,
             HttpServletRequest request
     ) {
-        advertisementService.remove(id, request);
+        advertisementService.removeAdvertisement(id, request);
         return ResponseEntity.noContent().build();
     }
 

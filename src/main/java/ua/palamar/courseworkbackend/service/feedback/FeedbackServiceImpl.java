@@ -14,6 +14,9 @@ import ua.palamar.courseworkbackend.entity.feedback.Feedback;
 import ua.palamar.courseworkbackend.repository.FeedbackRepository;
 import ua.palamar.courseworkbackend.service.FeedbackService;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class FeedbackServiceImpl implements FeedbackService {
 
@@ -36,7 +39,8 @@ public class FeedbackServiceImpl implements FeedbackService {
         return new FeedbackResponse(
                 feedback.getId(),
                 feedback.getEmail(),
-                feedback.getText()
+                feedback.getText(),
+                feedback.getCreatedAt()
         );
     }
 
@@ -48,8 +52,18 @@ public class FeedbackServiceImpl implements FeedbackService {
         Long count = feedbackRepository.count();
 
         return new FeedbacksResponse(
-                feedbacks,
+                getFeedbackResponses(feedbacks),
                 count
         );
+    }
+
+    private List<FeedbackResponse> getFeedbackResponses(Page<Feedback> feedbacks) {
+        return feedbacks.stream()
+                .map(feedback -> new FeedbackResponse(
+                        feedback.getId(),
+                        feedback.getEmail(),
+                        feedback.getText(),
+                        feedback.getCreatedAt()
+                )).collect(Collectors.toList());
     }
 }

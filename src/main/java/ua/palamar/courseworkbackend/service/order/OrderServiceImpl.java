@@ -81,16 +81,6 @@ public class OrderServiceImpl implements OrderService {
 
         UserAccount receiver = userService.getUserEntityByEmail(email);
 
-        boolean receiverOrderedBefore = receiverOrderedBefore(receiver, advertisement);
-
-        if (receiverOrderedBefore) {
-            throw new ApiRequestException(
-                    String.format(
-                        "User %s already has order for this advertisement", receiver.getEmail()
-                    )
-            );
-        }
-
         Delivery delivery = new Delivery(
                 orderRequest.city(),
                 orderRequest.address(),
@@ -110,11 +100,6 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(orderEntity);
 
         return orderEntity;
-    }
-
-    private boolean receiverOrderedBefore(UserAccount receiver, Advertisement advertisement) {
-        return receiver.getOrderEntityEntities().stream()
-                .anyMatch(order -> order.getProduct() == advertisement);
     }
 
     public OrderEntity getOrderById(String id) {

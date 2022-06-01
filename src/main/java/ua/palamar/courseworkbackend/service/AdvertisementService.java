@@ -9,12 +9,11 @@ import ua.palamar.courseworkbackend.dto.response.AdvertisementsDetailsResponse;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Set;
 
 @Service
 public interface AdvertisementService {
 
-    AdvertisementResponse save(AdvertisementRequest advertisementRequest, HttpServletRequest request, MultipartFile file);
+    AdvertisementResponse saveAdvertisement(AdvertisementRequest advertisementRequest, HttpServletRequest request, MultipartFile file);
 
     AdvertisementsResponse getAllByCriteria(AdvertisementCriteria criteria);
 
@@ -22,5 +21,5 @@ public interface AdvertisementService {
 
     AdvertisementsDetailsResponse getAllByEmail(String email, AdvertisementCriteria advertisementCriteria);
 
-    void remove(String id, HttpServletRequest request);
+    void removeAdvertisement(String id, HttpServletRequest request);
 }

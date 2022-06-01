@@ -3,10 +3,11 @@ package ua.palamar.courseworkbackend.service.authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ua.palamar.courseworkbackend.adapter.user.UserDtoAdapter;
 import ua.palamar.courseworkbackend.dto.request.AuthenticationRequest;
 import ua.palamar.courseworkbackend.dto.response.AuthenticationResponse;
 import ua.palamar.courseworkbackend.dto.response.RefreshTokenResponse;
-import ua.palamar.courseworkbackend.dto.response.UserAuthResponse;
+import ua.palamar.courseworkbackend.dto.response.UserResponse;
 import ua.palamar.courseworkbackend.entity.user.UserAccount;
 import ua.palamar.courseworkbackend.entity.user.UserStatus;
 import ua.palamar.courseworkbackend.exception.ApiRequestException;
@@ -23,16 +24,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final UserDtoAdapter userDtoAdapter;
 
     @Autowired
     public AuthenticationServiceImpl(
             UserService userService,
             PasswordEncoder passwordEncoder,
-            TokenProvider tokenProvider
+            TokenProvider tokenProvider,
+            UserDtoAdapter userDtoAdapter
     ) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
+        this.userDtoAdapter = userDtoAdapter;
     }
 
     @Override
@@ -50,13 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String accessToken = tokenProvider.generateToken(currentUser);
         String refreshToken = tokenProvider.generateRefreshToken(currentUser);
 
-        UserAuthResponse response = new UserAuthResponse(
-                currentUser.getEmail(),
-                currentUser.getFirstName(),
-                currentUser.getLastName(),
-                currentUser.getPhoneNumber(),
-                currentUser.getRole()
-        );
+        UserResponse response = userDtoAdapter.getModel(currentUser);
 
         return new AuthenticationResponse(
                 accessToken,
@@ -80,13 +78,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             String token = tokenProvider.generateToken(currentUser);
 
-            UserAuthResponse response = new UserAuthResponse(
-                    currentUser.getEmail(),
-                    currentUser.getFirstName(),
-                    currentUser.getLastName(),
-                    currentUser.getPhoneNumber(),
-                    currentUser.getRole()
-            );
+            UserResponse response = userDtoAdapter.getModel(currentUser);
 
             return new RefreshTokenResponse(
                     token,

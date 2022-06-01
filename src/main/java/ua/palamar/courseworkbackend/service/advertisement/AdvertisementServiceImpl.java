@@ -19,6 +19,7 @@ import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementCategory;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.image.Image;
+import ua.palamar.courseworkbackend.entity.order.DeliveryStatus;
 import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.entity.order.OrderStatus;
 import ua.palamar.courseworkbackend.entity.user.UserAccount;
@@ -36,6 +37,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static ua.palamar.courseworkbackend.entity.order.DeliveryStatus.*;
 
 @Service
 public class AdvertisementServiceImpl implements AdvertisementService {
@@ -68,7 +71,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     @Transactional
-    public AdvertisementResponse save(AdvertisementRequest advertisementRequest, HttpServletRequest request, MultipartFile file) {
+    public AdvertisementResponse saveAdvertisement(AdvertisementRequest advertisementRequest, HttpServletRequest request, MultipartFile file) {
         String email = tokenProvider.getEmail(request);
 
         UserAccount creator = userService.getUserEntityByEmail(email);
@@ -110,7 +113,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     @Transactional
-    public void remove(String id, HttpServletRequest request) {
+    public void removeAdvertisement(String id, HttpServletRequest request) {
         String email = tokenProvider.getEmail(request);
 
         UserAccount userAccount = userService.getUserEntityByEmail(email);
@@ -125,13 +128,14 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         Set<OrderEntity> orderEntities = advertisement.getOrders();
 
-        boolean hasConfirmedOrders = orderEntities.stream()
-                .anyMatch(order -> order.getOrderStatus().equals(OrderStatus.CONFIRMED));
+        boolean hasUncompletedOrders = orderEntities.stream()
+                .anyMatch(order -> order.getOrderStatus().equals(OrderStatus.CONFIRMED) &&
+                        !order.getDelivery().getDeliveryStatus().equals(DELIVERED));
 
-        if (hasConfirmedOrders) { // todo:
+        if (hasUncompletedOrders) {
             throw new ApiRequestException(
                     String.format(
-                            "User with email %s has confirmed orders", email
+                            "User with email %s has uncompleted orders", email
                     )
             );
         }
