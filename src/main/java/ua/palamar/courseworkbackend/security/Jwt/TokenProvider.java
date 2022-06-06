@@ -31,14 +31,12 @@ public class TokenProvider {
 
 
     public boolean validateToken (String token) {
-
         return !Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody()
                 .getExpiration()
                 .before(new Date());
-
     }
 
     public String generateToken (UserAccount userAccount) {

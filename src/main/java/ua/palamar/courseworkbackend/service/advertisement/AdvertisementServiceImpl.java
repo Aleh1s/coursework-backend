@@ -71,7 +71,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     @Transactional
-    public AdvertisementResponse saveAdvertisement(AdvertisementRequest advertisementRequest, HttpServletRequest request, MultipartFile file) {
+    public AdvertisementResponse createAdvertisement(AdvertisementRequest advertisementRequest, HttpServletRequest request, MultipartFile file) {
         String email = tokenProvider.getEmail(request);
 
         UserAccount creator = userService.getUserEntityByEmail(email);
@@ -200,14 +200,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Override
-    public AdvertisementsDetailsResponse getAllByEmail(String email, AdvertisementCriteria criteria) {
-        UserAccount user = userRepository.findUserEntityByEmailJoinFetchAdvertisements(email)
-                .orElseThrow(() -> new ApiRequestException(
-                                String.format(
-                                        "User with email does not exist", email
-                                )
-                        )
-                );
+    public AdvertisementsDetailsResponse getAllByEmailAndCriteria(String email, AdvertisementCriteria criteria) {
+        UserAccount user = userService.getUserEntityByEmail(email);
 
         Pageable pageable = PageRequest.of(criteria.page(), criteria.limit(), Sort.by(criteria.sortBy()).descending());
 

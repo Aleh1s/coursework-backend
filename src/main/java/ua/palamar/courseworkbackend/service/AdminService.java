@@ -12,4 +12,5 @@ public interface AdminService {
     void changeUserAccountStatus(String email, UserStatus status);
     void changeAdvertisementStatus(String id, AdvertisementStatus status, HttpServletRequest request);
     AdvertisementsResponse getAdvertisementsForModeration(AdvertisementCriteria criteria);
+
 }

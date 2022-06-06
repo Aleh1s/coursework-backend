@@ -13,13 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public interface AdvertisementService {
 
-    AdvertisementResponse saveAdvertisement(AdvertisementRequest advertisementRequest, HttpServletRequest request, MultipartFile file);
+    AdvertisementResponse createAdvertisement(AdvertisementRequest advertisementRequest, HttpServletRequest request, MultipartFile file);
 
     AdvertisementsResponse getAllByCriteria(AdvertisementCriteria criteria);
 
     AdvertisementResponse getByIdJoinFetchCreator(String id);
 
-    AdvertisementsDetailsResponse getAllByEmail(String email, AdvertisementCriteria advertisementCriteria);
+    AdvertisementsDetailsResponse getAllByEmailAndCriteria(String email, AdvertisementCriteria advertisementCriteria);
 
     void removeAdvertisement(String id, HttpServletRequest request);
 }

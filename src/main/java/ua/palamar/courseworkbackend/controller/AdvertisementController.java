@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.palamar.courseworkbackend.dto.criteria.AdvertisementCriteria;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequest;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
-import ua.palamar.courseworkbackend.dto.response.AdvertisementsDetailsResponse;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementCategory;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
@@ -37,7 +36,7 @@ public class AdvertisementController {
             HttpServletRequest request
     ) {
         AdvertisementRequest model = new AdvertisementRequest(title, description, category, city);
-        return new ResponseEntity<>(advertisementService.saveAdvertisement(model, request, file), HttpStatus.CREATED);
+        return new ResponseEntity<>(advertisementService.createAdvertisement(model, request, file), HttpStatus.CREATED);
     }
 
     @DeleteMapping
@@ -66,16 +65,5 @@ public class AdvertisementController {
                 advertisementService.getAllByCriteria(
                         new AdvertisementCriteria(category, limit, page, sortBy, query)
                 ), HttpStatus.OK);
-    }
-
-    @GetMapping("/one")
-    public ResponseEntity<AdvertisementsDetailsResponse> getAllByEmail(
-            @RequestParam(value = "_limit", defaultValue = "12") Integer limit,
-            @RequestParam(value = "_page", defaultValue = "0") Integer page,
-            @RequestParam(value = "_sortBy", defaultValue = "createdAt") String sortBy,
-            @RequestParam("_email") String email
-    ) {
-        return new ResponseEntity<>(advertisementService.getAllByEmail(email, new AdvertisementCriteria(null, limit, page, sortBy, null)
-        ), HttpStatus.OK);
     }
 }

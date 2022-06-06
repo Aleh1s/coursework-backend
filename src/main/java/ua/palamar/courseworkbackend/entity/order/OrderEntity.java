@@ -89,18 +89,10 @@ public class OrderEntity {
         this.receiver = receiver;
     }
 
-    public void removeReceiver(UserAccount receiver) {
-        receiver.getOrderEntityEntities().remove(this);
-        this.receiver = null;
-    }
 
     public void addAdvertisement(Advertisement product) {
         product.getOrders().add(this);
         this.product = product;
     }
 
-    public void removerAdvertisement(Advertisement product) {
-        product.getOrders().remove(this);
-        this.product = null;
-    }
 }

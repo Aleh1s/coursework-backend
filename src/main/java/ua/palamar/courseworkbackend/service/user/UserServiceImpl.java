@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService, UserServiceValidator {
                         file.getBytes()
                 );
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ApiRequestException("Can not create image", e);
             }
 
             user.setImage(image);

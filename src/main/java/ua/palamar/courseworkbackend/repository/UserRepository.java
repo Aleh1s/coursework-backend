@@ -17,9 +17,6 @@ public interface UserRepository extends JpaRepository<UserAccount, String> {
     boolean existsByEmail(String email);
     boolean existsByPhoneNumber(String phoneNumber);
 
-    @Query("select u from UserAccount u join fetch u.advertisements where u.email = :email")
-    Optional<UserAccount> findUserEntityByEmailJoinFetchAdvertisements(String email);
-
     @Query("select u from UserAccount u join fetch u.image where u.email = :email")
     Optional<UserAccount> findUserEntityByEmailJoinFetchImage(String email);
 

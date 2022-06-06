@@ -28,6 +28,5 @@ public interface OrderRepository extends JpaRepository<OrderEntity, String> {
     List<OrderEntity> findAllByProductIdJoinFetchDeliveryAndReceiver(String id);
 
     Long countAllByReceiverEmail(String email);
-    Long countAllByProductId(String id);
 
 }
