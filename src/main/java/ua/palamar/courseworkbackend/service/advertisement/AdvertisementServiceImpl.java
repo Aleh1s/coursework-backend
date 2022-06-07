@@ -19,7 +19,6 @@ import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementCategory;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus;
 import ua.palamar.courseworkbackend.entity.image.Image;
-import ua.palamar.courseworkbackend.entity.order.DeliveryStatus;
 import ua.palamar.courseworkbackend.entity.order.OrderEntity;
 import ua.palamar.courseworkbackend.entity.order.OrderStatus;
 import ua.palamar.courseworkbackend.entity.user.UserAccount;
@@ -34,11 +33,10 @@ import ua.palamar.courseworkbackend.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ua.palamar.courseworkbackend.entity.order.DeliveryStatus.*;
+import static ua.palamar.courseworkbackend.entity.order.DeliveryStatus.DELIVERED;
 
 @Service
 public class AdvertisementServiceImpl implements AdvertisementService {
