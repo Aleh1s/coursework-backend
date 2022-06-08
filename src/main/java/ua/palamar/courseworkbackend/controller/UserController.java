@@ -27,7 +27,7 @@ public class UserController {
         this.advertisementService = advertisementService;
     }
 
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<?> updateUser(
             @RequestBody UpdateUserRequest updateUserRequest,
             HttpServletRequest request

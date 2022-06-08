@@ -64,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/orders/change-status/**"
                 ).hasAuthority(ORDER_CHANGE.getPermission())
                 .antMatchers(
-                        HttpMethod.PUT,
+                        HttpMethod.PATCH,
                         "/api/v1/users/**"
                 ).hasAuthority(USER_UPDATE.getPermission())
                 .antMatchers(

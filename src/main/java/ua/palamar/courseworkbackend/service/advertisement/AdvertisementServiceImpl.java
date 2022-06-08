@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,10 +12,8 @@ import ua.palamar.courseworkbackend.adapter.advertisement.AdvertisementDtoAdapte
 import ua.palamar.courseworkbackend.adapter.user.UserDtoAdapter;
 import ua.palamar.courseworkbackend.dto.criteria.AdvertisementCriteria;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequest;
-import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
-import ua.palamar.courseworkbackend.dto.response.AdvertisementsDetailsResponse;
-import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
-import ua.palamar.courseworkbackend.dto.response.UserResponse;
+import ua.palamar.courseworkbackend.dto.request.UpdateAdvertisementRequest;
+import ua.palamar.courseworkbackend.dto.response.*;
 import ua.palamar.courseworkbackend.entity.advertisement.Advertisement;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementCategory;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementStatus;
@@ -153,6 +152,61 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
     }
 
+    private Advertisement getById(String id) {
+        return advertisementRepository.findById(id)
+                .orElseThrow(() -> new ApiRequestException(String.format(
+                        "Advertisement with id %s does not exist", id
+                )));
+    }
+
+    @Override
+    public UpdateAdvertisementResponse updateAdvertisement(UpdateAdvertisementRequest request, HttpServletRequest httpServletRequest) {
+        String id = request.id();
+        Advertisement currentAdvertisement = getById(id);
+
+        String email = tokenProvider.getEmail(httpServletRequest);
+        UserAccount currentUser = userService.getUserEntityByEmail(email);
+
+        String title = request.title();
+        String description = request.description();
+        String city = request.city();
+        AdvertisementCategory category = request.category();
+
+        if (!currentAdvertisement.getCreator().equals(currentUser)) {
+            throw new ApiRequestException(String.format(
+                    "User with email %s can not edit advertisement with is %s", email, id
+            ));
+        }
+
+        if (!title.equals("")) {
+            currentAdvertisement.setTitle(title);
+        }
+
+        if (!description.equals("")) {
+            currentAdvertisement.setDescription(description  );
+        }
+
+        if (!city.equals("")) {
+            currentAdvertisement.setCity(city);
+        }
+
+        if (!category.equals(currentAdvertisement.getCategory())) {
+            currentAdvertisement.setCategory(category);
+        }
+
+        advertisementRepository.save(currentAdvertisement);
+        return getUpdateAdvertisementResponse(currentAdvertisement);
+    }
+
+    private UpdateAdvertisementResponse getUpdateAdvertisementResponse(Advertisement advertisement) {
+        return new UpdateAdvertisementResponse(
+                advertisement.getTitle(),
+                advertisement.getDescription(),
+                advertisement.getCity(),
+                advertisement.getCategory()
+        );
+    }
+
     @Override
     public AdvertisementsResponse getAllByCriteria(
             AdvertisementCriteria criteria
@@ -213,15 +267,20 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     private List<AdvertisementResponse> getAdvertisementResponses(List<Advertisement> advertisements, UserResponse userResponse) {
         return advertisements.stream()
-                .map(advertisement -> new AdvertisementResponse(
-                        advertisement.getId(),
-                        advertisement.getTitle(),
-                        advertisement.getDescription(),
-                        advertisement.getCity(),
-                        advertisement.getStatus(),
-                        advertisement.getCategory(),
-                        advertisement.getCreatedAt(),
-                        userResponse
-                )).collect(Collectors.toList());
+                .map(advertisement -> getAdvertisementResponse(advertisement, userResponse))
+                .collect(Collectors.toList());
+    }
+
+    private AdvertisementResponse getAdvertisementResponse(Advertisement advertisement, UserResponse userResponse) {
+        return new AdvertisementResponse(
+                advertisement.getId(),
+                advertisement.getTitle(),
+                advertisement.getDescription(),
+                advertisement.getCity(),
+                advertisement.getStatus(),
+                advertisement.getCategory(),
+                advertisement.getCreatedAt(),
+                userResponse
+        );
     }
 }

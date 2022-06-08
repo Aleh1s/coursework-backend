@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.palamar.courseworkbackend.dto.criteria.AdvertisementCriteria;
 import ua.palamar.courseworkbackend.dto.request.AdvertisementRequest;
+import ua.palamar.courseworkbackend.dto.request.UpdateAdvertisementRequest;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementResponse;
 import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
+import ua.palamar.courseworkbackend.dto.response.UpdateAdvertisementResponse;
 import ua.palamar.courseworkbackend.entity.advertisement.AdvertisementCategory;
 import ua.palamar.courseworkbackend.service.AdvertisementService;
 
@@ -46,6 +48,14 @@ public class AdvertisementController {
     ) {
         advertisementService.removeAdvertisement(id, request);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping
+    public ResponseEntity<UpdateAdvertisementResponse> updateAdvertisement(
+            @RequestBody UpdateAdvertisementRequest request,
+            HttpServletRequest httpServletRequest
+    ) {
+        return new ResponseEntity<>(advertisementService.updateAdvertisement(request, httpServletRequest), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
