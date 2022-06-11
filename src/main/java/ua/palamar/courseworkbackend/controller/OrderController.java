@@ -32,7 +32,9 @@ public class OrderController {
             @RequestBody OrderRequest model,
             HttpServletRequest request
     ) {
-        return new ResponseEntity<>(orderService.makeOrder(model, request), HttpStatus.OK);
+        return new ResponseEntity<>(
+                orderService.makeOrder(model, request), HttpStatus.OK
+        );
     }
 
     @PatchMapping("/decline")

@@ -26,7 +26,9 @@ public class FeedbackController {
     public ResponseEntity<FeedbackResponse> create(
             @RequestBody FeedbackRequest request
     ) {
-        return new ResponseEntity<>(feedbackService.create(request), HttpStatus.OK);
+        return new ResponseEntity<>(
+                feedbackService.create(request), HttpStatus.OK
+        );
     }
 
     @GetMapping

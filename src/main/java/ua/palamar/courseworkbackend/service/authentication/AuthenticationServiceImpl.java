@@ -41,13 +41,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
-        UserAccount currentUser = userService.getUserEntityByEmail(authenticationRequest.email());
+        String email = authenticationRequest.email().trim();
+        String password = authenticationRequest.password().trim();
+
+        UserAccount currentUser = userService.getUserEntityByEmail(email);
 
         if (currentUser.getStatus().equals(UserStatus.BLOCKED)) {
             throw new ApiRequestException("User is blocked");
         }
 
-        if (!passwordEncoder.matches(authenticationRequest.password(), currentUser.getPassword())) {
+        if (!passwordEncoder.matches(password, currentUser.getPassword())) {
             throw new ApiRequestException("Wrong password");
         }
 

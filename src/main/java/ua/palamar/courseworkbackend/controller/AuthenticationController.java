@@ -26,11 +26,15 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest authenticationRequest
     ) {
-        return new ResponseEntity<>(authenticationService.authenticate(authenticationRequest), HttpStatus.OK);
+        return new ResponseEntity<>(
+                authenticationService.authenticate(authenticationRequest), HttpStatus.OK
+        );
     }
 
     @GetMapping("/refresh")
     public ResponseEntity<?> refresh(HttpServletRequest request) {
-        return new ResponseEntity<>(authenticationService.refresh(request), HttpStatus.OK);
+        return new ResponseEntity<>(
+                authenticationService.refresh(request), HttpStatus.OK
+        );
     }
 }

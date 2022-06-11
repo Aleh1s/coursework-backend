@@ -54,11 +54,15 @@ public class RegistrationServiceImpl implements RegistrationService {
                     String.format("User with phone number: %s already exists", phoneNumber)
             );
 
+        String email = registrationRequest.email().trim();
+        String firstName= registrationRequest.firstName().trim();
+        String lastName= registrationRequest.lastName().trim();
+
         UserAccount newUser = new UserAccount(
-                registrationRequest.email(),
+                email,
                 passwordEncoder.encode(registrationRequest.password()),
-                registrationRequest.firstName(),
-                registrationRequest.lastName(),
+                firstName,
+                lastName,
                 UserRole.USER,
                 phoneNumber
         );

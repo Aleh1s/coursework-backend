@@ -82,12 +82,15 @@ public class UserServiceImpl implements UserService, UserServiceValidator {
     }
 
     @Override
-    public ResponseEntity<?> updateUser(UpdateUserRequest updateUserRequest, HttpServletRequest request) {
+    public ResponseEntity<?> updateUser(
+            UpdateUserRequest updateUserRequest,
+            HttpServletRequest request
+    ) {
         String email = tokenProvider.getEmail(request);
         UserAccount user = getUserEntityByEmail(email);
 
-        String phoneNumber = updateUserRequest.phoneNumber();
-        if (!phoneNumber.equals("")) {
+        String phoneNumber = updateUserRequest.phoneNumber().trim();
+        if (!phoneNumber.isBlank()) {
             if (phoneNumber.startsWith("+38")) {
                 phoneNumber = phoneNumber.substring("+38".length());
             }
@@ -101,13 +104,13 @@ public class UserServiceImpl implements UserService, UserServiceValidator {
             user.setPhoneNumber(phoneNumber);
         }
 
-        String firstName = updateUserRequest.firstName();
-        if (!firstName.equals("")) {
+        String firstName = updateUserRequest.firstName().trim();
+        if (!firstName.isBlank()) {
             user.setFirstName(firstName);
         }
 
-        String lastName = updateUserRequest.lastName();
-        if (!lastName.equals("")) {
+        String lastName = updateUserRequest.lastName().trim();
+        if (!lastName.isBlank()) {
             user.setLastName(lastName);
         }
 

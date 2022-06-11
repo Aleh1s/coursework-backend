@@ -12,6 +12,7 @@ import ua.palamar.courseworkbackend.dto.response.AdvertisementsResponse;
 import ua.palamar.courseworkbackend.dto.response.UpdateAdvertisementResponse;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @Service
 public interface AdvertisementService {

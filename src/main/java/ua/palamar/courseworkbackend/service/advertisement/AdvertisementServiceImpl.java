@@ -88,23 +88,25 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                     file.getBytes()
             );
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ApiRequestException("Image creating server IOException", e);
         }
 
         imageRepository.save(image);
 
+        String title = advertisementRequest.title().trim();
+        String description = advertisementRequest.description().trim();
+        String city = advertisementRequest.city().trim();
+
         Advertisement advertisement = new Advertisement(
-                advertisementRequest.title(),
-                advertisementRequest.description(),
+                title,
+                description,
                 advertisementRequest.category(),
-                advertisementRequest.city(),
+                city,
                 image
         );
 
         advertisement.addCreator(creator);
-
         advertisementRepository.save(advertisement);
-
         return advertisementDtoAdapter.getModel(advertisement, creator);
     }
 
@@ -167,9 +169,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         String email = tokenProvider.getEmail(httpServletRequest);
         UserAccount currentUser = userService.getUserEntityByEmail(email);
 
-        String title = request.title();
-        String description = request.description();
-        String city = request.city();
+        String title = request.title().trim();
+        String description = request.description().trim();
+        String city = request.city().trim();
         AdvertisementCategory category = request.category();
 
         if (!currentAdvertisement.getCreator().equals(currentUser)) {
@@ -178,15 +180,15 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             ));
         }
 
-        if (!title.equals("")) {
+        if (!title.isBlank()) {
             currentAdvertisement.setTitle(title);
         }
 
-        if (!description.equals("")) {
+        if (!description.isBlank()) {
             currentAdvertisement.setDescription(description  );
         }
 
-        if (!city.equals("")) {
+        if (!city.isBlank()) {
             currentAdvertisement.setCity(city);
         }
 

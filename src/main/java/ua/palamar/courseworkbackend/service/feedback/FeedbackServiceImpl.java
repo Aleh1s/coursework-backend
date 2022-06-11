@@ -30,8 +30,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public FeedbackResponse create(FeedbackRequest request) {
         Feedback feedbackEntity = new Feedback(
-                request.email(),
-                request.text()
+                request.email().trim(),
+                request.text().trim()
         );
 
         Feedback feedback = feedbackRepository.save(feedbackEntity);

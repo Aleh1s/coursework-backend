@@ -81,16 +81,21 @@ public class OrderServiceImpl implements OrderService {
 
         UserAccount receiver = userService.getUserEntityByEmail(email);
 
+        String city = orderRequest.city().trim();
+        String address = orderRequest.address().trim();
+        String postOffice = orderRequest.postOffice().trim();
+        String wishes = orderRequest.wishes().trim();
+
         Delivery delivery = new Delivery(
-                orderRequest.city(),
-                orderRequest.address(),
-                orderRequest.postOffice()
+                city,
+                address,
+                postOffice
         );
 
         OrderEntity orderEntity = new OrderEntity(
                 delivery,
                 owner,
-                orderRequest.wishes()
+                wishes
         );
 
         orderEntity.addAdvertisement(advertisement);

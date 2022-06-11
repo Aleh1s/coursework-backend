@@ -38,7 +38,9 @@ public class AdvertisementController {
             HttpServletRequest request
     ) {
         AdvertisementRequest model = new AdvertisementRequest(title, description, category, city);
-        return new ResponseEntity<>(advertisementService.createAdvertisement(model, request, file), HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                advertisementService.createAdvertisement(model, request, file), HttpStatus.CREATED
+        );
     }
 
     @DeleteMapping
@@ -55,12 +57,16 @@ public class AdvertisementController {
             @RequestBody UpdateAdvertisementRequest request,
             HttpServletRequest httpServletRequest
     ) {
-        return new ResponseEntity<>(advertisementService.updateAdvertisement(request, httpServletRequest), HttpStatus.OK);
+        return new ResponseEntity<>(
+                advertisementService.updateAdvertisement(request, httpServletRequest), HttpStatus.OK
+        );
     }
 
     @GetMapping("{id}")
     public ResponseEntity<AdvertisementResponse> getById(@PathVariable("id") String id) {
-        return new ResponseEntity<>(advertisementService.getByIdJoinFetchCreator(id), HttpStatus.OK);
+        return new ResponseEntity<>(
+                advertisementService.getByIdJoinFetchCreator(id), HttpStatus.OK
+        );
     }
 
     @GetMapping
@@ -73,7 +79,7 @@ public class AdvertisementController {
     ) {
         return new ResponseEntity<>(
                 advertisementService.getAllByCriteria(
-                        new AdvertisementCriteria(category, limit, page, sortBy, query)
+                        new AdvertisementCriteria(category, limit, page, sortBy, query.trim())
                 ), HttpStatus.OK);
     }
 }
