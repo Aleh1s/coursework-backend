@@ -91,10 +91,6 @@ public class UserServiceImpl implements UserService, UserServiceValidator {
 
         String phoneNumber = updateUserRequest.phoneNumber().trim();
         if (!phoneNumber.isBlank()) {
-            if (phoneNumber.startsWith("+38")) {
-                phoneNumber = phoneNumber.substring("+38".length());
-            }
-
             if (!phoneNumber.equals(user.getPhoneNumber()) && userRepository.existsByPhoneNumber(phoneNumber)) {
                 throw new ApiRequestException(
                         String.format("User with phone number %s already exists", phoneNumber)
